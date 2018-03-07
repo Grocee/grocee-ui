@@ -1,33 +1,48 @@
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
+	Platform,
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
 } from 'react-native';
-import Meteor from 'react-native-meteor';
+import Meteor, { createContainer } from 'react-native-meteor';
 import { 
 	TabNavigator,
 	TabBarBottom
 } from 'react-navigation';
+import settings from './config/settings';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import RecipePage from './screens/RecipePage';
 
-const SERVER_URL = 'ws://localhost:3000/websocket';
+Meteor.connect(settings.METEOR_URL);
 
-type Props = {};
-export default class App extends Component<Props> {
+const App = (props) => {
+	const { status, user, loggingIn, recipes } = props;
+	
+	// if (!status.connected || loggingIn) {
+	// 	console.log('Loading...');
+	// 	return <Text>Loading...</Text>;
+	// } else if (user !== null) {
+	// 	console.log('User is logged in: ' + user.username);
+	// 	return <RootStack />;
+	// }
+	// console.log('Not logged in. Need to login...')
+	// return <Text>LOGIN NOW!</Text>;
+	return <RootStack screenProps={recipes}/>;
+};
 
-  componentWillMount() {
-	Meteor.connect(SERVER_URL);
-  }
+export default createContainer(() => {
+	Meteor.subscribe('recipes');
+	return {
+		status: Meteor.status(),
+		user: Meteor.user(),
+		loggingIn: Meteor.loggingIn(),
+		recipes: Meteor.collection('recipes').find(),
+	};
+}, App);
 
-  render() {
-	  return (<RootStack />);
-  }
-}
-
-class HomePage extends Component<Props> {
+class HomePage extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
@@ -39,7 +54,7 @@ class HomePage extends Component<Props> {
 	}
 }
 
-class GroceryPage extends Component<Props> {
+class GroceryPage extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
@@ -51,19 +66,7 @@ class GroceryPage extends Component<Props> {
 	}
 }
 
-class RecipePage extends Component<Props> {
-	render() {
-		return (
-			<View style={styles.container}>
-				<Text style={styles.welcome}>
-					Recipe Page
-				</Text>
-			</View>
-		);
-	}
-}
-
-class InventoryPage extends Component<Props> {
+class InventoryPage extends Component {
 	
 	_handleAddInventory() {
 		Meteor.call('inventories.insert', 'inventory item', '1 item');
@@ -76,7 +79,7 @@ class InventoryPage extends Component<Props> {
 					Inventory Page
 				</Text>
 				<TouchableOpacity style={styles.button} onPress={this._handleAddInventory}>
-		  			<Text>Test Add Inventory</Text>
+						<Text>Test Add Inventory</Text>
 				</TouchableOpacity>
 			</View>
 		);
@@ -128,24 +131,24 @@ const RootStack = TabNavigator(
 )
 
 const styles = StyleSheet.create({
-  container: {
+	container: {
 	flex: 1,
 	justifyContent: 'center',
 	alignItems: 'center',
 	backgroundColor: '#F5FCFF',
-  },
-  welcome: {
+	},
+	welcome: {
 	fontSize: 20,
 	textAlign: 'center',
 	margin: 10,
-  },
-  instructions: {
+	},
+	instructions: {
 	textAlign: 'center',
 	color: '#333333',
 	marginBottom: 5,
-  },
-  button: {
+	},
+	button: {
 	padding: 10,
 	backgroundColor: '#c5c5c5',
-  },
+	},
 });
