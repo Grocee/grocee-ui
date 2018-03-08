@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "eslint": "eslint --ext .js .",
+    "eslint-report": "eslint --ext .js . -f node_modules/eslint-html-reporter/reporter.js -o eslint.report.html",
     "test": "jest"
   },
   "dependencies": {
