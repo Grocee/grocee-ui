@@ -102,9 +102,9 @@ const RootStack = TabNavigator(
 		}
 	},
 	{
-		navigationOptions: ({ navigation }) => {
+		navigationOptions: ({ navigation }) => ({
 			tabBarIcon: ({ focused, tintColor }) => {
-				const { routeName } = navigation.store;
+				const { routeName } = navigation.state;
 				let iconName;
 				if (routeName === 'Home') {
 					iconName = 'home';
@@ -118,17 +118,17 @@ const RootStack = TabNavigator(
 
 				return (<Ionicons name={iconName} size={25} color={tintColor}/>);
 			}
-		},
+		}),
 		tabBarOptions: {
 			activeTintColor: 'tomato',
-			inactiveTintColor: 'gray'
+			inactiveTintColor: 'gray',
 		},
 		tabBarComponent: TabBarBottom,
-		tabBarPOsition: 'bottom',
+		tabBarPosition: 'bottom',
 		animationEnabled: false,
-		swipeEnabled: false
+		swipeEnabled: false,
 	}
-)
+);
 
 const styles = StyleSheet.create({
 	container: {
