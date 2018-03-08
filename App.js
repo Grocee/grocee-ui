@@ -15,6 +15,7 @@ import {
 import settings from './config/settings';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './screens/RecipePage';
+import Button from './components/Button';
 
 Meteor.connect(settings.METEOR_URL);
 
@@ -24,11 +25,9 @@ const App = (props) => {
 	if (!status.connected || loggingIn) {
 		return <Text>Loading...</Text>;
 	} else if (user !== null) {
-		return <RootStack />;
+		return <RootStack screenProps={recipes}/>;
 	}
-	return <SignIn />;
-	
-	//return <RootStack screenProps={recipes}/>;
+	return <SignIn />;	
 };
 
 export default createContainer(() => {
@@ -42,12 +41,18 @@ export default createContainer(() => {
 }, App);
 
 class HomePage extends Component {
+
+	_handleSignOut = () => {
+		Meteor.logout();
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>
 					Welcome to Grocee!
 				</Text>
+				<Button text='Sign Out' onPress={this._handleSignOut} />
 			</View>
 		);
 	}

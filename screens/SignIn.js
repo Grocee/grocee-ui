@@ -120,7 +120,7 @@ export default class SignIn extends Component {
 						style={styles.logo}
 						source={logoImage}
 					/>
-					<Text style={styles.headerText}>{this.state.email}</Text>
+					<Text style={styles.headerText}>grocee</Text>
 				</View>
 
 				<InputWrapper>

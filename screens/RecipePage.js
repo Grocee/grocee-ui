@@ -61,14 +61,6 @@ export default class RecipePage extends Component {
 		/>
 	);
 
-	_onNameChange = (event) => {
-		this.setState({ name: event.nativeEvent.text });
-	};
-
-	_onURLChange = (event) => {
-		this.setState( { url: event.nativeEvent.text });
-	};
-
 	_submitRecipe = () => {
 		//Insert to Meteor
 
@@ -91,17 +83,11 @@ export default class RecipePage extends Component {
 	};
 
 	render() {
-		
-		console.log('Recipes count: ' + this.props.screenProps.length);
-
 		return (
 			<View style={StyleSheet.absoluteFill}>
 				<TextInput
-					style={styles.recipeInput}
-					// Below isfrom react-native official API, not sure why it doesn't work
-					//onChangeText={(text) => this.setState({name})} 
-					
-					onChange={this._onNameChange} // TODO: make this inline and get rid of the method
+					style={styles.recipeInput}					
+					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
 					placeholder='Add new recipe'
 					autoCapitalize='words'
@@ -110,7 +96,7 @@ export default class RecipePage extends Component {
 				/>
 				<TextInput
 					style={styles.recipeInput}
-					onChange={this._onURLChange} // TODO: make this inline and get rid of the method
+					onChangeText={(url) => this.setState({ url })}
 					value={this.state.url}
 					placeholder='URL of recipe'
 					keyboardType='url'
