@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
+import SignIn from './screens/SignIn';
 import { 
 	TabNavigator,
 	TabBarBottom
@@ -20,16 +21,14 @@ Meteor.connect(settings.METEOR_URL);
 const App = (props) => {
 	const { status, user, loggingIn, recipes } = props;
 	
-	// if (!status.connected || loggingIn) {
-	// 	console.log('Loading...');
-	// 	return <Text>Loading...</Text>;
-	// } else if (user !== null) {
-	// 	console.log('User is logged in: ' + user.username);
-	// 	return <RootStack />;
-	// }
-	// console.log('Not logged in. Need to login...')
-	// return <Text>LOGIN NOW!</Text>;
-	return <RootStack screenProps={recipes}/>;
+	if (!status.connected || loggingIn) {
+		return <Text>Loading...</Text>;
+	} else if (user !== null) {
+		return <RootStack />;
+	}
+	return <SignIn />;
+	
+	//return <RootStack screenProps={recipes}/>;
 };
 
 export default createContainer(() => {
