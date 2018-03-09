@@ -25,6 +25,7 @@ export default class SignIn extends Component {
 
 		this.mounted = false;
 		this.state = {
+			username: '',
 			email: '',
 			password: '',
 			confirmPassword: '',
@@ -48,9 +49,13 @@ export default class SignIn extends Component {
 	}
 
 	_validateInput = () => {
-		const { email, password, confirmPassword, confirmPasswordVisible } = this.state;
+		const { username, email, password, confirmPassword, confirmPasswordVisible } = this.state;
 		let valid = true;
 
+		if (username.length === 0) {
+			this._handleError('Username cannot be empty.');
+		}
+		
 		if (email.length === 0) {
 			this._handleError('Email cannot be empty.');
 		}
@@ -83,10 +88,10 @@ export default class SignIn extends Component {
 	}
 
 	_handleCreateAccount = () => {
-		const { email, password, confirmPasswordVisible } = this.state;
+		const { username, email, password, confirmPasswordVisible } = this.state;
 
 		if (confirmPasswordVisible && this._validateInput()) {
-			Accounts.createUser({ email, password }, (error) => {
+			Accounts.createUser({ username, email, password }, (error) => {
 				if (error) {
 					this._handleError(error.reason);
 				} else {
@@ -98,18 +103,6 @@ export default class SignIn extends Component {
 			LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 			this.setState({ confirmPasswordVisible: true });
 		}
-	}
-
-	_onEmailChange = (event) => {
-		this.setState({ email: event.nativeEvent.text });
-	}
-
-	_onPasswordChange = (event) => {
-		this.setState({ password: event.nativeEvent.text });
-	}
-
-	_onConfirmPasswordChange = (event) => {
-		this.setState({ confirmPassword: event.nativeEvent.text });
 	}
 
 	render() {
@@ -125,8 +118,13 @@ export default class SignIn extends Component {
 
 				<InputWrapper>
 					<GenericTextInput
+						placeholder='username'
+						onChangeText={(username) => this.setState({ username })}
+					/>
+					<GenericTextInput
 						placeholder='email address'
 						onChangeText={(email) => this.setState({ email })}
+						borderTop
 					/>
 					<GenericTextInput
 						placeholder='password'
