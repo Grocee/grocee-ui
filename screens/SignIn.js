@@ -51,10 +51,6 @@ export default class SignIn extends Component {
 	_validateInput = () => {
 		const { username, email, password, confirmPassword, confirmPasswordVisible } = this.state;
 		let valid = true;
-
-		if (username.length === 0) {
-			this._handleError('Username cannot be empty.');
-		}
 		
 		if (email.length === 0) {
 			this._handleError('Email cannot be empty.');
@@ -117,10 +113,6 @@ export default class SignIn extends Component {
 				</View>
 
 				<InputWrapper>
-					<GenericTextInput
-						placeholder='username'
-						onChangeText={(username) => this.setState({ username })}
-					/>
 					<GenericTextInput
 						placeholder='email address'
 						onChangeText={(email) => this.setState({ email })}
