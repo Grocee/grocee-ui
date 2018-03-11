@@ -11,6 +11,7 @@ import {
 	TextInput,
 	Linking
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { colors } from '../config/styles';
 import logoImage from '../images/rn-logo.png';
 import GenericTextInput, {InputWrapper } from '../components/GenericTextInput';
@@ -103,7 +104,7 @@ export default class SignIn extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 				<View style={styles.header}>
 					<Image
 						style={styles.logo}
@@ -145,7 +146,7 @@ export default class SignIn extends Component {
 
 				<KeyboardSpacer />
 
-			</View>
+			</SafeAreaView>
 		);
 	}
 }

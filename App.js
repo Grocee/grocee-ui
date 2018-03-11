@@ -10,7 +10,8 @@ import Meteor, { createContainer } from 'react-native-meteor';
 import SignIn from './screens/SignIn';
 import { 
 	TabNavigator,
-	TabBarBottom
+	TabBarBottom,
+	SafeAreaView
 } from 'react-navigation';
 import settings from './config/settings';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,7 +30,11 @@ const App = (props) => {
 	}
 	
 	if (!status.connected || loggingIn) {
-		return <Text>Loading...</Text>;
+		return (
+			<SafeAreaView style={StyleSheet.absoluteFill}>
+				<Text style={ { textAlign: 'center', fontSize: 18, fontWeight: 'bold', marginTop: 100 } }>Loading...</Text>
+			</SafeAreaView>
+		);
 	} else if (user !== null) {
 		return <RootStack screenProps={data}/>;
 	}
@@ -56,12 +61,12 @@ class HomePage extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 				<Text style={styles.welcome}>
 					Welcome to Grocee!
 				</Text>
 				<Button text='Sign Out' onPress={this._handleSignOut} />
-			</View>
+			</SafeAreaView>
 		);
 	}
 }

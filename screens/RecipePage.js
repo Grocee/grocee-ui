@@ -9,6 +9,7 @@ import {
   TextInput,
   Linking
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import settings from '../config/settings';
 
 // probably should abstract this out into its own method and make this strictly FE
@@ -84,7 +85,7 @@ export default class RecipePage extends Component {
 
 	render() {
 		return (
-			<View style={StyleSheet.absoluteFill}>
+			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<TextInput
 					style={styles.recipeInput}					
 					onChangeText={(name) => this.setState({ name })}
@@ -110,7 +111,7 @@ export default class RecipePage extends Component {
 					keyExtractor={this._keyExtractor}
 					renderItem={this._renderItem}
 				/>
-			</View>
+			</SafeAreaView>
 		)
 	}
 

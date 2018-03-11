@@ -9,6 +9,7 @@ import {
   TextInput,
   Linking
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import settings from '../config/settings';
 import Meteor, { createContainer } from 'react-native-meteor';
 
@@ -74,7 +75,7 @@ export default class InventoryPage extends Component {
 
 	render() {
 		return (
-			<View style={StyleSheet.absoluteFill}>
+			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<TextInput
 					style={styles.inventoryInput}					
 					onChangeText={(name) => this.setState({ name })}
@@ -99,7 +100,7 @@ export default class InventoryPage extends Component {
 					keyExtractor={this._keyExtractor}
 					renderItem={this._renderItem}
 				/>
-			</View>
+			</SafeAreaView>
 		);
 	}
 }
