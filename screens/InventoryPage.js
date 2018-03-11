@@ -10,27 +10,21 @@ import {
   Linking
 } from 'react-native';
 import settings from '../config/settings';
-
-// probably should abstract this out into its own method and make this strictly FE
 import Meteor, { createContainer } from 'react-native-meteor';
 
 Meteor.connect(settings.METEOR_URL);
 
-class Recipe extends React.PureComponent {
-	
-	_onPress = () => {
-		return Linking.openURL(this.props.item.url);
-	};
+class Inventory extends React.PureComponent {
 
 	render() {
 		const item = this.props.item;
 		return (
-			<TouchableHighlight onPress={this._onPress} underlayColor='#dddddd'>
+			<TouchableHighlight underlayColor='#dddddd'>
 				<View>
 					<View style={styles.rowContainer}>
-						<View style={styles.recipeContainer}>
+						<View style={styles.inventoryContainer}>
 							<Text style={ {color: 'dark grey', fontWeight: 'bold', fontSize: 18} }>{item.name}</Text>
-							<Text style={ {color: 'grey', fontWeight: '100', fontSize: 14} }>{item.url}</Text>
+							<Text style={ {color: 'grey', fontWeight: '100', fontSize: 14} }>{item.amount}</Text>
 						</View>
 					</View>
 					<View style={styles.separator}/>
@@ -40,13 +34,13 @@ class Recipe extends React.PureComponent {
 	}
 }
 
-export default class RecipePage extends Component {
+export default class InventoryPage extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			name: '',
-			url: '',
+			amount: '',
 			isLoading: false,
 		};
 	}
@@ -54,75 +48,64 @@ export default class RecipePage extends Component {
 	_keyExtractor = (item, index) => index;
 
 	_renderItem = ({item, index}) => (
-		<Recipe
+		<Inventory
 			item={item}
 			index={index}
 			onPressItem={this._onPressItem}
 		/>
 	);
 
-	_submitRecipe = () => {
-		//Insert to Meteor
-
+	_submmitInventory = () => {
 		if (this.state.name.length === 0) {
-			// show alert
 			console.log('name cannot be empty')
 			return
 		}
 
-		if (this.state.url.length === 0) {
-			// show alert
-			console.log('url cannot be empty')
+		if (this.state.amount.length === 0) {
+			console.log('amount cannot be empty')
 			return
 		}
 
-		Meteor.call('recipes.insert', this.state.name, this.state.url);
+		Meteor.call('inventories.insert', this.state.name, this.state.amount);
 
 		this.state.name = '';
-		this.state.url = '';
+		this.state.amount = '';
 	};
 
 	render() {
 		return (
 			<View style={StyleSheet.absoluteFill}>
 				<TextInput
-					style={styles.recipeInput}					
+					style={styles.inventoryInput}					
 					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
-					placeholder='Add new recipe'
+					placeholder='Add new inventory'
 					autoCapitalize='words'
 					returnKeyType='next'
 					//onSubmitEditing={} //make the url one active
 				/>
 				<TextInput
-					style={styles.recipeInput}
-					onChangeText={(url) => this.setState({ url })}
-					value={this.state.url}
-					placeholder='URL of recipe'
-					keyboardType='url'
+					style={styles.inventoryInput}
+					onChangeText={(amount) => this.setState({ amount })}
+					value={this.state.amount}
+					placeholder='The amount of this item'
 					autoCapitalize='none'
-					autoCorrect='false'
+					autoCorrect='true'
 					returnKeyType='done'
-					onSubmitEditing={this._submitRecipe}
+					onSubmitEditing={this._submmitInventory}
 				/>
 				<FlatList
-					data={this.props.screenProps.recipes}
+					data={this.props.screenProps.inventories}
 					keyExtractor={this._keyExtractor}
 					renderItem={this._renderItem}
 				/>
 			</View>
-		)
+		);
 	}
+}
 
-};
-
-const styles = StyleSheet.create({
-	thumb: {
-		width: 80,
-		height: 80,
-		marginRight: 10
-	},
-	recipeInput: {
+export const styles = StyleSheet.create({
+	inventoryInput: {
 		height: 50,
 		//flexGrow: 1,
 		fontSize: 18,
@@ -131,7 +114,7 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		color: '#48BBEC',
 	},
-	recipeContainer: {
+	inventoryContainer: {
 		flex: 1,
 	},
 	separator: {

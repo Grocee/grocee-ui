@@ -15,28 +15,36 @@ import {
 import settings from './config/settings';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './screens/RecipePage';
+import InventoryPage from './screens/InventoryPage';
 import Button from './components/Button';
 
 Meteor.connect(settings.METEOR_URL);
 
 const App = (props) => {
-	const { status, user, loggingIn, recipes } = props;
+	const { status, user, loggingIn } = props;
+
+	const data = {
+		recipes: props.recipes,
+		inventories: props.inventories,
+	}
 	
 	if (!status.connected || loggingIn) {
 		return <Text>Loading...</Text>;
 	} else if (user !== null) {
-		return <RootStack screenProps={recipes}/>;
+		return <RootStack screenProps={data}/>;
 	}
 	return <SignIn />;	
 };
 
 export default createContainer(() => {
 	Meteor.subscribe('recipes');
+	Meteor.subscribe('inventories');
 	return {
 		status: Meteor.status(),
 		user: Meteor.user(),
 		loggingIn: Meteor.loggingIn(),
 		recipes: Meteor.collection('recipes').find(),
+		inventories: Meteor.collection('inventories').find(),
 	};
 }, App);
 
@@ -65,26 +73,6 @@ class GroceryPage extends Component {
 				<Text style={styles.welcome}>
 					Grocery Page
 				</Text>
-			</View>
-		);
-	}
-}
-
-class InventoryPage extends Component {
-	
-	_handleAddInventory() {
-		Meteor.call('inventories.insert', 'inventory item', '1 item');
-	}
-
-	render() {
-		return (
-			<View style={styles.container}>
-				<Text style={styles.welcome}>
-					Inventory Page
-				</Text>
-				<TouchableOpacity style={styles.button} onPress={this._handleAddInventory}>
-						<Text>Test Add Inventory</Text>
-				</TouchableOpacity>
 			</View>
 		);
 	}
