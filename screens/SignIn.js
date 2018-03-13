@@ -26,7 +26,6 @@ export default class SignIn extends Component {
 
 		this.mounted = false;
 		this.state = {
-			username: '',
 			email: '',
 			password: '',
 			confirmPassword: '',
@@ -50,7 +49,7 @@ export default class SignIn extends Component {
 	}
 
 	_validateInput = () => {
-		const { username, email, password, confirmPassword, confirmPasswordVisible } = this.state;
+		const { email, password, confirmPassword, confirmPasswordVisible } = this.state;
 		let valid = true;
 		
 		if (email.length === 0) {
@@ -85,10 +84,10 @@ export default class SignIn extends Component {
 	}
 
 	_handleCreateAccount = () => {
-		const { username, email, password, confirmPasswordVisible } = this.state;
+		const { email, password, confirmPasswordVisible } = this.state;
 
 		if (confirmPasswordVisible && this._validateInput()) {
-			Accounts.createUser({ username, email, password }, (error) => {
+			Accounts.createUser({ email, password }, (error) => {
 				if (error) {
 					this._handleError(error.reason);
 				} else {
