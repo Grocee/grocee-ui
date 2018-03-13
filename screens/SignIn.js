@@ -117,6 +117,7 @@ export default class SignIn extends Component {
 						placeholder='email address'
 						onChangeText={(email) => this.setState({ email })}
 						borderTop
+						keyboardType='email-address'
 					/>
 					<GenericTextInput
 						placeholder='password'
