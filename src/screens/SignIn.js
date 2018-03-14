@@ -12,8 +12,8 @@ import {
 	Linking
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { colors } from '../config/styles';
-import logoImage from '../images/rn-logo.png';
+import { colors } from '../../config/styles';
+import logoImage from '../../images/rn-logo.png';
 import GenericTextInput, {InputWrapper } from '../components/GenericTextInput';
 import Button from '../components/Button';
 import Meteor, { Accounts } from 'react-native-meteor';

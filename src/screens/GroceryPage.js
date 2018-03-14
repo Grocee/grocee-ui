@@ -6,7 +6,7 @@ import {
 	TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import settings from '../config/settings';
+import settings from '../../config/settings';
 import Meteor, { createContainer } from 'react-native-meteor';
 import { List, ListItem, SearchBar, Text, Button, CheckBox, Card, Header } from 'react-native-elements';
 

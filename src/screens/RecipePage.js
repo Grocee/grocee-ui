@@ -10,22 +10,28 @@ import {
   Linking
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import settings from '../config/settings';
+import settings from '../../config/settings';
+
+// probably should abstract this out into its own method and make this strictly FE
 import Meteor, { createContainer } from 'react-native-meteor';
 
 Meteor.connect(settings.METEOR_URL);
 
-class Inventory extends React.PureComponent {
+class Recipe extends React.PureComponent {
+	
+	_onPress = () => {
+		return Linking.openURL(this.props.item.url);
+	};
 
 	render() {
 		const item = this.props.item;
 		return (
-			<TouchableHighlight underlayColor='#dddddd'>
+			<TouchableHighlight onPress={this._onPress} underlayColor='#dddddd'>
 				<View>
 					<View style={styles.rowContainer}>
-						<View style={styles.inventoryContainer}>
+						<View style={styles.recipeContainer}>
 							<Text style={ {color: 'dark grey', fontWeight: 'bold', fontSize: 18} }>{item.name}</Text>
-							<Text style={ {color: 'grey', fontWeight: '100', fontSize: 14} }>{item.amount}</Text>
+							<Text style={ {color: 'grey', fontWeight: '100', fontSize: 14} }>{item.url}</Text>
 						</View>
 					</View>
 					<View style={styles.separator}/>
@@ -35,13 +41,13 @@ class Inventory extends React.PureComponent {
 	}
 }
 
-export default class InventoryPage extends Component {
+export default class RecipePage extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			name: '',
-			amount: '',
+			url: '',
 			isLoading: false,
 		};
 	}
@@ -49,64 +55,75 @@ export default class InventoryPage extends Component {
 	_keyExtractor = (item, index) => index;
 
 	_renderItem = ({item, index}) => (
-		<Inventory
+		<Recipe
 			item={item}
 			index={index}
 			onPressItem={this._onPressItem}
 		/>
 	);
 
-	_submmitInventory = () => {
+	_submitRecipe = () => {
+		//Insert to Meteor
+
 		if (this.state.name.length === 0) {
+			// show alert
 			console.log('name cannot be empty')
 			return
 		}
 
-		if (this.state.amount.length === 0) {
-			console.log('amount cannot be empty')
+		if (this.state.url.length === 0) {
+			// show alert
+			console.log('url cannot be empty')
 			return
 		}
 
-		Meteor.call('inventories.insert', this.state.name, this.state.amount);
+		Meteor.call('recipes.insert', this.state.name, this.state.url);
 
 		this.state.name = '';
-		this.state.amount = '';
+		this.state.url = '';
 	};
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<TextInput
-					style={styles.inventoryInput}					
+					style={styles.recipeInput}					
 					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
-					placeholder='Add new inventory'
+					placeholder='Add new recipe'
 					autoCapitalize='words'
 					returnKeyType='next'
 					//onSubmitEditing={} //make the url one active
 				/>
 				<TextInput
-					style={styles.inventoryInput}
-					onChangeText={(amount) => this.setState({ amount })}
-					value={this.state.amount}
-					placeholder='The amount of this item'
+					style={styles.recipeInput}
+					onChangeText={(url) => this.setState({ url })}
+					value={this.state.url}
+					placeholder='URL of recipe'
+					keyboardType='url'
 					autoCapitalize='none'
-					autoCorrect='true'
+					autoCorrect='false'
 					returnKeyType='done'
-					onSubmitEditing={this._submmitInventory}
+					onSubmitEditing={this._submitRecipe}
 				/>
 				<FlatList
-					data={this.props.screenProps.inventories}
+					data={this.props.screenProps.recipes}
 					keyExtractor={this._keyExtractor}
 					renderItem={this._renderItem}
 				/>
 			</SafeAreaView>
-		);
+		)
 	}
-}
 
-export const styles = StyleSheet.create({
-	inventoryInput: {
+};
+
+const styles = StyleSheet.create({
+	thumb: {
+		width: 80,
+		height: 80,
+		marginRight: 10
+	},
+	recipeInput: {
 		height: 50,
 		//flexGrow: 1,
 		fontSize: 18,
@@ -115,7 +132,7 @@ export const styles = StyleSheet.create({
 		borderRadius: 8,
 		color: '#48BBEC',
 	},
-	inventoryContainer: {
+	recipeContainer: {
 		flex: 1,
 	},
 	separator: {

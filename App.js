@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
-import SignIn from './screens/SignIn';
+import SignIn from './src/screens/SignIn';
 import { 
 	TabNavigator,
 	TabBarBottom,
@@ -15,10 +15,10 @@ import {
 } from 'react-navigation';
 import settings from './config/settings';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import RecipePage from './screens/RecipePage';
-import InventoryPage from './screens/InventoryPage';
-import GroceryPage from './screens/GroceryPage';
-import Button from './components/Button';
+import RecipePage from './src/screens/RecipePage';
+import InventoryPage from './src/screens/InventoryPage';
+import GroceryPage from './src/screens/GroceryPage';
+import Button from './src/components/Button';
 
 Meteor.connect(settings.METEOR_URL);
 
