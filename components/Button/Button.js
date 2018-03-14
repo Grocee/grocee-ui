@@ -1,28 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
+import { Button } from 'react-native-elements';
 
-const Button = (props) => {
+const GroceeButton = (props) => {
 	const { text, onPress } = props;
-	return (
-		<TouchableOpacity style={styles.button} onPress={onPress}>
-			<Text style={styles.buttonText}>
-				{text}
-			</Text>
-		</TouchableOpacity>
-	);
+	return (<Button title={text} onPress={onPress} titleStyle={styles.buttonText} buttonStyle={styles.button} />)
 };
 
-Button.propTypes = {
+GroceeButton.propTypes = {
 	text: PropTypes.string,
 	onPress: PropTypes.func,
 };
 
-Button.defaultProps = {
+GroceeButton.defaultProps = {
 	text: 'Button Text',
 	// eslint-disable-next-line no-console
 	onPress: () => console.log('Button Pressed'),
 };
 
-export default Button;
+export default GroceeButton;

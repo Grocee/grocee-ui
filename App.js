@@ -17,6 +17,7 @@ import settings from './config/settings';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './screens/RecipePage';
 import InventoryPage from './screens/InventoryPage';
+import GroceryPage from './screens/GroceryPage';
 import Button from './components/Button';
 
 Meteor.connect(settings.METEOR_URL);
@@ -27,7 +28,8 @@ const App = (props) => {
 	const data = {
 		recipes: props.recipes,
 		inventories: props.inventories,
-	}
+		groceries: props.groceries
+	};
 	
 	if (!status.connected || loggingIn) {
 		return (
@@ -43,13 +45,15 @@ const App = (props) => {
 
 export default createContainer(() => {
 	Meteor.subscribe('recipes');
-	Meteor.subscribe('inventories');
+    Meteor.subscribe('inventories');
+	Meteor.subscribe('groceries');
 	return {
 		status: Meteor.status(),
 		user: Meteor.user(),
 		loggingIn: Meteor.loggingIn(),
 		recipes: Meteor.collection('recipes').find(),
-		inventories: Meteor.collection('inventories').find(),
+        inventories: Meteor.collection('inventories').find(),
+        groceries: Meteor.collection('groceries').find()
 	};
 }, App);
 
@@ -67,18 +71,6 @@ class HomePage extends Component {
 				</Text>
 				<Button text='Sign Out' onPress={this._handleSignOut} />
 			</SafeAreaView>
-		);
-	}
-}
-
-class GroceryPage extends Component {
-	render() {
-		return (
-			<View style={styles.container}>
-				<Text style={styles.welcome}>
-					Grocery Page
-				</Text>
-			</View>
 		);
 	}
 }
@@ -114,7 +106,14 @@ const RootStack = TabNavigator(
 				}
 
 				return (<Ionicons name={iconName} size={25} color={tintColor}/>);
-			}
+			},
+			headerStyle: {
+				backgroundColor: '#f4511e',
+			},
+			headerTintColor: '#fff',
+			headerTitleStyle: {
+				fontWeight: 'bold',
+			},
 		}),
 		tabBarOptions: {
 			activeTintColor: 'tomato',
