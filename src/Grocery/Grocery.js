@@ -11,6 +11,10 @@ export default class Grocery extends Component {
 	handlePress() {
 		let checked = !this.props.item.checked;
 		Meteor.call('groceries.setChecked', this.props.item._id, checked);
+		
+		if ( checked ) {
+			Meteor.call('inventories.insert', this.props.item.name);
+		}
 	}
 
 	render() {
