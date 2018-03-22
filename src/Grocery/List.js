@@ -20,18 +20,17 @@ export default class GroceryList extends Component {
 			name: '',
 			amount: '',
 			isLoading: false,
-			searchNeedle: ''
+			searchNeedle: '',
+			displayChecked: false
 		};
 	}
 
 	submitGrocery() {
 		if (this.state.name.length === 0) {
-			console.log('name cannot be empty')
 			return
 		}
 
 		if (this.state.amount.length === 0) {
-			console.log('amount cannot be empty')
 			return
 		}
 
@@ -67,13 +66,19 @@ export default class GroceryList extends Component {
 	}
 
 	renderGroceries() {
-		const groceries = this.props.screenProps.groceries.filter(grocery => {
+		// Filter based on search results
+		let groceries = this.props.screenProps.groceries.filter(grocery => {
 			if (this.state.searchNeedle !== '') {
 				return grocery.name.indexOf(this.state.searchNeedle) >= 0;
 			} else {
 				return true;
 			}
 		});
+
+		// Filter based on setChecked
+		if ( !this.state.displayChecked ) {
+			groceries = groceries.filter(grocery => !grocery.checked);
+		}
 
 		return (
 			<Card title="Groceries">
@@ -92,6 +97,7 @@ export default class GroceryList extends Component {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				{this.renderAddNewGrocery()}
+				<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
 				{this.renderGroceries()}
 			</SafeAreaView>
 		);
