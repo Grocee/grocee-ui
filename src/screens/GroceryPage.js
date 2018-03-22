@@ -2,6 +2,7 @@ import { SafeAreaView, StackNavigator } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 
 import Home from '../Grocery/Home';
+import AddList from '../Grocery/AddList';
 import List from '../Grocery/List';
 
 const GroceryPage = StackNavigator(
@@ -13,13 +14,21 @@ const GroceryPage = StackNavigator(
 				title: 'Groceries'
 			})
 		},
+		AddList: {
+			screen: AddList,
+			path: 'grocery/addList',
+			mode: 'modal'
+		},
 		List: {
 			screen: List,
 			path: 'grocery/list/:listName',
 			navigationOptions: ({ _navigation }) => ({
-				title: 'Groceries',
+				title: 'Grocery List',
 			})
 		}
+	},
+	{
+		initialRouteName: 'Home'
 	}
 );
 
