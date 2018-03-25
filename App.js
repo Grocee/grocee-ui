@@ -18,7 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './src/screens/RecipePage';
 import InventoryPage from './src/screens/InventoryPage';
 import GroceryPage from './src/screens/GroceryPage';
-import Button from './src/components/Button';
+import SettingsPage from './src/screens/SettingsPage';
 
 Meteor.connect(settings.METEOR_URL);
 
@@ -57,49 +57,31 @@ export default createContainer(() => {
 	};
 }, App);
 
-class HomePage extends Component {
-
-	_handleSignOut = () => {
-		Meteor.logout();
-	}
-
-	render() {
-		return (
-			<SafeAreaView style={styles.container}>
-				<Text style={styles.welcome}>
-					Welcome to Grocee!
-				</Text>
-				<Button text='Sign Out' onPress={this._handleSignOut} />
-			</SafeAreaView>
-		);
-	}
-}
-
 const RootStack = TabNavigator(
 	{
-		Home: {
-			screen: HomePage
-		},
 		Grocery: {
 			screen: GroceryPage
 		},
-		Recipe: {
+		Recipes: {
 			screen: RecipePage
 		},
 		Inventory: {
 			screen: InventoryPage
-		}
+		},
+		Settings: {
+			screen: SettingsPage
+		},
 	},
 	{
 		navigationOptions: ({ navigation }) => ({
 			tabBarIcon: ({ focused, tintColor }) => {
 				const { routeName } = navigation.state;
 				let iconName;
-				if (routeName === 'Home') {
-					iconName = focused ? 'ios-home' : 'ios-home-outline';
+				if (routeName === 'Settings') {
+					iconName = focused ? 'ios-settings' : 'ios-settings-outline';
 				} else if (routeName === 'Grocery') {
 					iconName = focused ? 'ios-cart' : 'ios-cart-outline';
-				} else if (routeName === 'Recipe') {
+				} else if (routeName === 'Recipes') {
 					iconName = focused ? 'ios-book' : 'ios-book-outline';
 				} else if (routeName === 'Inventory') {
 					iconName = focused ? 'ios-filing' : 'ios-filing-outline';
