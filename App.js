@@ -96,13 +96,13 @@ const RootStack = TabNavigator(
 				const { routeName } = navigation.state;
 				let iconName;
 				if (routeName === 'Home') {
-					iconName = 'home';
+					iconName = focused ? 'ios-home' : 'ios-home-outline';
 				} else if (routeName === 'Grocery') {
-					iconName = 'local-grocery-store';
+					iconName = focused ? 'ios-cart' : 'ios-cart-outline';
 				} else if (routeName === 'Recipe') {
-					iconName = 'bookmarks';
+					iconName = focused ? 'ios-book' : 'ios-book-outline';
 				} else if (routeName === 'Inventory') {
-					iconName = 'kitchen';
+					iconName = focused ? 'ios-filing' : 'ios-filing-outline';
 				}
 
 				return (<Ionicons name={iconName} size={25} color={tintColor}/>);
