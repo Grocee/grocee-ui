@@ -46,17 +46,19 @@ export default class InventoryPage extends Component {
 		};
 	}
 
-	_keyExtractor = (item, index) => index;
+	_keyExtractor(item, index) {
+		return index;
+	} 
 
-	_renderItem = ({item, index}) => (
+	_renderItem({item, index}) {
 		<Inventory
 			item={item}
 			index={index}
 			onPressItem={this._onPressItem}
 		/>
-	);
+	};
 
-	_submmitInventory = () => {
+	_submmitInventory() {
 		if (this.state.name.length === 0) {
 			console.log('name cannot be empty')
 			return

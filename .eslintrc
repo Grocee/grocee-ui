@@ -25,7 +25,7 @@
             "ignoreRestSiblings": false 
             }
         ],
-        "no-console": "error",
+        "no-console": 1,
         "semi": ["off", "always"],
         "no-extra-semi": "warn",
         "curly": ["warn", "all"],

@@ -19,7 +19,7 @@ Meteor.connect(settings.METEOR_URL);
 
 class Recipe extends React.PureComponent {
 	
-	_onPress = () => {
+	_onPress() {
 		return Linking.openURL(this.props.item.url);
 	};
 
@@ -52,17 +52,19 @@ export default class RecipePage extends Component {
 		};
 	}
 
-	_keyExtractor = (item, index) => index;
+	_keyExtractor(item, index) {
+		return index;
+	}
 
-	_renderItem = ({item, index}) => (
+	_renderItem({item, index}) {
 		<Recipe
 			item={item}
 			index={index}
 			onPressItem={this._onPressItem}
 		/>
-	);
+	};
 
-	_submitRecipe = () => {
+	_submitRecipe() {
 		//Insert to Meteor
 
 		if (this.state.name.length === 0) {
