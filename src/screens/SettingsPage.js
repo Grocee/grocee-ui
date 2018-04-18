@@ -19,7 +19,7 @@ Meteor.connect(settings.METEOR_URL);
 
 class SettingsPage extends Component {
 	
-	_handleSignOut() {
+	_handleSignOut = () => {
 		Meteor.logout();
 	}
 
