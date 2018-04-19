@@ -16,6 +16,7 @@ export default class GroceryList extends Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			name: '',
 			amount: '',
@@ -49,8 +50,7 @@ export default class GroceryList extends Component {
 					value={this.state.name}
 					placeholder='Add new grocery item'
 					autoCapitalize='words'
-					returnKeyType='next'
-				/>
+					returnKeyType='next' />
 				<TextInput
 					style={styles.groceryInput}
 					onChangeText={(amount) => this.setState({ amount })}
@@ -59,14 +59,14 @@ export default class GroceryList extends Component {
 					autoCapitalize='none'
 					autoCorrect='true'
 					returnKeyType='done'
-					onSubmitEditing={() => this.submitGrocery()}
-				/>
+					onSubmitEditing={() => this.submitGrocery()} />
 			</Card>
 		);
 	}
 
 	renderGroceries() {
 		// Filter based on search results
+		// TODO also filter based on this.props.navigation.state.params.listName
 		let groceries = this.props.screenProps.groceries.filter(grocery => {
 			if (this.state.searchNeedle !== '') {
 				return grocery.name.indexOf(this.state.searchNeedle) >= 0;

@@ -14,31 +14,30 @@ export default class Home extends Component {
 	}
 
 	renderAddNewList() {
-		// return (
-		// 	<Card title="Add new Grocery Item">
-		// 		<TextInput
-		// 			style={styles.input}					
-		// 			onChangeText={(name) => this.setState({ name })}
-		// 			value={this.state.name}
-		// 			placeholder='Add new grocery list'
-		// 			autoCapitalize='words'
-		// 			returnKeyType='next'
-		// 		/>
-		// 	</Card>
-		// );
-
 		return (<Button title={"Add grocery list"} onPress={() => this.props.navigation.navigate('AddList')}/>);
+	}
+    
+	renderList(list) {
+		return (
+			<ListItem title={list.name} onPress={() => this.props.navigation.navigate('GroceryList', {listName: list.name})}/>
+		)
+	}
+    
+	renderLists() {
+		let lists = this.props.screenProps.groceryLists || [];
+
+		return (
+			<List>
+				{lists.map(list => this.renderList(list))}
+			</List>
+		);
 	}
 
 	render() {
 		return (
 			<SafeAreaView>
 				{this.renderAddNewList()}
-				<List>
-					<ListItem title={"one"}/>
-					<ListItem title={"two"}/>
-					<ListItem title={"three"}/>
-				</List>
+				{this.renderLists()}
 			</SafeAreaView>
 		);
 	}
