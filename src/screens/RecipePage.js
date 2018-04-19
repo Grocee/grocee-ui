@@ -19,7 +19,7 @@ Meteor.connect(settings.METEOR_URL);
 
 class Recipe extends React.PureComponent {
 	
-	_onPress() {
+	_onPress = () => {
 		return Linking.openURL(this.props.item.url);
 	};
 
@@ -52,19 +52,17 @@ export default class RecipePage extends Component {
 		};
 	}
 
-	_keyExtractor(item, index) {
-		return index;
-	}
+	_keyExtractor = (item, index) => index;
 
-	_renderItem({item, index}) {
+	_renderItem = ({item, index}) => (
 		<Recipe
 			item={item}
 			index={index}
 			onPressItem={this._onPressItem}
 		/>
-	}
+	);
 
-	_submitRecipe() {
+	_submitRecipe = () => {
 		//Insert to Meteor
 
 		if (this.state.name.length === 0) {
@@ -83,7 +81,7 @@ export default class RecipePage extends Component {
 
 		this.state.name = '';
 		this.state.url = '';
-	}
+	};
 
 	render() {
 		return (
@@ -106,12 +104,12 @@ export default class RecipePage extends Component {
 					autoCapitalize='none'
 					autoCorrect='false'
 					returnKeyType='done'
-					onSubmitEditing={() => this._submitRecipe()}
+					onSubmitEditing={this._submitRecipe}
 				/>
 				<FlatList
 					data={this.props.screenProps.recipes}
-					keyExtractor={() => this._keyExtractor()}
-					renderItem={() => this._renderItem()}
+					keyExtractor={this._keyExtractor}
+					renderItem={this._renderItem}
 				/>
 			</SafeAreaView>
 		)

@@ -46,19 +46,17 @@ export default class InventoryPage extends Component {
 		};
 	}
 
-	_keyExtractor(item, index) {
-		return index;
-	}
+	_keyExtractor = (item, index) => index;
 
-	_renderItem({item, index}) {
+	_renderItem = ({item, index}) => (
 		<Inventory
 			item={item}
 			index={index}
 			onPressItem={this._onPressItem}
 		/>
-	}
+	);
 
-	_submmitInventory() {
+	_submmitInventory = () => {
 		if (this.state.name.length === 0) {
 			console.log('name cannot be empty')
 			return
@@ -73,7 +71,7 @@ export default class InventoryPage extends Component {
 
 		this.state.name = '';
 		this.state.amount = '';
-	}
+	};
 
 	render() {
 		return (
@@ -95,12 +93,12 @@ export default class InventoryPage extends Component {
 					autoCapitalize='none'
 					autoCorrect='true'
 					returnKeyType='done'
-					onSubmitEditing={() => this._submmitInventory()}
+					onSubmitEditing={this._submmitInventory}
 				/>
 				<FlatList
 					data={this.props.screenProps.inventories}
-					keyExtractor={() => this._keyExtractor()}
-					renderItem={() => this._renderItem()}
+					keyExtractor={this._keyExtractor}
+					renderItem={this._renderItem}
 				/>
 			</SafeAreaView>
 		);

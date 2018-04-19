@@ -19,7 +19,7 @@ Meteor.connect(settings.METEOR_URL);
 
 class SettingsPage extends Component {
 	
-	_handleSignOut() {
+	_handleSignOut = () => {
 		Meteor.logout();
 	}
 
@@ -27,7 +27,7 @@ class SettingsPage extends Component {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<ScrollView style={{ flex: 1}}>
-					<Button text='Sign Out' onPress={() => this._handleSignOut()}/>
+					<Button text='Sign Out' onPress={this._handleSignOut}/>
 				</ScrollView>
 			</SafeAreaView>
 		);
