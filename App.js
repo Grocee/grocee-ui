@@ -19,6 +19,8 @@ import RecipePage from './src/screens/RecipePage';
 import InventoryPage from './src/screens/InventoryPage';
 import GroceryPage from './src/screens/GroceryPage';
 import SettingsPage from './src/screens/SettingsPage';
+const MK = require('react-native-material-kit');
+const { MKButton, MKColor } = MK;
 
 Meteor.connect(settings.METEOR_URL);
 
@@ -101,7 +103,7 @@ const RootStack = TabNavigator(
 			},
 		}),
 		tabBarOptions: {
-			activeTintColor: 'tomato',
+			activeTintColor: MKColor.Red,
 			inactiveTintColor: 'gray',
 		},
 		tabBarComponent: TabBarBottom,

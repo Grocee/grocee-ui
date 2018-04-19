@@ -48,7 +48,7 @@ export default class SignIn extends Component {
 		}
 	}
 
-	_validateInput = () => {
+	_validateInput() {
 		const { email, password, confirmPassword, confirmPasswordVisible } = this.state;
 		let valid = true;
 		
@@ -72,7 +72,7 @@ export default class SignIn extends Component {
 		return valid;
 	}
 
-	_handleSignIn = () => {
+	_handleSignIn() {
 		if (this._validateInput()) {
 			const { email, password } = this.state;
 			Meteor.loginWithPassword(email, password, (error) => {
@@ -83,7 +83,7 @@ export default class SignIn extends Component {
 		}
 	}
 
-	_handleCreateAccount = () => {
+	_handleCreateAccount() {
 		const { email, password, confirmPasswordVisible } = this.state;
 
 		if (confirmPasswordVisible && this._validateInput()) {
@@ -140,8 +140,8 @@ export default class SignIn extends Component {
 				</View>
 
 				<View style={styles.buttons}>
-					<Button text='Sign In' onPress={this._handleSignIn} />
-					<Button text='Create Account' onPress={this._handleCreateAccount} />
+					<Button text='Sign In' onPress={() => this._handleSignIn()} />
+					<Button text='Create Account' onPress={() => this._handleCreateAccount()} />
 				</View>
 
 				<KeyboardSpacer />
