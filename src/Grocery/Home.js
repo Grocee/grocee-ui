@@ -14,19 +14,6 @@ export default class Home extends Component {
 	}
 
 	renderAddNewList() {
-		// return (
-		// 	<Card title="Add new Grocery Item">
-		// 		<TextInput
-		// 			style={styles.input}					
-		// 			onChangeText={(name) => this.setState({ name })}
-		// 			value={this.state.name}
-		// 			placeholder='Add new grocery list'
-		// 			autoCapitalize='words'
-		// 			returnKeyType='next'
-		// 		/>
-		// 	</Card>
-		// );
-
 		return (<Button title={"Add grocery list"} onPress={() => this.props.navigation.navigate('AddList')}/>);
 	}
 

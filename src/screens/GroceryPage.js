@@ -17,7 +17,10 @@ const GroceryPage = StackNavigator(
 		AddList: {
 			screen: AddList,
 			path: 'grocery/addList',
-			mode: 'modal'
+			mode: 'modal',
+			navigationOptions: ({ _navigation }) => ({
+				title: 'Add Grocery List'
+			})
 		},
 		List: {
 			screen: List,
@@ -28,7 +31,7 @@ const GroceryPage = StackNavigator(
 		}
 	},
 	{
-		initialRouteName: 'Home'
+		initialRouteName: 'List'
 	}
 );
 
