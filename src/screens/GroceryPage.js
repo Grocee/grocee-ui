@@ -3,7 +3,7 @@ import Meteor from 'react-native-meteor';
 
 import Home from '../Grocery/Home';
 import AddList from '../Grocery/AddList';
-import List from '../Grocery/List';
+import GroceryList from '../Grocery/GroceryList';
 
 const GroceryPage = StackNavigator(
 	{
@@ -19,8 +19,8 @@ const GroceryPage = StackNavigator(
 			path: 'grocery/addList',
 			mode: 'modal'
 		},
-		List: {
-			screen: List,
+		GroceryList: {
+			screen: GroceryList,
 			path: 'grocery/list/:listName',
 			navigationOptions: ({ _navigation }) => ({
 				title: 'Grocery List',

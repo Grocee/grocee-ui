@@ -29,16 +29,28 @@ export default class Home extends Component {
 
 		return (<Button title={"Add grocery list"} onPress={() => this.props.navigation.navigate('AddList')}/>);
 	}
+    
+	renderList(list) {
+		return (
+			<ListItem title={list.name} onPress={() => this.props.navigation.navigate('GroceryList', {listName: list.name})}/>
+		)
+	}
+    
+	renderLists() {
+		let lists = this.props.screenProps.groceryLists || [];
+
+		return (
+			<List>
+				{lists.map(list => this.renderList(list))}
+			</List>
+		);
+	}
 
 	render() {
 		return (
 			<SafeAreaView>
 				{this.renderAddNewList()}
-				<List>
-					<ListItem title={"one"}/>
-					<ListItem title={"two"}/>
-					<ListItem title={"three"}/>
-				</List>
+				{this.renderLists()}
 			</SafeAreaView>
 		);
 	}
