@@ -44,18 +44,18 @@ const App = (props) => {
 
 export default createContainer(() => {
 	Meteor.subscribe('recipes');
-    Meteor.subscribe('inventories');
-    Meteor.subscribe('groceries');
-    Meteor.subscribe('grocerylists');
+	Meteor.subscribe('inventories');
+	Meteor.subscribe('groceries');
+	Meteor.subscribe('grocerylists');
 
 	return {
 		status: Meteor.status(),
 		user: Meteor.user(),
 		loggingIn: Meteor.loggingIn(),
 		recipes: Meteor.collection('recipes').find(),
-        inventories: Meteor.collection('inventories').find(),
-        groceries: Meteor.collection('groceries').find(),
-        groceryLists: Meteor.collection('grocerylists').find()
+		inventories: Meteor.collection('inventories').find(),
+		groceries: Meteor.collection('groceries').find(),
+		groceryLists: Meteor.collection('grocerylists').find()
 	};
 }, App);
 
