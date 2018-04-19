@@ -14,6 +14,7 @@ import {
 	SafeAreaView
 } from 'react-navigation';
 import settings from './config/settings';
+import { colors } from './config/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './src/screens/RecipePage';
 import InventoryPage from './src/screens/InventoryPage';
@@ -101,7 +102,7 @@ const RootStack = TabNavigator(
 			},
 		}),
 		tabBarOptions: {
-			activeTintColor: 'tomato',
+			activeTintColor: colors.background,
 			inactiveTintColor: 'gray',
 		},
 		tabBarComponent: TabBarBottom,
