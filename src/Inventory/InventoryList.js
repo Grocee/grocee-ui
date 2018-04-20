@@ -14,8 +14,6 @@ import Meteor, { createContainer } from 'react-native-meteor';
 import { List, ListItem, Card, Button, Icon } from 'react-native-elements';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ColoredFab = MKButton.coloredFab().build();
-
 class Inventory extends React.PureComponent {
 	render() {
 		const item = this.props.item;
@@ -101,9 +99,6 @@ export default class InventoryList extends Component {
 					renderItem={this._renderItem}
 				/>
 				<View style={styles.fab}>
-					<ColoredFab>
-						<MCIcons name='plus' size={30} color='white'/>
-					</ColoredFab>
 				</View>
 			</SafeAreaView>
 		);

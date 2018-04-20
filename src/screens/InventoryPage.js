@@ -5,7 +5,6 @@ import settings from '../../config/settings';
 import Meteor, { createContainer } from 'react-native-meteor';
 import Home from '../Inventory/Home';
 import InventoryList from '../Inventory/InventoryList';
-import { MKColor } from 'react-native-material-kit';
 
 Meteor.connect(settings.METEOR_URL);
 
