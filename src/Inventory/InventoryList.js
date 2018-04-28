@@ -7,115 +7,149 @@ import {
 	FlatList,
 	Text,
 	TextInput,
-	Linking
+	Linking,
+	ScrollView
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView, withNavigation } from 'react-navigation';
 import Meteor, { createContainer } from 'react-native-meteor';
+import { colors } from '../../config/styles';
 import { List, ListItem, Card, Button, Icon } from 'react-native-elements';
-import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-class Inventory extends React.PureComponent {
-	render() {
-		const item = this.props.item;
-		return (
-			<TouchableHighlight underlayColor='#dddddd'>
-				<View>
-					<View style={styles.rowContainer}>
-						<View style={styles.inventoryContainer}>
-							<Text style={ {color: 'dark grey', fontWeight: 'bold', fontSize: 18} }>{item.name}</Text>
-							<Text style={ {color: 'grey', fontWeight: '100', fontSize: 14} }>{item.amount}</Text>
-						</View>
-					</View>
-					<View style={styles.separator}/>
-				</View>
-			</TouchableHighlight>
-		);
-	}
-}
-
-export default class InventoryList extends Component {
+// what if we subscribe here?
+class InventoryList extends Component {
 
 	constructor(props) {
 		super(props);
+		
 		this.state = {
 			name: '',
 			amount: '',
 			isLoading: false,
+			id: this.props.navigation.state.params.listId,
+			//inventories: this.props.screenProps.inventories,
+			inventories: this.props.inventories,
+			items: this.props.navigation.state.params.items,
+			newItemInputVisible: false
 		};
+
+		//console.log(this.state);
 	}
 
-	_keyExtractor = (item, index) => index;
+	_keyExtractor(item, index) {
+		return index;
+	}
 
-	_renderItem = ({item, index}) => (
-		<Inventory
-			item={item}
-			index={index}
-			onPressItem={this._onPressItem}
-		/>
-	);
-
-	_submmitInventory = () => {
+	_addNewInventory() {
+		
 		if (this.state.name.length === 0) {
 			console.log('name cannot be empty')
+			this.state.newItemInputVisible = false;
 			return
 		}
 
-		if (this.state.amount.length === 0) {
-			console.log('amount cannot be empty')
-			return
-		}
+		Meteor.call('inventories.insert', this.state.name, this.state.id, (err, itemId) => {
+			if (err) {
+				console.log("Error caught" + err);
+			} else {
+				Meteor.call('inventorylists.addItem', this.state.id, itemId);
+			}
+		});
 
-		Meteor.call('inventories.insert', this.state.name, this.state.amount);
-
+		this.state.newItemInputVisible = false;
 		this.state.name = '';
-		this.state.amount = '';
-	};
+	}
+
+	_filterItems() {
+		console.log('test');
+		let filtered = this.state.inventories.filter(function(inventory) {
+			console.log(inventory._id);
+			console.log(inventory.list);
+			inventory.list === this.state.id
+		});
+
+		console.log(filtered);
+
+		return filtered;
+	}
+
+	_renderItem(item) {
+		return (
+			<ListItem
+				key={item._id}
+				title={item.name}
+				hideChevron
+			/>
+		);
+	}
+
+	_renderItems() {
+		let items = this.state.inventories || [];
+
+		return (
+			<ScrollView style={{ flex: 1 }}>
+				<List>
+					{items.map(item => this._renderItem(item))}
+				</List>
+			</ScrollView>
+		);
+	}
+
+	_renderAddButton() {
+		return (
+			<View style={styles.fab}>
+				<Icon
+					name='add'
+					raised
+					reverse
+					color={colors.background}
+					onPress={() => this.setState({ newItemInputVisible: true })}
+				/>
+			</View>
+		);
+	}
+
+	_renderNewItemTextInput() {
+		return (
+			<View style={styles.newItem}>
+				<TextInput
+					placeholder="Item name"
+					returnKeyType='done'
+					autoCapitalize='words'
+					autoFocus
+					onChangeText={(name) => this.setState({ name })}
+					onSubmitEditing={() => this._addNewInventory()}
+				/>
+			</View>
+		);
+	}
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<TextInput
-					style={styles.inventoryInput}					
-					onChangeText={(name) => this.setState({ name })}
-					value={this.state.name}
-					placeholder='Add new inventory'
-					autoCapitalize='words'
-					returnKeyType='next'
-					//onSubmitEditing={} //make the url one active
-				/>
-				<TextInput
-					style={styles.inventoryInput}
-					onChangeText={(amount) => this.setState({ amount })}
-					value={this.state.amount}
-					placeholder='The amount of this item'
-					autoCapitalize='none'
-					autoCorrect='true'
-					returnKeyType='done'
-					onSubmitEditing={this._submmitInventory}
-				/>
-				<FlatList
-					data={this.props.screenProps.inventories}
-					keyExtractor={this._keyExtractor}
-					renderItem={this._renderItem}
-				/>
-				<View style={styles.fab}>
-				</View>
+				{this.state.newItemInputVisible ? this._renderNewItemTextInput() : null}
+				{this._renderItems()}
+				{this._renderAddButton()}
 			</SafeAreaView>
 		);
 	}
 }
 
-InventoryList.navigationOptions = props => {
-	return {
-		headerTitle: "Inventory",
-		headerStyle: {
-			backgroundColor: MKColor.Red
-		},
-		headerTitleStyle: {
-			color: 'white'
-		}
+const container = createContainer(() => {
+	Meteor.subscribe('inventories');
+	return { inventories: Meteor.collection('inventories').find() };
+}, InventoryList);
+
+container.navigationOptions = {
+	headerTitle: "Inventory",
+	headerStyle: {
+		backgroundColor: colors.background,
+	},
+	headerTitleStyle: {
+		color: colors.tint,
 	}
 }
+
+export default container;
 
 export const styles = StyleSheet.create({
 	inventoryInput: {
@@ -147,4 +181,8 @@ export const styles = StyleSheet.create({
 		bottom: 24,
 		right: 24,
 	},
+	newItem: {
+		height: 40,
+		padding: 4
+	}
 });

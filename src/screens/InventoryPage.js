@@ -5,6 +5,7 @@ import settings from '../../config/settings';
 import Meteor, { createContainer } from 'react-native-meteor';
 import Home from '../Inventory/Home';
 import InventoryList from '../Inventory/InventoryList';
+import CreateList from '../Inventory/CreateList';
 
 Meteor.connect(settings.METEOR_URL);
 
@@ -21,4 +22,19 @@ const InventoryPage = StackNavigator(
 	}
 )
 
-export default InventoryPage;
+const MainStack = StackNavigator(
+	{
+		Inventory: {
+			screen: InventoryPage,
+		},
+		CreateList: {
+			screen: CreateList,
+		},
+	},
+	{
+		mode: 'modal',
+		headerMode: 'none'
+	}
+)
+
+export default MainStack;
