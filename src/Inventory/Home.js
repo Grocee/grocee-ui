@@ -20,6 +20,9 @@ export default class Home extends Component {
 
 	constructor(props) {
 		super(props);
+
+		Meteor.subscribe('inventorylists');
+
 		this.state = {
 			inventories: this.props.screenProps.inventories
 		}
@@ -51,25 +54,20 @@ export default class Home extends Component {
 		}
 	}
 
-	getItemsForList(list) {
-		let items = this.state.inventories;
-
-		return items;
-	}
-
 	renderList(list) {
 		return (
 			<ListItem
 				key={list._id}
 				title={list.name}
 				badge={{ value: list.items.length }}
-				onPress={() => this.props.navigation.navigate('InventoryList', { listId: list._id, items: list.items, name: list.name })}
+				onPress={() => this.props.navigation.navigate('InventoryList', { listId: list._id, name: list.name })}
 			/>
 		);
 	}
 
 	renderLists() {
-		let lists = this.props.screenProps.inventoryLists || [];
+
+		let lists = Meteor.collection('inventorylists').find();
 
 		return (
 			<List containerStyle={styles.list} >

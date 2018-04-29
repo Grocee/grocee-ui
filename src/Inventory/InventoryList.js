@@ -10,12 +10,12 @@ class InventoryList extends Component {
 
 	constructor(props) {
 		super(props);
-		
+
+		Meteor.subscribe('inventories');
+
 		this.state = {
 			isLoading: false,
 			id: this.props.navigation.state.params.listId,
-			inventories: this.props.screenProps.inventories,
-			items: this.props.navigation.state.params.items || [],
 			newItemInputVisible: false
 		};
 
@@ -33,14 +33,7 @@ class InventoryList extends Component {
 		}
 	}
 
-	_updateList(newItem) {
-		//this.setState((prevState) => ({ inventories: prevState.inventories.push(newItem) }));
-		//this.setState({ items: this.state.items.push(newItem._id) })
-		this.state.inventories.push(newItem);
-		console.log(this.state);
-	}
-
-	_addNewInventory() {
+	addNewInventory() {
 		
 		if (this.state.name.length === 0) {
 			console.log('name cannot be empty') // eslint-disable-line
@@ -48,16 +41,20 @@ class InventoryList extends Component {
 			return
 		}
 
-		Meteor.call('inventories.insert', this.state.name, (err, item) => {
+		Meteor.call('inventories.insert', this.state.name, this.state.id, (err, newItemId) => {
 			if (err) {
 				console.log("Error caught: " + err.reason); // eslint-disable-line
 			} else {
-				console.log(item);
-				Meteor.call('inventorylists.addItem', this.state.id, item._id);
-				this._updateList(item);
-				// this.state.items.push(itemId);
-				// console.log(this.state)
-				// change this to return the newly created item and then we can use this to add to the list of items, but how do we refresh inside the completion handler?
+
+				/* kind of redundant. We can probably update the schema to remove `items` array 
+				in the list document altogether in favor of an inventory item having a list id 
+				that it belongs to. This will cause one minor issue in the main list view that 
+				we won't be able to see the number of items in the list. One way is to just 
+				update this to just keep track of number of inventories in the list by using a 
+				Meteor method just to update the count. But I'm just going to leave this in 
+				for now.
+				*/
+				Meteor.call('inventorylists.addItem', this.state.id, newItemId);
 			}
 		});
 
@@ -65,7 +62,7 @@ class InventoryList extends Component {
 		this.setState({ name: '' });
 	}
 
-	_renderItem(item) {
+	renderItem(item) {
 		return (
 			<ListItem
 				key={item._id}
@@ -75,19 +72,21 @@ class InventoryList extends Component {
 		);
 	}
 
-	_renderItems() {
-		let items = this.state.inventories.filter(inventory => this.state.items.includes(inventory._id));
+	renderItems() {
+		
+		// find inventory items that belong to this list
+		let inventories = Meteor.collection('inventories').find({ list: this.state.id });
 
 		return (
 			<ScrollView style={{ flex: 1 }}>
 				<List>
-					{items.map(item => this._renderItem(item))}
+					{inventories.map(item => this.renderItem(item))}
 				</List>
 			</ScrollView>
 		);
 	}
 
-	_renderAddButton() {
+	renderAddButton() {
 		return (
 			<View style={styles.fab}>
 				<Icon
@@ -101,7 +100,7 @@ class InventoryList extends Component {
 		);
 	}
 
-	_renderNewItemTextInput() {
+	renderNewItemTextInput() {
 		return (
 			<View style={styles.newItem}>
 				<TextInput
@@ -110,7 +109,7 @@ class InventoryList extends Component {
 					autoCapitalize='words'
 					autoFocus
 					onChangeText={(name) => this.setState({ name })}
-					onSubmitEditing={() => this._addNewInventory()}
+					onSubmitEditing={() => this.addNewInventory()}
 				/>
 			</View>
 		);
@@ -119,9 +118,9 @@ class InventoryList extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				{this.state.newItemInputVisible ? this._renderNewItemTextInput() : null}
-				{this._renderItems()}
-				{this._renderAddButton()}
+				{this.state.newItemInputVisible ? this.renderNewItemTextInput() : null}
+				{this.renderItems()}
+				{this.renderAddButton()}
 			</SafeAreaView>
 		);
 	}

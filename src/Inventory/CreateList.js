@@ -26,16 +26,14 @@ class CreateList extends React.Component {
 	}
 
 	_createNewList() {
-		console.log('Creating new list named: ' + this.state.name);
-
 		if (this.state.name.length === 0) {
-			console.log('name cannot be empty');
+			console.log('name cannot be empty'); // eslint-disable-line
 			return;
 		}
 
 		Meteor.call('inventorylists.create', this.state.name);
 		
-		this.state.name = '';
+		this.setState({ name: '' });
 		this.props.navigation.goBack();
 	}
 

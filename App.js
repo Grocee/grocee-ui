@@ -24,8 +24,6 @@ const App = (props) => {
 
 	const data = {
 		recipes: props.recipes,
-		inventories: props.inventories,
-		inventoryLists: props.inventoryLists,
 		groceries: props.groceries,
 		groceryLists: props.groceryLists
 	};
@@ -44,8 +42,6 @@ const App = (props) => {
 
 export default createContainer(() => {
 	Meteor.subscribe('recipes');
-	Meteor.subscribe('inventories');
-	Meteor.subscribe('inventorylists');
 	Meteor.subscribe('groceries');
 	Meteor.subscribe('grocerylists');
 
@@ -54,8 +50,6 @@ export default createContainer(() => {
 		user: Meteor.user(),
 		loggingIn: Meteor.loggingIn(),
 		recipes: Meteor.collection('recipes').find(),
-		inventories: Meteor.collection('inventories').find(),
-		inventoryLists: Meteor.collection('inventorylists').find(),
 		groceries: Meteor.collection('groceries').find(),
 		groceryLists: Meteor.collection('grocerylists').find()
 	};
