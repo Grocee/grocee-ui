@@ -16,8 +16,6 @@ import { colors } from '../../config/styles';
 import { List, ListItem, Card, Button, Icon } from 'react-native-elements';
 import settings from '../../config/settings';
 
-Meteor.connect(settings.METEOR_URL);
-
 export default class Home extends Component {
 
 	constructor(props) {
@@ -64,9 +62,8 @@ export default class Home extends Component {
 			<ListItem
 				key={list._id}
 				title={list.name}
-				badge={{ value: '?' }}
-				hideChevron
-				onPress={() => this.props.navigation.navigate('InventoryList', { listId: list._id, items: list.items })}
+				badge={{ value: list.items.length }}
+				onPress={() => this.props.navigation.navigate('InventoryList', { listId: list._id, items: list.items, name: list.name })}
 			/>
 		);
 	}

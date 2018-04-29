@@ -16,8 +16,6 @@ import Header from 'react-navigation/src/views/Header/Header';
 import Meteor, { createContainer } from 'react-native-meteor';
 import settings from '../../config/settings';
 
-Meteor.connect(settings.METEOR_URL);
-
 class CreateList extends React.Component {
 
 	constructor(props) {

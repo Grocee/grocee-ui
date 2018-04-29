@@ -7,8 +7,6 @@ import Home from '../Inventory/Home';
 import InventoryList from '../Inventory/InventoryList';
 import CreateList from '../Inventory/CreateList';
 
-Meteor.connect(settings.METEOR_URL);
-
 const InventoryPage = StackNavigator(
 	{
 		Home: {

@@ -8,11 +8,7 @@ import {
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 import SignIn from './src/screens/SignIn';
-import { 
-	TabNavigator,
-	TabBarBottom,
-	SafeAreaView
-} from 'react-navigation';
+import { TabNavigator, TabBarBottom, SafeAreaView } from 'react-navigation';
 import settings from './config/settings';
 import { colors } from './config/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -115,26 +111,3 @@ const RootStack = TabNavigator(
 		swipeEnabled: false,
 	}
 );
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
-	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
-	},
-	instructions: {
-		textAlign: 'center',
-		color: '#333333',
-		marginBottom: 5,
-	},
-	button: {
-		padding: 10,
-		backgroundColor: '#c5c5c5',
-	},
-});
