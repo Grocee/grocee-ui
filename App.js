@@ -28,7 +28,8 @@ const App = (props) => {
 	const data = {
 		recipes: props.recipes,
 		inventories: props.inventories,
-		groceries: props.groceries
+		groceries: props.groceries,
+		groceryLists: props.groceryLists
 	};
 	
 	if (!status.connected || loggingIn) {
