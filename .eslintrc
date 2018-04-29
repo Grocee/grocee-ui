@@ -1,6 +1,6 @@
 {
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 2016,
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true
@@ -11,8 +11,12 @@
         "es6": true,
         "browser": true
     },
+    "plugins": [
+        "react"
+    ],
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended", 
+        "plugin:react/recommended"
     ],
     "rules": {
         // "off", "warn", "error" : values to en/disable rules
