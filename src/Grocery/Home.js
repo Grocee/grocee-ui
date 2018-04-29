@@ -10,10 +10,6 @@ export default class Home extends Component {
 	
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			name: ''
-		};
 	}
 
 	static navigationOptions({ navigation }) {
@@ -37,7 +33,7 @@ export default class Home extends Component {
     
 	renderList(list) {
 		return (
-			<ListItem key={list._id} title={list.name} onPress={() => this.props.navigation.navigate('GroceryList', {listName: list.name})}/>
+			<ListItem key={list._id} title={list.name} onPress={() => this.props.navigation.navigate('GroceryList', {id: list._id, name: list.name})}/>
 		)
 	}
     

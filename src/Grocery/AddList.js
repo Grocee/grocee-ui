@@ -21,8 +21,13 @@ export default class AddGroceryList extends Component {
 			return
 		}
 
-		Meteor.call('grocerylists.create', this.state.name);
-		this.props.navigation.replace('GroceryList', {listName: this.state.name});
+		Meteor.call('grocerylists.create', this.state.name, (err, groceryListId) => {
+			if (err) {
+				// TODO do something
+			}
+
+			this.props.navigation.replace('GroceryList', {id: groceryListId, name: this.state.name});
+		});
 	}
 
 	static navigationOptions({ navigation }) {

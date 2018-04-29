@@ -3,7 +3,7 @@ import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { SearchBar, Button, Card, Icon } from 'react-native-elements';
 
@@ -84,18 +84,25 @@ export default class GroceryList extends Component {
 
 	renderGroceries() {
 		// Filter based on search results
-		// TODO also filter based on this.props.navigation.state.params.listName
-		let groceries = this.props.screenProps.groceries.filter(grocery => {
-			if (this.state.searchNeedle !== '') {
-				return grocery.name.indexOf(this.state.searchNeedle) >= 0;
-			} else {
-				return true;
+		const groceryList = this.props.screenProps.groceryLists.find(list => list._id === this.props.navigation.state.params.id);
+		let groceries = [];
+		if ( groceryList ) {
+			groceries = this.props.screenProps.groceries.filter(grocery => {
+				if (groceryList.items.includes(grocery._id)) {
+					if (this.state.searchNeedle !== '') {
+						return grocery.name.indexOf(this.state.searchNeedle) >= 0;
+					} else {
+						return true;
+					}
+				} else {
+					return false;
+				}
+			});
+	
+			// Filter based on setChecked
+			if ( !this.state.displayChecked ) {
+				groceries = groceries.filter(grocery => !grocery.checked);
 			}
-		});
-
-		// Filter based on setChecked
-		if ( !this.state.displayChecked ) {
-			groceries = groceries.filter(grocery => !grocery.checked);
 		}
 
 		return (
@@ -114,9 +121,11 @@ export default class GroceryList extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				{this.renderAddNewGrocery()}
-				<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
-				{this.renderGroceries()}
+				<ScrollView style={{ flex: 1 }}>
+					{this.renderAddNewGrocery()}
+					<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
+					{this.renderGroceries()}
+				</ScrollView>
 			</SafeAreaView>
 		);
 	}
