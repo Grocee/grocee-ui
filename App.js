@@ -28,6 +28,7 @@ const App = (props) => {
 		groceryLists: props.groceryLists,
 		inventories: props.inventories,
 		inventoryLists: props.inventoryLists
+
 	};
 	
 	if (!status.connected || loggingIn) {
