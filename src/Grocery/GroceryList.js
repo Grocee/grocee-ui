@@ -37,8 +37,10 @@ export default class GroceryList extends Component {
 
 		Meteor.call('groceries.insert', this.state.name, this.state.amount);
 
-		this.state.name = '';
-		this.state.amount = '';
+		this.setState({
+			name: '',
+			amount: ''
+		});
 	};
 
 	renderAddNewGrocery() {
@@ -88,7 +90,7 @@ export default class GroceryList extends Component {
 					onChangeText={text => this.setState({searchNeedle: text})}
 					onClear={() => this.setState({searchNeedle: ''})}
 					placeholder='Search for a grocery item...'/>
-				{groceries.map(groceryItem => (<Grocery item={groceryItem}/>))}
+				{groceries.map(groceryItem => (<Grocery key={groceryItem._id} item={groceryItem}/>))}
 			</Card>
 		);
 	}
