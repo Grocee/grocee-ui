@@ -1,11 +1,5 @@
-import React, { Component } from 'react';
-import {
-	Platform,
-	StyleSheet,
-	Text,
-	View,
-	TouchableOpacity,
-} from 'react-native';
+import React  from 'react';
+import { StyleSheet, Text } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 import SignIn from './src/screens/SignIn';
 import { TabNavigator, TabBarBottom, SafeAreaView } from 'react-navigation';
@@ -83,13 +77,21 @@ const RootStack = TabNavigator(
 				const { routeName } = navigation.state;
 				let iconName;
 				if (routeName === 'Settings') {
-					iconName = focused ? 'ios-settings' : 'ios-settings-outline';
+					iconName = focused 
+						? 'ios-settings'
+						: 'ios-settings-outline';
 				} else if (routeName === 'Grocery') {
-					iconName = focused ? 'ios-cart' : 'ios-cart-outline';
+					iconName = focused 
+						? 'ios-cart' 
+						: 'ios-cart-outline';
 				} else if (routeName === 'Recipes') {
-					iconName = focused ? 'ios-book' : 'ios-book-outline';
+					iconName = focused 
+						? 'ios-book' 
+						: 'ios-book-outline';
 				} else if (routeName === 'Inventory') {
-					iconName = focused ? 'ios-filing' : 'ios-filing-outline';
+					iconName = focused 
+						? 'ios-filing' 
+						: 'ios-filing-outline';
 				}
 
 				return (<Ionicons name={iconName} size={25} color={tintColor}/>);

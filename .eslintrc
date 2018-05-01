@@ -1,6 +1,6 @@
 {
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 2018,
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true
@@ -11,11 +11,14 @@
         "es6": true,
         "browser": true
     },
+    "plugins": [
+        "react"
+    ],
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended", 
+        "plugin:react/recommended"
     ],
     "rules": {
-        // "off", "warn", "error" : values to en/disable rules
         "quotes": ["off", "single"],
         "indent": ["warn", "tab"],
         "no-unused-vars": ["warn", {
@@ -43,6 +46,9 @@
         "object-curly-spacing": ["off", "always"],
         "array-bracket-spacing": ["off", "always"],
         "no-undef": ["error"],
-        "brace-style": ["error", "1tbs"]
+		"brace-style": ["error", "1tbs"],
+		
+		"react/prop-types": ["off"],
+		"react/display-name": ["off"]
     }
 }

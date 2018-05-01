@@ -17,7 +17,7 @@ import Meteor, { createContainer } from 'react-native-meteor';
 
 class Recipe extends React.PureComponent {
 	
-	_onPress = () => {
+	_onPress() {
 		return Linking.openURL(this.props.item.url);
 	};
 
@@ -50,17 +50,21 @@ export default class RecipePage extends Component {
 		};
 	}
 
-	_keyExtractor = (item, index) => index;
+	_keyExtractor(item, index) {
+		return index;
+	}
 
-	_renderItem = ({item, index}) => (
-		<Recipe
-			item={item}
-			index={index}
-			onPressItem={this._onPressItem}
-		/>
-	);
+	_renderItem({item, index}) {
+		return (
+			<Recipe
+				item={item}
+				index={index}
+				onPressItem={this._onPressItem}
+			/>
+		)
+	};
 
-	_submitRecipe = () => {
+	_submitRecipe() {
 		//Insert to Meteor
 
 		if (this.state.name.length === 0) {
@@ -77,8 +81,10 @@ export default class RecipePage extends Component {
 
 		Meteor.call('recipes.insert', this.state.name, this.state.url);
 
-		this.state.name = '';
-		this.state.url = '';
+		this.setState({
+			name: '',
+			url: ''
+		});
 	};
 
 	render() {
