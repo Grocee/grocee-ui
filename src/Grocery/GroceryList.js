@@ -34,52 +34,12 @@ export default class GroceryList extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('AddList')}
+						onPress={() => navigation.navigate('AddGrocery', { listId: navigation.state.params.id })}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
 			)
 		}
-	}
-
-	submitGrocery() {
-		if (this.state.name.length === 0) {
-			return
-		}
-
-		if (this.state.amount.length === 0) {
-			return
-		}
-
-		Meteor.call('groceries.insert', this.state.name, this.state.amount);
-
-		this.setState({
-			name: '',
-			amount: ''
-		});
-	}
-
-	renderAddNewGrocery() {
-		return (
-			<Card title="Add new Grocery Item">
-				<TextInput
-					style={stylesheet.input}					
-					onChangeText={(name) => this.setState({ name })}
-					value={this.state.name}
-					placeholder='Add new grocery item'
-					autoCapitalize='words'
-					returnKeyType='next' />
-				<TextInput
-					style={stylesheet.input}
-					onChangeText={(amount) => this.setState({ amount })}
-					value={this.state.amount}
-					placeholder='The amount of this item'
-					autoCapitalize='none'
-					autoCorrect='true'
-					returnKeyType='done'
-					onSubmitEditing={() => this.submitGrocery()} />
-			</Card>
-		);
 	}
 
 	renderGroceries() {
@@ -106,15 +66,17 @@ export default class GroceryList extends Component {
 		}
 
 		return (
-			<Card title="Groceries">
+			<View>
 				<SearchBar 
 					lightTheme
 					platform="ios"
 					onChangeText={text => this.setState({searchNeedle: text})}
 					onClear={() => this.setState({searchNeedle: ''})}
 					placeholder='Search for a grocery item...'/>
+				{/* <Text h6>{JSON.stringify(this.props.navigation.state.params)}</Text>
+				<Text h6>{JSON.stringify(groceryList)}</Text> */}
 				{groceries.map(groceryItem => (<Grocery key={groceryItem._id} item={groceryItem}/>))}
-			</Card>
+			</View>
 		);
 	}
 
@@ -122,7 +84,6 @@ export default class GroceryList extends Component {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<ScrollView style={{ flex: 1 }}>
-					{this.renderAddNewGrocery()}
 					<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
 					{this.renderGroceries()}
 				</ScrollView>
