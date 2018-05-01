@@ -3,8 +3,10 @@ import { StyleSheet, Text } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 import SignIn from './src/screens/SignIn';
 import { TabNavigator, TabBarBottom, SafeAreaView } from 'react-navigation';
+
 import settings from './config/settings';
-import { colors } from './config/styles';
+import { colors, navigationOptions } from './config/styles';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './src/screens/RecipePage';
 import InventoryPage from './src/screens/InventoryPage';
@@ -65,7 +67,7 @@ const RootStack = TabNavigator(
 		},
 	},
 	{
-		navigationOptions: ({ navigation }) => ({
+		navigationOptions: ({ navigation }) => Object.assign({}, navigationOptions, {
 			tabBarIcon: ({ focused, tintColor }) => {
 				const { routeName } = navigation.state;
 				let iconName;
