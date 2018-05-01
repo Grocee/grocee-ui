@@ -6,6 +6,8 @@ import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { List, ListItem, Icon } from 'react-native-elements';
 
+
+
 export default class Home extends Component {
 	
 	constructor(props) {

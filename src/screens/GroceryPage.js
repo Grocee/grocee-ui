@@ -2,6 +2,8 @@ import { StackNavigator } from 'react-navigation';
 
 import { navigationOptions } from '../../config/styles';
 
+import { navigationOptions } from '../../config/styles';
+
 import Home from '../Grocery/Home';
 import AddList from '../Grocery/AddList';
 import GroceryList from '../Grocery/GroceryList';
