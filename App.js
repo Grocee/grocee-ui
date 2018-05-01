@@ -8,12 +8,9 @@ import {
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 import SignIn from './src/screens/SignIn';
-import { 
-	TabNavigator,
-	TabBarBottom,
-	SafeAreaView
-} from 'react-navigation';
+import { TabNavigator, TabBarBottom, SafeAreaView } from 'react-navigation';
 import settings from './config/settings';
+import { colors } from './config/styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RecipePage from './src/screens/RecipePage';
 import InventoryPage from './src/screens/InventoryPage';
@@ -27,7 +24,6 @@ const App = (props) => {
 
 	const data = {
 		recipes: props.recipes,
-		inventories: props.inventories,
 		groceries: props.groceries,
 		groceryLists: props.groceryLists
 	};
@@ -46,7 +42,6 @@ const App = (props) => {
 
 export default createContainer(() => {
 	Meteor.subscribe('recipes');
-	Meteor.subscribe('inventories');
 	Meteor.subscribe('groceries');
 	Meteor.subscribe('grocerylists');
 
@@ -55,7 +50,6 @@ export default createContainer(() => {
 		user: Meteor.user(),
 		loggingIn: Meteor.loggingIn(),
 		recipes: Meteor.collection('recipes').find(),
-		inventories: Meteor.collection('inventories').find(),
 		groceries: Meteor.collection('groceries').find(),
 		groceryLists: Meteor.collection('grocerylists').find()
 	};
@@ -102,7 +96,7 @@ const RootStack = TabNavigator(
 			},
 		}),
 		tabBarOptions: {
-			activeTintColor: 'tomato',
+			activeTintColor: colors.background,
 			inactiveTintColor: 'gray',
 		},
 		tabBarComponent: TabBarBottom,
@@ -111,26 +105,3 @@ const RootStack = TabNavigator(
 		swipeEnabled: false,
 	}
 );
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
-	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
-	},
-	instructions: {
-		textAlign: 'center',
-		color: '#333333',
-		marginBottom: 5,
-	},
-	button: {
-		padding: 10,
-		backgroundColor: '#c5c5c5',
-	},
-});

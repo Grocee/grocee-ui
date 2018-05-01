@@ -1,45 +1,43 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Image,
-  View,
-  TouchableHighlight,
-  FlatList,
-  Text,
-  TextInput,
-  Linking,
-  ScrollView
-} from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
 import settings from '../../config/settings';
-import Meteor, { createContainer } from 'react-native-meteor';
-import Button from '../components/Button';
-
-Meteor.connect(settings.METEOR_URL);
+import { colors } from '../../config/styles';
+import Meteor from 'react-native-meteor';
+import { Button } from 'react-native-elements';
 
 class SettingsPage extends Component {
 	
-	_handleSignOut = () => {
+	static navigationOptions({ navigation }) {
+		return {
+			headerTitle: 'Settings',
+			headerStyle: {
+				backgroundColor: colors.background
+			},
+			headerTitleStyle: {
+				color: colors.tint
+			},
+			justifyContent: 'center',
+			alignItems: 'center',
+		};
+	}
+	_handleSignOut() {
 		Meteor.logout();
 	}
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<ScrollView style={{ flex: 1}}>
-					<Button text='Sign Out' onPress={this._handleSignOut}/>
+				<ScrollView style={{ flex: 1 }}>
+					<Button 
+						style={styles.button}
+						title='Sign Out'
+						onPress={() => this._handleSignOut()}
+					/>
 				</ScrollView>
 			</SafeAreaView>
 		);
 	}
-};
-
-SettingsPage.navigationOptions = props => {
-	return {
-		headerTitle: 'Settings',
-		justifyContent: 'center',
-		alignItems: 'center',
-	};
 };
 
 const SettingsStack = StackNavigator({
@@ -51,6 +49,9 @@ const SettingsStack = StackNavigator({
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1
+	},
+	button: {
+		padding: 5
 	}
 });
 

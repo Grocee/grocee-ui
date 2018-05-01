@@ -15,8 +15,6 @@ import settings from '../../config/settings';
 // probably should abstract this out into its own method and make this strictly FE
 import Meteor, { createContainer } from 'react-native-meteor';
 
-Meteor.connect(settings.METEOR_URL);
-
 class Recipe extends React.PureComponent {
 	
 	_onPress = () => {
