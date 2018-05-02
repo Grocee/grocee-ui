@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors } from '../../config/styles';
 import { List, ListItem, Icon } from 'react-native-elements';
+import { Swipeout } from 'react-native-swipeout';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
 // what if we subscribe here?
 class InventoryList extends Component {
@@ -78,6 +80,31 @@ class InventoryList extends Component {
 		this.props.navigation.goBack();
 	}
 
+	closeRow(rowMap, rowKey) {
+		if (rowMap[rowKey]) {
+			rowMap[rowKey].closeRow();
+		}
+	}
+
+	deleteItem(item) {
+
+		Meteor.call('inventories.remove', item._id, (err) => {
+			if (err) {
+				Alert.alert(
+					"Error Deleting Item",
+					err.error,
+					[
+						{ text: "OK", style: 'normal' }
+					],
+					{ cancelable: true }
+				);
+			} else {
+				Meteor.call('inventorylists.removeItem', this.props.navigation.state.params.id, item._id);
+			}
+		});
+
+	}
+
 	addNewInventory() {
 		
 		if (this.state.name.length === 0) {
@@ -107,11 +134,17 @@ class InventoryList extends Component {
 
 	renderItem(item) {
 		return (
-			<ListItem
-				key={item._id}
-				title={item.name}
-				hideChevron
-			/>
+			<SwipeRow rightOpenValue={-75} disableRightSwipe >
+				<View style={styles.standaloneRowBack} >
+					<Text style={styles.backTextWhite}></Text>
+					<TouchableOpacity onPress={() => this.deleteItem(item)} >
+						<Text style={styles.backTextWhite}>Delete</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.standaloneRowFront}>
+					<Text>{item.name}</Text>
+				</View>
+			</SwipeRow>
 		);
 	}
 
@@ -166,6 +199,14 @@ class InventoryList extends Component {
 	}
 
 	render() {
+
+		var buttons = [
+			{
+				text: 'Delete'
+				//,backgroundColor: 'red'
+			}
+		];
+
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				{this.state.newItemInputVisible ? this.renderNewItemTextInput() : null}
@@ -191,5 +232,24 @@ export const styles = StyleSheet.create({
 	},
 	rightButton: {
 		padding: 5
+	},
+	standaloneRowFront: {
+		backgroundColor: 'white',
+		justifyContent: 'center',
+		padding: 10,
+		height: 45,
+		borderWidth: 0.3,
+		borderColor: '#3c3c3c'
+	},
+	standaloneRowBack: {
+		alignItems: 'center',
+		backgroundColor: 'red',
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		padding: 15
+	},
+	backTextWhite: {
+		color: '#FFF'
 	},
 });
