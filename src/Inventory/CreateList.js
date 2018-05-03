@@ -7,7 +7,8 @@ import {
 	FlatList,
 	Text,
 	TextInput,
-	Linking
+	Linking,
+	Alert
 } from 'react-native';
 import { colors } from '../../config/styles';
 import { List, ListItem, Card, Button, Icon, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
@@ -20,6 +21,10 @@ class CreateList extends React.Component {
 
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			name: ""
+		};
 	}
 
 	_createNewList() {
@@ -27,17 +32,27 @@ class CreateList extends React.Component {
 		// if no name just go back without creating the list
 		if (this.state.name.length === 0) {
 			this.props.navigation.goBack();
+			return;
 		}
 
-		Meteor.call('inventorylists.create', this.state.name, (err, groceryListId) => {
+		Meteor.call('inventorylists.create', this.state.name, (err, newListId) => {
 			if (err) {
-				// TODO: display alert
+				Alert.alert(
+					"Error Creating New List",
+					err.error,
+					[
+						{ text: "OK", style: 'normal'}
+					],
+					{ cancelable: true }
+				);
 			}
+			
+			this.props.navigation.goBack();
 
-			// TODO: go back and navigate to the newly created list
+			// TODO: fix this to allow for navigating to the list after creation
+			// Might have to investigate a different way to present a new list text input
+			// this.props.navigation.state.params.loadList({ _id: newListId, name: this.state.name });
 		});
-
-		this.props.navigation.goBack();
 	}
 
 	render() {

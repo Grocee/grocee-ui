@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import {
 	StyleSheet,
-	Image,
 	View,
-	TouchableHighlight,
-	FlatList,
 	Text,
-	TextInput,
-	Linking,
-	ScrollView
+	ScrollView,
+	Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { colors } from '../../config/styles';
@@ -22,7 +18,8 @@ export default class Home extends Component {
 	}
 
 	static navigationOptions({ navigation }) {
-	
+		const params = navigation.state.params || {};
+
 		return {
 			headerTitle: "Inventory",
 			headerStyle: {
@@ -39,12 +36,16 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('CreateList')}
+						onPress={() => navigation.navigate('CreateList', { loadList: params.loadList})}
 						containerStyle={styles.rightButton}
 					/>
 				</View>
 			)
 		}
+	}
+
+	componentWillMount() {
+		this.props.navigation.setParams({ setModalVisible: this.setModalVisible });
 	}
 
 	renderList(list) {
@@ -56,6 +57,10 @@ export default class Home extends Component {
 				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
 			/>
 		);
+	}
+
+	loadList(list) {
+		this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name });
 	}
 
 	renderLists() {
