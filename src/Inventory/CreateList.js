@@ -20,20 +20,23 @@ class CreateList extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
-			name: ''
-		};
 	}
 
 	_createNewList() {
+
+		// if no name just go back without creating the list
 		if (this.state.name.length === 0) {
-			console.log('name cannot be empty'); // eslint-disable-line
-			return;
+			this.props.navigation.goBack();
 		}
 
-		Meteor.call('inventorylists.create', this.state.name);
-		
-		this.setState({ name: '' });
+		Meteor.call('inventorylists.create', this.state.name, (err, groceryListId) => {
+			if (err) {
+				// TODO: display alert
+			}
+
+			// TODO: go back and navigate to the newly created list
+		});
+
 		this.props.navigation.goBack();
 	}
 

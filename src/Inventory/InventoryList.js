@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors } from '../../config/styles';
@@ -8,14 +8,12 @@ import { List, ListItem, Icon } from 'react-native-elements';
 // what if we subscribe here?
 class InventoryList extends Component {
 
+	//TODO: dismisses the text field if tap anywhere outside the view
+
 	constructor(props) {
 		super(props);
 
-		Meteor.subscribe('inventories');
-
 		this.state = {
-			isLoading: false,
-			id: this.props.navigation.state.params.listId,
 			newItemInputVisible: false
 		};
 
@@ -41,25 +39,16 @@ class InventoryList extends Component {
 			return
 		}
 
-		Meteor.call('inventories.insert', this.state.name, this.state.id, (err, newItemId) => {
+		Meteor.call('inventories.insert', this.state.name, (err, newItemId) => {
+			
 			if (err) {
 				console.log("Error caught: " + err.reason); // eslint-disable-line
-			} else {
-
-				/* kind of redundant. We can probably update the schema to remove `items` array 
-				in the list document altogether in favor of an inventory item having a list id 
-				that it belongs to. This will cause one minor issue in the main list view that 
-				we won't be able to see the number of items in the list. One way is to just 
-				update this to just keep track of number of inventories in the list by using a 
-				Meteor method just to update the count. But I'm just going to leave this in 
-				for now.
-				*/
-				Meteor.call('inventorylists.addItem', this.state.id, newItemId);
 			}
+
+			Meteor.call('inventorylists.addItem', this.props.navigation.state.params.id, newItemId);
 		});
 
-		this.setState({ newItemInputVisible: false });
-		this.setState({ name: '' });
+		this.setState({ newItemInputVisible: false, name: '' });
 	}
 
 	renderItem(item) {
@@ -74,16 +63,23 @@ class InventoryList extends Component {
 
 	renderItems() {
 		
-		// find inventory items that belong to this list
-		let inventories = Meteor.collection('inventories').find({ list: this.state.id });
+		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.id);
+		let inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
 
-		return (
-			<ScrollView style={{ flex: 1 }}>
-				<List>
-					{inventories.map(item => this.renderItem(item))}
-				</List>
-			</ScrollView>
-		);
+		if (inventories.length > 0) {
+			return (
+				<ScrollView style={{ flex: 1 }}>
+					<List>
+						{inventories.map(item => this.renderItem(item))}
+					</List>
+				</ScrollView>
+			);
+		} else {
+			return (
+				<Text>You don't have any inventory items in this list yet.</Text>
+			);
+		}
+
 	}
 
 	renderAddButton() {
@@ -94,7 +90,7 @@ class InventoryList extends Component {
 					raised
 					reverse
 					color={colors.background}
-					onPress={() => this.setState({ newItemInputVisible: true })}
+					onPress={() => this.setState(prevState => ({ newItemInputVisible: !prevState.newItemInputVisible }))}
 				/>
 			</View>
 		);
@@ -135,6 +131,7 @@ export const styles = StyleSheet.create({
 		right: 24,
 	},
 	newItem: {
+		backgroundColor: 'white',
 		height: 40,
 		padding: 4
 	}
