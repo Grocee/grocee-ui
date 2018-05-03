@@ -130,7 +130,7 @@ class InventoryList extends Component {
 			);
 		} else {
 			return (
-				<Text>You don't have any inventory items in this list yet.</Text>
+				<Text>There are no inventory items in this list.</Text>
 			);
 		}
 
