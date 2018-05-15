@@ -1,5 +1,4 @@
-import { SafeAreaView, StackNavigator } from 'react-navigation';
-import Meteor from 'react-native-meteor';
+import { StackNavigator } from 'react-navigation';
 
 import { navigationOptions } from '../../config/styles';
 

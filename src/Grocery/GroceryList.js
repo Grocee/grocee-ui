@@ -57,7 +57,7 @@ export default class GroceryList extends Component {
 			name: '',
 			amount: ''
 		});
-	};
+	}
 
 	renderAddNewGrocery() {
 		return (

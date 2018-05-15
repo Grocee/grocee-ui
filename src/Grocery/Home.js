@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
-import { colors, navigationOptions, stylesheet } from '../../config/styles';
+import { colors, stylesheet } from '../../config/styles';
 
-import { Text, TextInput, StyleSheet, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { List, ListItem, Card, Button, Icon } from 'react-native-elements';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { List, ListItem, Icon } from 'react-native-elements';
 
 export default class Home extends Component {
 	

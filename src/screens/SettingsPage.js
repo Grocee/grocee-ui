@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView, StackNavigator } from 'react-navigation';
-import settings from '../../config/settings';
 import { colors } from '../../config/styles';
 import Meteor from 'react-native-meteor';
 import { Button } from 'react-native-elements';
 
 class SettingsPage extends Component {
 	
-	static navigationOptions({ navigation }) {
+	static navigationOptions({ _navigation }) {
 		return {
 			headerTitle: 'Settings',
 			headerStyle: {
@@ -38,7 +37,7 @@ class SettingsPage extends Component {
 			</SafeAreaView>
 		);
 	}
-};
+}
 
 const SettingsStack = StackNavigator({
 	Main: {

@@ -1,16 +1,5 @@
 import React, { Component } from 'react';
-import {
-	StyleSheet,
-	Dimensions,
-	LayoutAnimation,
-	Image,
-	View,
-	TouchableHighlight,
-	FlatList,
-	Text,
-	TextInput,
-	Linking
-} from 'react-native';
+import { StyleSheet, Dimensions, LayoutAnimation, Image, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { colors } from '../../config/styles';
 import logoImage from '../../images/rn-logo.png';
