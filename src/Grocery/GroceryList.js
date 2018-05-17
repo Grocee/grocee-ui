@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import {
-	StyleSheet,
-	View,
-	TouchableHighlight,
-	TextInput,
-} from 'react-native';
-import { SafeAreaView, StackNavigator } from 'react-navigation';
-import settings from '../../config/settings';
-import Meteor, { createContainer } from 'react-native-meteor';
-import { List, ListItem, SearchBar, Text, Button, Card } from 'react-native-elements';
+import Meteor from 'react-native-meteor';
+
+import { colors, stylesheet } from '../../config/styles';
+
+import { StyleSheet, View, TextInput } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
+import { SearchBar, Button, Card, Icon } from 'react-native-elements';
 
 import Grocery from './Grocery';
 
@@ -26,6 +23,25 @@ export default class GroceryList extends Component {
 		};
 	}
 
+	static navigationOptions({ navigation }) {
+		return {
+			headerTitle: navigation.state.params.name,
+			headerBackTitle: "Back",
+			headerRight: (
+				<View style={stylesheet.rightButton}>
+					<Icon 
+						name='add'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.navigate('AddList')}
+						containerStyle={stylesheet.rightButton}
+					/>
+				</View>
+			)
+		}
+	}
+
 	submitGrocery() {
 		if (this.state.name.length === 0) {
 			return
@@ -41,20 +57,20 @@ export default class GroceryList extends Component {
 			name: '',
 			amount: ''
 		});
-	};
+	}
 
 	renderAddNewGrocery() {
 		return (
 			<Card title="Add new Grocery Item">
 				<TextInput
-					style={styles.groceryInput}					
+					style={stylesheet.input}					
 					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
 					placeholder='Add new grocery item'
 					autoCapitalize='words'
 					returnKeyType='next' />
 				<TextInput
-					style={styles.groceryInput}
+					style={stylesheet.input}
 					onChangeText={(amount) => this.setState({ amount })}
 					value={this.state.amount}
 					placeholder='The amount of this item'
@@ -107,14 +123,6 @@ export default class GroceryList extends Component {
 }
 
 export const styles = StyleSheet.create({
-	groceryInput: {
-		height: 50,
-		fontSize: 18,
-		borderWidth: 1,
-		borderColor: '#48BBEC',
-		borderRadius: 8,
-		color: '#48BBEC',
-	},
 	groceryContainer: {
 		flex: 1,
 	},
