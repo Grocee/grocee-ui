@@ -18,7 +18,6 @@ export default class Home extends Component {
 	}
 
 	static navigationOptions({ navigation }) {
-		const params = navigation.state.params || {};
 
 		return {
 			headerTitle: "Inventory",
@@ -36,16 +35,12 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('CreateList', { loadList: params.loadList})}
+						onPress={() => navigation.navigate('CreateList')}
 						containerStyle={styles.rightButton}
 					/>
 				</View>
 			)
 		}
-	}
-
-	componentWillMount() {
-		this.props.navigation.setParams({ setModalVisible: this.setModalVisible });
 	}
 
 	renderList(list) {
