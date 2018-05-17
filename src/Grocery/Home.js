@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { Text, TextInput, StyleSheet } from 'react-native';
+
+import { colors, stylesheet } from '../../config/styles';
+
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { List, ListItem, Card, Button } from 'react-native-elements';
+import { List, ListItem, Icon } from 'react-native-elements';
 
 export default class Home extends Component {
 	
@@ -13,21 +16,23 @@ export default class Home extends Component {
 		};
 	}
 
-	renderAddNewList() {
-		// return (
-		// 	<Card title="Add new Grocery Item">
-		// 		<TextInput
-		// 			style={styles.input}					
-		// 			onChangeText={(name) => this.setState({ name })}
-		// 			value={this.state.name}
-		// 			placeholder='Add new grocery list'
-		// 			autoCapitalize='words'
-		// 			returnKeyType='next'
-		// 		/>
-		// 	</Card>
-		// );
-
-		return (<Button title={"Add grocery list"} onPress={() => this.props.navigation.navigate('AddList')}/>);
+	static navigationOptions({ navigation }) {
+		return {
+			headerTitle: 'Groceries',
+			headerBackTitle: "Back",
+			headerRight: (
+				<View style={stylesheet.rightButton}>
+					<Icon 
+						name='add'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.navigate('AddList')}
+						containerStyle={stylesheet.rightButton}
+					/>
+				</View>
+			)
+		}
 	}
     
 	renderList(list) {
@@ -37,32 +42,29 @@ export default class Home extends Component {
 	}
     
 	renderLists() {
-		let lists = this.props.screenProps.groceryLists || [];
+		let lists = this.props.screenProps.groceryLists;
 
-		return (
-			<List>
-				{lists.map(list => this.renderList(list))}
-			</List>
-		);
+		if ( lists.length > 0 ) {
+			return (
+				<List>
+					{lists.map(list => this.renderList(list))}
+				</List>
+			);
+		} else {
+			// TODO make this look nicer
+			return (
+				<Text>You do not have any grocery lists. Click the top right icon to create one!</Text>
+			);
+		}
 	}
 
 	render() {
 		return (
-			<SafeAreaView>
-				{this.renderAddNewList()}
-				{this.renderLists()}
+			<SafeAreaView style={StyleSheet.absoluteFill}>
+				<ScrollView>
+					{this.renderLists()}
+				</ScrollView>
 			</SafeAreaView>
 		);
 	}
 }
-
-export const styles = StyleSheet.create({
-	input: {
-		height: 50,
-		fontSize: 18,
-		borderWidth: 1,
-		borderColor: '#48BBEC',
-		borderRadius: 8,
-		color: '#48BBEC',
-	}
-});

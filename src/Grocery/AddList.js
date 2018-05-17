@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Text, TextInput, StyleSheet } from 'react-native';
 import Meteor from 'react-native-meteor';
 
-import { Card } from 'react-native-elements';
+import { colors } from '../../config/styles';
+
+import { TextInput, StyleSheet, SafeAreaView } from 'react-native';
+import { Button } from 'react-native-elements';
 
 export default class AddGroceryList extends Component {
 	
@@ -23,9 +25,27 @@ export default class AddGroceryList extends Component {
 		this.props.navigation.replace('GroceryList', {listName: this.state.name});
 	}
 
+	static navigationOptions({ navigation }) {
+		return {
+			headerTitle: 'New Grocery List',
+			headerRight: (
+				<Button 
+					title='Done'
+					onPress={() => this.createList()}
+					backgroundColor={colors.background}/>
+			),
+			headerLeft: (
+				<Button 
+					title="Cancel"
+					onPress={() => navigation.goBack()}
+					backgroundColor={colors.background}/>
+			)
+		}
+	}
+
 	render() {
 		return (
-			<Card title="Add new Grocery List">
+			<SafeAreaView style={{ flex: 1 }}>
 				<TextInput
 					style={styles.groceryInput}					
 					onChangeText={(name) => this.setState({ name })}
@@ -34,8 +54,8 @@ export default class AddGroceryList extends Component {
 					autoCapitalize='words'
 					returnKeyType='done'
 					onSubmitEditing={() => this.createList()} />
-			</Card>
-		);
+			</SafeAreaView>
+		)
 	}
 }
 
