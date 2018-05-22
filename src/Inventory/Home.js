@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import {
 	StyleSheet,
-	Image,
 	View,
-	TouchableHighlight,
-	FlatList,
 	Text,
-	TextInput,
-	Linking,
-	ScrollView
+	ScrollView,
+	Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Meteor, { createContainer } from 'react-native-meteor';
 import { colors } from '../../config/styles';
 import { List, ListItem, Card, Button, Icon } from 'react-native-elements';
 import settings from '../../config/settings';
@@ -20,16 +15,10 @@ export default class Home extends Component {
 
 	constructor(props) {
 		super(props);
-
-		Meteor.subscribe('inventorylists');
-
-		this.state = {
-			inventories: this.props.screenProps.inventories
-		}
 	}
 
 	static navigationOptions({ navigation }) {
-	
+
 		return {
 			headerTitle: "Inventory",
 			headerStyle: {
@@ -60,20 +49,30 @@ export default class Home extends Component {
 				key={list._id}
 				title={list.name}
 				badge={{ value: list.items.length }}
-				onPress={() => this.props.navigation.navigate('InventoryList', { listId: list._id, name: list.name })}
+				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
 			/>
 		);
 	}
 
+	loadList(list) {
+		this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name });
+	}
+
 	renderLists() {
 
-		let lists = Meteor.collection('inventorylists').find();
+		let lists = this.props.screenProps.inventoryLists;
 
-		return (
-			<List containerStyle={styles.list} >
-				{lists.map(list => this.renderList(list))}
-			</List>
-		);
+		if (lists.length > 0) {
+			return (
+				<List containerStyle={styles.list} >
+					{lists.map(list => this.renderList(list))}
+				</List>
+			);
+		} else {
+			return (
+				<Text>You do not have any inventory lists. Click the top right icon to create one!</Text>
+			);
+		}
 	}
 
 	render() {
