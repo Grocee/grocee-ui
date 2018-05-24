@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Meteor from 'react-native-meteor';
 
-import { colors } from '../../config/styles';
+import { colors, stylesheet } from '../../config/styles';
 
-import { TextInput, StyleSheet, SafeAreaView } from 'react-native';
+import { TextInput, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-elements';
 
 export default class AddGroceryList extends Component {
@@ -52,7 +52,7 @@ export default class AddGroceryList extends Component {
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
 				<TextInput
-					style={styles.groceryInput}					
+					style={stylesheet.input}					
 					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
 					placeholder='Add new grocery list'
@@ -63,29 +63,3 @@ export default class AddGroceryList extends Component {
 		)
 	}
 }
-
-export const styles = StyleSheet.create({
-	groceryInput: {
-		height: 50,
-		fontSize: 18,
-		borderWidth: 1,
-		borderColor: '#48BBEC',
-		borderRadius: 8,
-		color: '#48BBEC',
-	},
-	groceryContainer: {
-		flex: 1,
-	},
-	separator: {
-		height: 1,
-		backgroundColor: '#dddddd'
-	},
-	title: {
-		fontSize: 20,
-		color: '#656565'
-	},
-	rowContainer: {
-		flexDirection: 'row',
-		padding: 10
-	},
-});

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { StyleSheet, View, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { SearchBar, Button, Card, Icon } from 'react-native-elements';
+import { SearchBar, Button, Icon } from 'react-native-elements';
 
 import Grocery from './Grocery';
 
@@ -91,21 +90,3 @@ export default class GroceryList extends Component {
 		);
 	}
 }
-
-export const styles = StyleSheet.create({
-	groceryContainer: {
-		flex: 1,
-	},
-	separator: {
-		height: 1,
-		backgroundColor: '#dddddd'
-	},
-	title: {
-		fontSize: 20,
-		color: '#656565'
-	},
-	rowContainer: {
-		flexDirection: 'row',
-		padding: 10
-	},
-});
