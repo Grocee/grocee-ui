@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors } from '../../config/styles';
 import { List, ListItem, Icon } from 'react-native-elements';
-import { Swipeout } from 'react-native-swipeout';
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
 // what if we subscribe here?
@@ -138,7 +137,7 @@ class InventoryList extends Component {
 		let inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
 
 		//TODO: convert SwipeListView to use the new FlatList version
-		
+
 		if (inventories.length > 0) {
 			return (
 				<ScrollView style={{ flex: 1 }}>
@@ -200,14 +199,6 @@ class InventoryList extends Component {
 	}
 
 	render() {
-
-		var buttons = [
-			{
-				text: 'Delete'
-				//,backgroundColor: 'red'
-			}
-		];
-
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				{this.state.newItemInputVisible ? this.renderNewItemTextInput() : null}
