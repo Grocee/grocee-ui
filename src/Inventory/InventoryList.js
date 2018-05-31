@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors } from '../../config/styles';
 import { List, ListItem, Icon } from 'react-native-elements';
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 // what if we subscribe here?
 class InventoryList extends Component {
@@ -77,12 +77,6 @@ class InventoryList extends Component {
 		// TODO: perform actual deletion
 
 		this.props.navigation.goBack();
-	}
-
-	closeRow(rowMap, rowKey) {
-		if (rowMap[rowKey]) {
-			rowMap[rowKey].closeRow();
-		}
 	}
 
 	deleteItem(item, rowMap, rowKey) {
