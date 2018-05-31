@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors } from '../../config/styles';
@@ -14,7 +14,7 @@ class InventoryList extends Component {
 
 	constructor(props) {
 		super(props);
-
+		this.dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		this.state = {
 			newItemInputVisible: false
 		};
@@ -86,8 +86,8 @@ class InventoryList extends Component {
 		}
 	}
 
-	deleteItem(item) {
-
+	deleteItem(item, rowMap, rowKey) {
+		this.closeRow(rowMap, rowKey);
 		Meteor.call('inventories.remove', item._id, (err) => {
 			if (err) {
 				Alert.alert(
@@ -132,33 +132,34 @@ class InventoryList extends Component {
 		this.setState({ newItemInputVisible: false, name: '' });
 	}
 
-	renderItem(item) {
-		return (
-			<SwipeRow rightOpenValue={-75} disableRightSwipe >
-				<View style={styles.standaloneRowBack} >
-					<Text style={styles.backTextWhite}></Text>
-					<TouchableOpacity onPress={() => this.deleteItem(item)} >
-						<Text style={styles.backTextWhite}>Delete</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={styles.standaloneRowFront}>
-					<Text>{item.name}</Text>
-				</View>
-			</SwipeRow>
-		);
-	}
-
 	renderItems() {
 		
 		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.id);
 		let inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
 
+		//TODO: convert SwipeListView to use the new FlatList version
+		
 		if (inventories.length > 0) {
 			return (
 				<ScrollView style={{ flex: 1 }}>
-					<List>
-						{inventories.map(item => this.renderItem(item))}
-					</List>
+					<SwipeListView
+						dataSource={this.dataSource.cloneWithRows(inventories)}
+						renderRow={ data => (
+							<View style={styles.standaloneRowFront}>
+								<Text>{data.name}</Text>
+							</View>
+						)}
+						renderHiddenRow={ (data, secId, rowId, rowMap) => (
+							<View style={styles.standaloneRowBack} >
+								<Text style={styles.backTextWhite}></Text>
+								<TouchableOpacity onPress={() => this.deleteItem(data, rowMap, `${secId}${rowId}`)} >
+									<Text style={styles.backTextWhite}>Delete</Text>
+								</TouchableOpacity>
+							</View>
+						)}
+						disableRightSwipe
+						rightOpenValue={-75}
+					/>
 				</ScrollView>
 			);
 		} else {
