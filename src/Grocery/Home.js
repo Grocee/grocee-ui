@@ -35,7 +35,11 @@ export default class Home extends Component {
     
 	renderList(list) {
 		return (
-			<ListItem key={list._id} title={list.name} onPress={() => this.props.navigation.navigate('GroceryList', {id: list._id, name: list.name})}/>
+			<ListItem 
+				key={list._id}
+				title={list.name}
+				badge={{ value: list.items.length }}
+				onPress={() => this.props.navigation.navigate('GroceryList', {id: list._id, name: list.name})}/>
 		)
 	}
     
