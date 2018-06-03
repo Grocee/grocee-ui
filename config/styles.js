@@ -33,7 +33,36 @@ const stylesheet = StyleSheet.create({
 	},
 	rightButton: {
 		padding: 5
-	}
+	},
+	fab: {
+		position: 'absolute',
+		bottom: 24,
+		right: 24,
+	},
+	newItem: {
+		backgroundColor: 'white',
+		height: 40,
+		padding: 4
+	},
+	standaloneRowFront: {
+		backgroundColor: 'white',
+		justifyContent: 'center',
+		padding: 10,
+		height: 45,
+		borderWidth: 0.3,
+		borderColor: '#3c3c3c'
+	},
+	standaloneRowBack: {
+		alignItems: 'center',
+		backgroundColor: 'red',
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		padding: 15
+	},
+	backTextWhite: {
+		color: '#FFF'
+	},
 });
 
 export { colors, navigationOptions, stylesheet };
