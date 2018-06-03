@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { SearchBar, Button, Icon } from 'react-native-elements';
+import { Icon, ListItem, List } from 'react-native-elements';
+import Swipeout from 'react-native-swipeout';
 
-import Grocery from './Grocery';
+import Meteor from 'react-native-meteor';
+
 
 export default class GroceryList extends Component {
 
@@ -80,17 +82,49 @@ export default class GroceryList extends Component {
 		}
 
 		return (
-			<View>
-				<SearchBar 
-					lightTheme
-					platform="ios"
-					onChangeText={text => this.setState({searchNeedle: text})}
-					onClear={() => this.setState({searchNeedle: ''})}
-					placeholder='Search for a grocery item...'/>
-				{/* <Text h6>{JSON.stringify(this.props.navigation.state.params)}</Text>
-				<Text h6>{JSON.stringify(groceryList)}</Text> */}
-				{groceries.map(groceryItem => (<Grocery key={groceryItem._id} item={groceryItem}/>))}
-			</View>
+			<List>
+				<FlatList
+					keyExtractor={(_item, index) => index}
+					data={groceries}
+					renderItem={this.renderItem}/>
+			</List>
+		);
+	}
+    
+	renderItem(item) {
+		const rightButtons = [
+			{
+				text: (<Icon 
+					name='edit'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'orange',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				type: 'secondary'
+				// onPress: () => add grocery stack
+			}
+		];
+
+		const leftButtons = [
+			{
+				text: (<Icon 
+					name='check'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'green',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				onPress: () => Meteor.call('groceries.setChecked', item.item._id, true)
+			}
+		]
+		
+		return (
+			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
+				<ListItem title={item.item.name} hideChevron/>
+			</Swipeout>
 		);
 	}
 
@@ -98,7 +132,6 @@ export default class GroceryList extends Component {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<ScrollView style={{ flex: 1 }}>
-					<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
 					{this.renderGroceries()}
 				</ScrollView>
 				{this.renderAddButton()}

@@ -31,7 +31,7 @@ export default class Home extends Component {
 		}
 	}
     
-	renderList(list) {
+	renderListItem(list) {
 		const groceries = this.props.screenProps.groceries;
 
 		// Only include grocery items that are not checked in the badge count
@@ -63,7 +63,7 @@ export default class Home extends Component {
 		if ( lists.length > 0 ) {
 			return (
 				<List>
-					{lists.map(list => this.renderList(list))}
+					{lists.map(list => this.renderListItem(list))}
 				</List>
 			);
 		} else {
