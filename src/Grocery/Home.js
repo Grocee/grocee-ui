@@ -34,11 +34,15 @@ export default class Home extends Component {
 	}
     
 	renderList(list) {
+		// TODO Only display badge for unchecked items
+		const badge = list.items && list.items.length > 0 
+			? { value: list.items.length, containerStyle: stylesheet.badge } 
+			: null;
 		return (
 			<ListItem 
 				key={list._id}
 				title={list.name}
-				badge={{ value: list.items.length }}
+				badge={badge}
 				onPress={() => this.props.navigation.navigate('GroceryList', {id: list._id, name: list.name})}/>
 		)
 	}

@@ -62,6 +62,9 @@ const stylesheet = StyleSheet.create({
 	},
 	backTextWhite: {
 		color: '#FFF'
+	},
+	badge: {
+		backgroundColor: 'salmon'
 	}
 });
 
