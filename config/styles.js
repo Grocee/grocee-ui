@@ -33,7 +33,12 @@ const stylesheet = StyleSheet.create({
 	},
 	rightButton: {
 		padding: 5
-	}
+	},
+	fab: {
+		position: 'absolute',
+		bottom: 24,
+		right: 24,
+	},
 });
 
 export { colors, navigationOptions, stylesheet };

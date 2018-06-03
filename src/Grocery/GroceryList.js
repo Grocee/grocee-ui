@@ -40,6 +40,21 @@ export default class GroceryList extends Component {
 			)
 		}
 	}
+    
+	renderAddButton() {
+		const navigation = this.props.navigation;
+		return (
+			<View style={stylesheet.fab}>
+				<Icon
+					name='add'
+					raised
+					reverse
+					color={colors.background}
+					onPress={() => navigation.navigate('AddGrocery', { listId: navigation.state.params.id })}
+				/>
+			</View>
+		);
+	}
 
 	renderGroceries() {
 		// Filter based on search results
@@ -47,7 +62,7 @@ export default class GroceryList extends Component {
 		let groceries = [];
 		if ( groceryList ) {
 			groceries = this.props.screenProps.groceries.filter(grocery => {
-				if (groceryList.items.includes(grocery._id)) {
+				if (groceryList.items && groceryList.items.includes(grocery._id)) {
 					if (this.state.searchNeedle !== '') {
 						return grocery.name.indexOf(this.state.searchNeedle) >= 0;
 					} else {
@@ -86,6 +101,7 @@ export default class GroceryList extends Component {
 					<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
 					{this.renderGroceries()}
 				</ScrollView>
+				{this.renderAddButton()}
 			</SafeAreaView>
 		);
 	}

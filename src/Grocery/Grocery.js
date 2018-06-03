@@ -19,9 +19,12 @@ export default class Grocery extends Component {
 
 	render() {
 		const item = this.props.item;
+		const title = item.amount 
+			? `${item.amount} ${item.name}`
+			: `${item.name}`;
 		return (
 			<CheckBox 
-				title={`${item.amount} ${item.name}`}
+				title={title}
 				checkedColor='green'
 				checked={item.checked}
 				onPress={() => this.handlePress()}

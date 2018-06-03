@@ -3,7 +3,7 @@ import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { TextInput, SafeAreaView } from 'react-native';
+import { TextInput, SafeAreaView, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 
 export default class AddGroceryList extends Component {
@@ -23,22 +23,23 @@ export default class AddGroceryList extends Component {
 
 		Meteor.call('grocerylists.create', this.state.name, (err, groceryListId) => {
 			if (err) {
-				// TODO do something
+				Alert.alert(
+					'Error creating Grocery List',
+					err.error,
+					[
+						{ text: "OK", style: 'normal' }
+					],
+					{ cancelable: true }
+				);
+			} else {
+				this.props.navigation.replace('GroceryList', {id: groceryListId, name: this.state.name});
 			}
-
-			this.props.navigation.replace('GroceryList', {id: groceryListId, name: this.state.name});
 		});
 	}
 
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: 'New Grocery List',
-			headerRight: (
-				<Button 
-					title='Done'
-					onPress={() => this.createList()}
-					backgroundColor={colors.background}/>
-			),
 			headerLeft: (
 				<Button 
 					title="Cancel"
