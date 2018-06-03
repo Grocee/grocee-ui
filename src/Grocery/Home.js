@@ -6,8 +6,6 @@ import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { List, ListItem, Icon } from 'react-native-elements';
 
-
-
 export default class Home extends Component {
 	
 	constructor(props) {
@@ -34,10 +32,22 @@ export default class Home extends Component {
 	}
     
 	renderList(list) {
-		// TODO Only display badge for unchecked items
-		const badge = list.items && list.items.length > 0 
-			? { value: list.items.length, containerStyle: stylesheet.badge } 
+		const groceries = this.props.screenProps.groceries;
+
+		// Only include grocery items that are not checked in the badge count
+		let badgeValue = 0;
+		if ( list.items ) {
+			badgeValue = list.items.filter(item => {
+				const grocery = groceries.find(grocery => grocery._id == item);
+				return grocery 
+					? grocery.checked
+					: false;
+			}).length;
+		}
+		const badge = badgeValue > 0 
+			? { value: badgeValue, containerStyle: stylesheet.badge } 
 			: null;
+            
 		return (
 			<ListItem 
 				key={list._id}
