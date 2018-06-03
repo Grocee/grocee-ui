@@ -6,25 +6,26 @@ import { colors, stylesheet } from '../../config/styles';
 import { TextInput, SafeAreaView, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 
-export default class AddGroceryList extends Component {
+export default class AddGrocery extends Component {
 	
 	constructor(props) {
 		super(props);
-        
+		
+		// TODO allow users to add an amount as well
 		this.state = {
 			name: ''
 		}
 	}
     
-	createList() {
+	addGrocery() {
 		if (this.state.name.length === 0) {
 			return
 		}
 
-		Meteor.call('grocerylists.create', this.state.name, (err, groceryListId) => {
+		Meteor.call('groceries.insert', this.state.name, null, (err, groceryId) => {
 			if (err) {
 				Alert.alert(
-					'Error creating Grocery List',
+					'Error creating Grocery item',
 					err.error,
 					[
 						{ text: "OK", style: 'normal' }
@@ -32,14 +33,15 @@ export default class AddGroceryList extends Component {
 					{ cancelable: true }
 				);
 			} else {
-				this.props.navigation.replace('GroceryList', {id: groceryListId, name: this.state.name});
+				Meteor.call('grocerylists.addItem', this.props.navigation.state.params.listId, groceryId);
+				this.props.navigation.goBack();
 			}
 		});
 	}
 
 	static navigationOptions({ navigation }) {
 		return {
-			headerTitle: 'New Grocery List',
+			headerTitle: 'New Grocery Item',
 			headerLeft: (
 				<Button 
 					title="Cancel"
@@ -56,10 +58,10 @@ export default class AddGroceryList extends Component {
 					style={stylesheet.input}					
 					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
-					placeholder='Add new grocery list'
+					placeholder='Add new grocery item'
 					autoCapitalize='words'
 					returnKeyType='done'
-					onSubmitEditing={() => this.createList()} />
+					onSubmitEditing={() => this.addGrocery()} />
 			</SafeAreaView>
 		)
 	}

@@ -63,6 +63,9 @@ const stylesheet = StyleSheet.create({
 	backTextWhite: {
 		color: '#FFF'
 	},
+	badge: {
+		backgroundColor: 'salmon'
+	}
 });
 
 export { colors, navigationOptions, stylesheet };

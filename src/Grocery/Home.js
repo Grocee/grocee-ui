@@ -10,10 +10,6 @@ export default class Home extends Component {
 	
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			name: ''
-		};
 	}
 
 	static navigationOptions({ navigation }) {
@@ -35,9 +31,29 @@ export default class Home extends Component {
 		}
 	}
     
-	renderList(list) {
+	renderListItem(list) {
+		const groceries = this.props.screenProps.groceries;
+
+		// Only include grocery items that are not checked in the badge count
+		let badgeValue = 0;
+		if ( list.items ) {
+			badgeValue = list.items.filter(item => {
+				const grocery = groceries.find(grocery => grocery._id == item);
+				return grocery 
+					? grocery.checked
+					: false;
+			}).length;
+		}
+		const badge = badgeValue > 0 
+			? { value: badgeValue, containerStyle: stylesheet.badge } 
+			: null;
+            
 		return (
-			<ListItem key={list._id} title={list.name} onPress={() => this.props.navigation.navigate('GroceryList', {listName: list.name})}/>
+			<ListItem 
+				key={list._id}
+				title={list.name}
+				badge={badge}
+				onPress={() => this.props.navigation.navigate('GroceryList', {id: list._id, name: list.name})}/>
 		)
 	}
     
@@ -47,7 +63,7 @@ export default class Home extends Component {
 		if ( lists.length > 0 ) {
 			return (
 				<List>
-					{lists.map(list => this.renderList(list))}
+					{lists.map(list => this.renderListItem(list))}
 				</List>
 			);
 		} else {

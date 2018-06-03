@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { SearchBar, Button, Card, Icon } from 'react-native-elements';
+import { Icon, ListItem, List } from 'react-native-elements';
+import Swipeout from 'react-native-swipeout';
 
-import Grocery from './Grocery';
+import Meteor from 'react-native-meteor';
+
 
 export default class GroceryList extends Component {
 
@@ -34,108 +35,107 @@ export default class GroceryList extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('AddList')}
+						onPress={() => navigation.navigate('AddGrocery', { listId: navigation.state.params.id })}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
 			)
 		}
 	}
-
-	submitGrocery() {
-		if (this.state.name.length === 0) {
-			return
-		}
-
-		if (this.state.amount.length === 0) {
-			return
-		}
-
-		Meteor.call('groceries.insert', this.state.name, this.state.amount);
-
-		this.setState({
-			name: '',
-			amount: ''
-		});
-	}
-
-	renderAddNewGrocery() {
+    
+	renderAddButton() {
+		const navigation = this.props.navigation;
 		return (
-			<Card title="Add new Grocery Item">
-				<TextInput
-					style={stylesheet.input}					
-					onChangeText={(name) => this.setState({ name })}
-					value={this.state.name}
-					placeholder='Add new grocery item'
-					autoCapitalize='words'
-					returnKeyType='next' />
-				<TextInput
-					style={stylesheet.input}
-					onChangeText={(amount) => this.setState({ amount })}
-					value={this.state.amount}
-					placeholder='The amount of this item'
-					autoCapitalize='none'
-					autoCorrect='true'
-					returnKeyType='done'
-					onSubmitEditing={() => this.submitGrocery()} />
-			</Card>
+			<View style={stylesheet.fab}>
+				<Icon
+					name='add'
+					raised
+					reverse
+					color={colors.background}
+					onPress={() => navigation.navigate('AddGrocery', { listId: navigation.state.params.id })}
+				/>
+			</View>
 		);
 	}
 
 	renderGroceries() {
 		// Filter based on search results
-		// TODO also filter based on this.props.navigation.state.params.listName
-		let groceries = this.props.screenProps.groceries.filter(grocery => {
-			if (this.state.searchNeedle !== '') {
-				return grocery.name.indexOf(this.state.searchNeedle) >= 0;
-			} else {
-				return true;
+		const groceryList = this.props.screenProps.groceryLists.find(list => list._id === this.props.navigation.state.params.id);
+		let groceries = [];
+		if ( groceryList ) {
+			groceries = this.props.screenProps.groceries.filter(grocery => {
+				if (groceryList.items && groceryList.items.includes(grocery._id)) {
+					if (this.state.searchNeedle !== '') {
+						return grocery.name.indexOf(this.state.searchNeedle) >= 0;
+					} else {
+						return true;
+					}
+				} else {
+					return false;
+				}
+			});
+	
+			// Filter based on setChecked
+			if ( !this.state.displayChecked ) {
+				groceries = groceries.filter(grocery => !grocery.checked);
 			}
-		});
-
-		// Filter based on setChecked
-		if ( !this.state.displayChecked ) {
-			groceries = groceries.filter(grocery => !grocery.checked);
 		}
 
 		return (
-			<Card title="Groceries">
-				<SearchBar 
-					lightTheme
-					platform="ios"
-					onChangeText={text => this.setState({searchNeedle: text})}
-					onClear={() => this.setState({searchNeedle: ''})}
-					placeholder='Search for a grocery item...'/>
-				{groceries.map(groceryItem => (<Grocery key={groceryItem._id} item={groceryItem}/>))}
-			</Card>
+			<List>
+				<FlatList
+					keyExtractor={(_item, index) => index}
+					data={groceries}
+					renderItem={this.renderItem}/>
+			</List>
+		);
+	}
+    
+	renderItem(item) {
+		const rightButtons = [
+			{
+				text: (<Icon 
+					name='edit'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'orange',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				type: 'secondary'
+				// onPress: () => add grocery stack
+			}
+		];
+
+		const leftButtons = [
+			{
+				text: (<Icon 
+					name='check'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'green',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				onPress: () => Meteor.call('groceries.setChecked', item.item._id, true)
+			}
+		]
+		
+		return (
+			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
+				<ListItem title={item.item.name} hideChevron/>
+			</Swipeout>
 		);
 	}
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				{this.renderAddNewGrocery()}
-				<Button title={"Display checked items"} clear={true} onPress={() => this.setState(prevState => ({displayChecked: !prevState.displayChecked}))}/>
-				{this.renderGroceries()}
+				<ScrollView style={{ flex: 1 }}>
+					{this.renderGroceries()}
+				</ScrollView>
+				{this.renderAddButton()}
 			</SafeAreaView>
 		);
 	}
 }
-
-export const styles = StyleSheet.create({
-	groceryContainer: {
-		flex: 1,
-	},
-	separator: {
-		height: 1,
-		backgroundColor: '#dddddd'
-	},
-	title: {
-		fontSize: 20,
-		color: '#656565'
-	},
-	rowContainer: {
-		flexDirection: 'row',
-		padding: 10
-	},
-});
