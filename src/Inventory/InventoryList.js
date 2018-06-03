@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
-import { colors } from '../../config/styles';
+import { colors, stylesheet } from '../../config/styles';
 import { List, ListItem, Icon } from 'react-native-elements';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
-// what if we subscribe here?
 class InventoryList extends Component {
 
 	//TODO: dismisses the text field if tap anywhere outside the view
@@ -32,14 +31,14 @@ class InventoryList extends Component {
 				color: colors.tint,
 			},
 			headerRight: (
-				<View style={styles.rightButton} >
+				<View style={stylesheet.rightButton} >
 					<Icon 
 						name='more-horiz'
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
 						onPress={params.showActionSheet}
-						containerStyle={styles.rightButton}
+						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
 			)
@@ -80,7 +79,10 @@ class InventoryList extends Component {
 	}
 
 	deleteItem(item, rowMap, rowKey) {
-		this.closeRow(rowMap, rowKey);
+		if (rowMap[rowKey]) {
+			rowMap[rowKey].closeRow();
+		}
+
 		Meteor.call('inventories.remove', item._id, (err) => {
 			if (err) {
 				Alert.alert(
@@ -138,15 +140,15 @@ class InventoryList extends Component {
 					<SwipeListView
 						dataSource={this.dataSource.cloneWithRows(inventories)}
 						renderRow={ data => (
-							<View style={styles.standaloneRowFront}>
+							<View style={stylesheet.standaloneRowFront}>
 								<Text>{data.name}</Text>
 							</View>
 						)}
 						renderHiddenRow={ (data, secId, rowId, rowMap) => (
-							<View style={styles.standaloneRowBack} >
-								<Text style={styles.backTextWhite}></Text>
+							<View style={stylesheet.standaloneRowBack} >
+								<Text style={stylesheet.backTextWhite}></Text>
 								<TouchableOpacity onPress={() => this.deleteItem(data, rowMap, `${secId}${rowId}`)} >
-									<Text style={styles.backTextWhite}>Delete</Text>
+									<Text style={stylesheet.backTextWhite}>Delete</Text>
 								</TouchableOpacity>
 							</View>
 						)}
@@ -165,7 +167,7 @@ class InventoryList extends Component {
 
 	renderAddButton() {
 		return (
-			<View style={styles.fab}>
+			<View style={stylesheet.fab}>
 				<Icon
 					name='add'
 					raised
@@ -179,7 +181,7 @@ class InventoryList extends Component {
 
 	renderNewItemTextInput() {
 		return (
-			<View style={styles.newItem}>
+			<View style={stylesheet.newItem}>
 				<TextInput
 					placeholder="Item name"
 					returnKeyType='done'
@@ -204,38 +206,3 @@ class InventoryList extends Component {
 }
 
 export default InventoryList;
-
-export const styles = StyleSheet.create({
-	fab: {
-		position: 'absolute',
-		bottom: 24,
-		right: 24,
-	},
-	newItem: {
-		backgroundColor: 'white',
-		height: 40,
-		padding: 4
-	},
-	rightButton: {
-		padding: 5
-	},
-	standaloneRowFront: {
-		backgroundColor: 'white',
-		justifyContent: 'center',
-		padding: 10,
-		height: 45,
-		borderWidth: 0.3,
-		borderColor: '#3c3c3c'
-	},
-	standaloneRowBack: {
-		alignItems: 'center',
-		backgroundColor: 'red',
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		padding: 15
-	},
-	backTextWhite: {
-		color: '#FFF'
-	},
-});
