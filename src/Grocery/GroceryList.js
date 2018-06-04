@@ -35,7 +35,7 @@ export default class GroceryList extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('AddGrocery', { listId: navigation.state.params.id })}
+						onPress={() => navigation.navigate('Grocery', { listId: navigation.state.params.id })}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
@@ -52,7 +52,7 @@ export default class GroceryList extends Component {
 					raised
 					reverse
 					color={colors.background}
-					onPress={() => navigation.navigate('AddGrocery', { listId: navigation.state.params.id })}
+					onPress={() => navigation.navigate('Grocery', { listId: navigation.state.params.id })}
 				/>
 			</View>
 		);
@@ -86,12 +86,13 @@ export default class GroceryList extends Component {
 				<FlatList
 					keyExtractor={(_item, index) => index}
 					data={groceries}
-					renderItem={this.renderItem}/>
+					renderItem={(item) => this.renderItem(item)}/>
 			</List>
 		);
 	}
     
 	renderItem(item) {
+		const navigation = this.props.navigation;
 		const rightButtons = [
 			{
 				text: (<Icon 
@@ -102,8 +103,8 @@ export default class GroceryList extends Component {
 				/>),
 				backgroundColor: 'orange',
 				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				type: 'secondary'
-				// onPress: () => add grocery stack
+				type: 'secondary',
+				onPress: () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id })
 			}
 		];
 
@@ -121,9 +122,10 @@ export default class GroceryList extends Component {
 			}
 		]
 		
+		const title = item.item.amount ? `${item.item.amount} ${item.item.name}` : `${item.item.name}`;
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
-				<ListItem title={item.item.name} hideChevron/>
+				<ListItem title={title} hideChevron/>
 			</Swipeout>
 		);
 	}

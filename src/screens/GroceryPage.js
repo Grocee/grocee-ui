@@ -5,7 +5,7 @@ import { navigationOptions } from '../../config/styles';
 import Home from '../Grocery/Home';
 import AddList from '../Grocery/AddList';
 import GroceryList from '../Grocery/GroceryList';
-import AddGrocery from '../Grocery/AddGrocery';
+import Grocery from '../Grocery/Grocery';
 
 const GroceryPage = StackNavigator(
 	{
@@ -22,9 +22,9 @@ const GroceryPage = StackNavigator(
 			screen: GroceryList,
 			path: 'grocery/list/:id'
 		},
-		AddGrocery: {
-			screen: AddGrocery,
-			path: 'grocery/list/add',
+		Grocery: {
+			screen: Grocery,
+			path: 'grocery/:id',
 			mode: 'modal' // why doesn't this work?
 		}
 	},
