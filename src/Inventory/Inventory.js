@@ -72,21 +72,20 @@ export default class Inventory extends Component {
 				return;
 			}
 
-			if (this.state.amount) {
-				Meteor.call('inventories.updateAmount', this.props.navigation.state.params.id, this.state.amount.trim(), (amountErr) => {
-					if (amountErr) {
-						Alert.alert(
-							"Error Updating Item",
-							amountErr.reason,
-							[
-								{ text: "OK", style: 'normal' }
-							],
-							{ cancelable: true }
-						);
-						return;
-					}
-				});
-			}
+			Meteor.call('inventories.updateAmount', this.props.navigation.state.params.id, this.state.amount.trim(), (amountErr) => {
+				if (amountErr) {
+					Alert.alert(
+						"Error Updating Item",
+						amountErr.reason,
+						[
+							{ text: "OK", style: 'normal' }
+						],
+						{ cancelable: true }
+					);
+					return;
+				}
+			});
+	
 
 			this.props.navigation.goBack();
 		});
