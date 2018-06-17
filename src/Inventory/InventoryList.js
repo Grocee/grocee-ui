@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors, stylesheet } from '../../config/styles';
 import { List, ListItem, Icon } from 'react-native-elements';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import Swipeout from 'react-native-swipeout';
 
 class InventoryList extends Component {
 
@@ -78,37 +78,15 @@ class InventoryList extends Component {
 		this.props.navigation.goBack();
 	}
 
-	deleteItem(item, rowMap, rowKey) {
-		if (rowMap[rowKey]) {
-			rowMap[rowKey].closeRow();
-		}
-
-		Meteor.call('inventories.remove', item._id, (err) => {
-			if (err) {
-				Alert.alert(
-					"Error Deleting Item",
-					err.error,
-					[
-						{ text: "OK", style: 'normal' }
-					],
-					{ cancelable: true }
-				);
-			} else {
-				Meteor.call('inventorylists.removeItem', this.props.navigation.state.params.id, item._id);
-			}
-		});
-
-	}
-
 	addNewInventory() {
 		
 		if (this.state.name.length === 0) {
 			console.log('name cannot be empty') // eslint-disable-line
 			this.setState({ newItemInputVisible: false });
-			return
+			return;
 		}
 
-		Meteor.call('inventories.insert', this.state.name, (err, newItemId) => {
+		Meteor.call('inventories.insert', this.state.name.trim(), (err, newItemId) => {
 			
 			if (err) {
 				Alert.alert(
@@ -127,35 +105,71 @@ class InventoryList extends Component {
 		this.setState({ newItemInputVisible: false, name: '' });
 	}
 
+	renderItem(inventories) {
+		const listId = this.props.navigation.state.params.id;
+		const rightButtons = [
+			{
+				text: (<Icon
+					name='edit'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'orange',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				type: 'secondary',
+				onPress: () => this.props.navigation.navigate('InventoryEdit', { listId: listId, id: inventories.item._id })
+			},
+			{
+				text: (<Icon
+					name='delete'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'red',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				type: 'secondary',
+				onPress: () => 	Meteor.call('inventories.remove', inventories.item._id, (err) => {
+					if (err) {
+						Alert.alert(
+							"Error Deleting Item",
+							err.reason,
+							[
+								{ text: "OK", style: 'normal' }
+							],
+							{ cancelable: true }
+						);
+					} else {
+						Meteor.call('inventorylists.removeItem', listId, inventories.item._id);
+					}
+				})
+			}
+		];
+
+		const title = inventories.item.amount ? `${inventories.item.name} (${inventories.item.amount})` : `${inventories.item.name}`;
+
+		return (
+			<Swipeout right={rightButtons} autoClose='true' backgroundColor='white'>
+				<ListItem title={title} hideChevron />
+			</Swipeout>
+		);
+	}
+
 	renderItems() {
 		
 		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.id);
 		let inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
 
-		//TODO: convert SwipeListView to use the new FlatList version
-
 		if (inventories.length > 0) {
 			return (
-				<ScrollView style={{ flex: 1 }}>
-					<SwipeListView
-						dataSource={this.dataSource.cloneWithRows(inventories)}
-						renderRow={ data => (
-							<View style={stylesheet.standaloneRowFront}>
-								<Text>{data.name}</Text>
-							</View>
-						)}
-						renderHiddenRow={ (data, secId, rowId, rowMap) => (
-							<View style={stylesheet.standaloneRowBack} >
-								<Text style={stylesheet.backTextWhite}></Text>
-								<TouchableOpacity onPress={() => this.deleteItem(data, rowMap, `${secId}${rowId}`)} >
-									<Text style={stylesheet.backTextWhite}>Delete</Text>
-								</TouchableOpacity>
-							</View>
-						)}
-						disableRightSwipe
-						rightOpenValue={-75}
+				<List>
+					<FlatList
+						keyExtractor={(_item, index) => index}
+						data={inventories}
+						renderItem={(inventories) => this.renderItem(inventories)}
 					/>
-				</ScrollView>
+				</List>
 			);
 		} else {
 			return (
@@ -198,7 +212,9 @@ class InventoryList extends Component {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				{this.state.newItemInputVisible ? this.renderNewItemTextInput() : null}
-				{this.renderItems()}
+				<ScrollView style={{ flex: 1 }}>
+					{this.renderItems()}
+				</ScrollView>
 				{this.renderAddButton()}
 			</SafeAreaView>
 		);
