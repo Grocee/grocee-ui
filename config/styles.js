@@ -26,7 +26,8 @@ const stylesheet = StyleSheet.create({
 	input: {
 		padding: 12,
 		height: 50,
-		fontSize: 18
+		fontSize: 18,
+		padding: 12
 	},
 	rightButton: {
 		padding: 5
