@@ -27,19 +27,7 @@ export default class GroceryList extends Component {
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: navigation.state.params.name,
-			headerBackTitle: "Back",
-			headerRight: (
-				<View style={stylesheet.rightButton}>
-					<Icon 
-						name='add'
-						color={colors.tint}
-						size={24}
-						underlayColor='transparent'
-						onPress={() => navigation.navigate('Grocery', { listId: navigation.state.params.id })}
-						containerStyle={stylesheet.rightButton}
-					/>
-				</View>
-			)
+			headerBackTitle: "Back"
 		}
 	}
     

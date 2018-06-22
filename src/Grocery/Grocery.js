@@ -34,7 +34,7 @@ export default class Grocery extends Component {
     
 	addGrocery() {
 		if (this.state.name.length === 0) {
-			Alert.alert(
+			return Alert.alert(
 				'Error updating Grocery item',
 				'Grocery name must not be empty',
 				[
@@ -64,7 +64,7 @@ export default class Grocery extends Component {
 
 	updateGrocery() {
 		if (this.state.name.length === 0) {
-			Alert.alert(
+			return Alert.alert(
 				'Error updating Grocery item',
 				'Grocery name must not be empty',
 				[
