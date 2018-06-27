@@ -101,6 +101,26 @@ export default class Grocery extends Component {
 					title="Cancel"
 					onPress={() => navigation.goBack()}
 					backgroundColor={colors.background}/>
+			),
+			headerRight: (
+				<Button 
+					title="Delete"
+					onPress={() => {
+						Meteor.call('groceries.remove', navigation.state.params.id, (err) => {
+							if (err) {
+								return Alert.alert(
+									'Error removing Grocery item',
+									err,
+									[
+										{ text: "OK", style: 'normal'}
+									],
+									{ cancelable: true }
+								);
+							}
+							navigation.goBack();
+						});
+					}}
+					backgroundColor={colors.background}/>
 			)
 		}
 	}

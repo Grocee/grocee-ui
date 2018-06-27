@@ -93,6 +93,18 @@ export default class GroceryList extends Component {
 				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
 				type: 'secondary',
 				onPress: () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id })
+			},
+			{
+				text: (<Icon 
+					name='delete'
+					color={colors.tint}
+					size={24}
+					underlayColor='transparent'
+				/>),
+				backgroundColor: 'red',
+				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+				type: 'secondary',
+				onPress: () => Meteor.call('groceries.remove', item.item._id)
 			}
 		];
 
