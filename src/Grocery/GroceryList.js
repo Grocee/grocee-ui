@@ -15,13 +15,38 @@ export default class GroceryList extends Component {
 	constructor(props) {
 		super(props);
 
+		let groceryList = this.props.screenProps.groceryLists.find(list => list._id === this.props.navigation.state.params.id);
+		let groceries = [];
+		if (groceryList && groceryList.items) {
+			groceries = this.props.screenProps.groceries.filter(grocery => groceryList.items.includes(grocery._id));
+		}
+
 		this.state = {
 			name: '',
 			amount: '',
 			isLoading: false,
 			searchNeedle: '',
-			displayChecked: false
+			displayChecked: false,
+			groceryList: groceryList || {},
+			groceries
 		};
+	}
+
+	componentDidUpdate(_prevProps) {
+		// TODO Update groceryList and groceries in the state accordingly
+	}
+
+	getGroceries(groceryLists, groceryListId, allGroceries) {
+		let groceryList = groceryLists.find(list => list._id === groceryListId);
+		let groceries = [];
+		if (groceryList && groceryList.items) {
+			groceries = allGroceries.filter(grocery => groceryList.items.includes(grocery._id));
+		}
+		if (!groceryList) {
+			groceryList = {};
+		}
+
+		return { groceryList , groceries };
 	}
 
 	static navigationOptions({ navigation }) {
@@ -45,10 +70,11 @@ export default class GroceryList extends Component {
 							}
 
 							// Also need to delete all the grocery items in this grocery list
+							// TODO archive instead of delete?
 							this.state.groceries.forEach(grocery => {
 								Meteor.call('groceries.remove', grocery._id);
 							});
-							
+
 							navigation.goBack();
 						});
 					}}
@@ -74,33 +100,19 @@ export default class GroceryList extends Component {
 
 	renderGroceries() {
 		// Filter based on search results
-		const groceryList = this.props.screenProps.groceryLists.find(list => list._id === this.props.navigation.state.params.id);
-		let groceries = [];
-		if ( groceryList ) {
-			groceries = this.props.screenProps.groceries.filter(grocery => {
-				if (groceryList.items && groceryList.items.includes(grocery._id)) {
-					if (this.state.searchNeedle !== '') {
-						return grocery.name.indexOf(this.state.searchNeedle) >= 0;
-					} else {
-						return true;
-					}
-				} else {
-					return false;
-				}
-			});
-	
-			// Filter based on setChecked
-			if ( !this.state.displayChecked ) {
-				groceries = groceries.filter(grocery => !grocery.checked);
+		let filteredGroceries = this.state.groceries.filter(grocery => {
+			if (this.state.searchNeedle !== '') {
+				return grocery.name.indexOf(this.state.searchNeedle) >= 0;
+			} else {
+				return true;
 			}
+		});
 
-			// TODO Put this in a better place
-			this.setState({
-				groceries
-			});
+		if (!this.state.displayChecked) {
+			filteredGroceries = filteredGroceries.filter(grocery => !grocery.checked);
 		}
 
-		if (groceries.length == 0) {
+		if (filteredGroceries.length == 0) {
 			return (
 				<Text>You do not have any grocery items in this grocery list. Click the + button to add one!</Text>
 			)
@@ -110,7 +122,7 @@ export default class GroceryList extends Component {
 			<List>
 				<FlatList
 					keyExtractor={(_item, index) => index}
-					data={groceries}
+					data={filteredGroceries}
 					renderItem={(item) => this.renderItem(item)}/>
 			</List>
 		);
