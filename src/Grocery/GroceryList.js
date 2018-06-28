@@ -102,7 +102,7 @@ export default class GroceryList extends Component {
 
 		if (groceries.length == 0) {
 			return (
-				<Text>You do not have any grocery items in this grocery list. Click the "+" button to add one!</Text>
+				<Text>You do not have any grocery items in this grocery list. Click the + button to add one!</Text>
 			)
 		}
 
