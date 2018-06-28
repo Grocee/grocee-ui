@@ -3,7 +3,7 @@ import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { TextInput, SafeAreaView, Alert, Text } from 'react-native';
+import { TextInput, SafeAreaView, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 
 export default class Grocery extends Component {

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { StyleSheet, View, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, View, ScrollView, FlatList, Alert, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Icon, ListItem, List } from 'react-native-elements';
+import { Icon, ListItem, List, Button } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 
 import Meteor from 'react-native-meteor';
@@ -27,7 +27,33 @@ export default class GroceryList extends Component {
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: navigation.state.params.name,
-			headerBackTitle: "Back"
+			headerBackTitle: "Back",
+			headerRight: (
+				<Button 
+					title="Delete"
+					onPress={() => {
+						Meteor.call('grocerylists.remove', navigation.state.params.id, (err) => {
+							if (err) {
+								return Alert.alert(
+									'Error removing Grocery List',
+									err,
+									[
+										{ text: "OK", style: 'normal'}
+									],
+									{ cancelable: true }
+								);
+							}
+
+							// Also need to delete all the grocery items in this grocery list
+							this.state.groceries.forEach(grocery => {
+								Meteor.call('groceries.remove', grocery._id);
+							});
+							
+							navigation.goBack();
+						});
+					}}
+					backgroundColor={colors.background}/>
+			)
 		}
 	}
     
@@ -67,6 +93,17 @@ export default class GroceryList extends Component {
 			if ( !this.state.displayChecked ) {
 				groceries = groceries.filter(grocery => !grocery.checked);
 			}
+
+			// TODO Put this in a better place
+			this.setState({
+				groceries
+			});
+		}
+
+		if (groceries.length == 0) {
+			return (
+				<Text>You do not have any grocery items in this grocery list. Click the "+" button to add one!</Text>
+			)
 		}
 
 		return (
@@ -120,12 +157,14 @@ export default class GroceryList extends Component {
 				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
 				onPress: () => Meteor.call('groceries.setChecked', item.item._id, true)
 			}
-		]
+		];
+		
+		const onPress = () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id });
 		
 		const title = item.item.amount ? `${item.item.amount} ${item.item.name}` : `${item.item.name}`;
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
-				<ListItem title={title} hideChevron/>
+				<ListItem title={title} onPress={onPress} hideChevron/>
 			</Swipeout>
 		);
 	}
