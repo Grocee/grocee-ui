@@ -35,7 +35,7 @@ class CreateList extends React.Component {
 			return;
 		}
 
-		Meteor.call('inventorylists.create', this.state.name.trim(), (err, newListId) => {
+		Meteor.call('inventorylists.create', this.state.name, (err, newListId) => {
 			if (err) {
 				Alert.alert(
 					"Error Creating New List",

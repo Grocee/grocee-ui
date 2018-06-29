@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
+import { StyleSheet, FlatList, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
-import { colors, stylesheet } from '../../config/styles';
+import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
 import { List, ListItem, Icon } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
+import EditButton from '../components/EditButton';
+import DeleteButton from '../components/DeleteButton';
 
 class InventoryList extends Component {
 
@@ -86,7 +88,7 @@ class InventoryList extends Component {
 			return;
 		}
 
-		Meteor.call('inventories.insert', this.state.name.trim(), (err, newItemId) => {
+		Meteor.call('inventories.insert', this.state.name, (err, newItemId) => {
 			
 			if (err) {
 				Alert.alert(
@@ -109,27 +111,17 @@ class InventoryList extends Component {
 		const listId = this.props.navigation.state.params.id;
 		const rightButtons = [
 			{
-				text: (<Icon
-					name='edit'
-					color={colors.tint}
-					size={24}
-					underlayColor='transparent'
-				/>),
-				backgroundColor: 'orange',
-				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				type: 'secondary',
+				text: (<EditButton/>),
+				backgroundColor: editButton.backgroundColor,
+				underlayColor: editButton.underlayColor,
+				type: editButton.type,
 				onPress: () => this.props.navigation.navigate('InventoryEdit', { listId: listId, id: inventories.item._id })
 			},
 			{
-				text: (<Icon
-					name='delete'
-					color={colors.tint}
-					size={24}
-					underlayColor='transparent'
-				/>),
-				backgroundColor: 'red',
-				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				type: 'secondary',
+				text: (<DeleteButton/>),
+				backgroundColor: deleteButton.backgroundColor,
+				underlayColor: deleteButton.underlayColor,
+				type: deleteButton.type,
 				onPress: () => 	Meteor.call('inventories.remove', inventories.item._id, (err) => {
 					if (err) {
 						Alert.alert(

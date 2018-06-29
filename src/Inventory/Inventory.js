@@ -27,7 +27,6 @@ export default class Inventory extends Component {
 	}
 
 	static navigationOptions({ navigation }) {
-		const params = navigation.state.params || {};
 		return {
 			headerTitle: 'Edit Item',
 			headerStyle: {
@@ -59,7 +58,7 @@ export default class Inventory extends Component {
 			return;
 		}
 
-		Meteor.call('inventories.updateName', this.props.navigation.state.params.id, this.state.name.trim(), (err) => {
+		Meteor.call('inventories.updateName', this.props.navigation.state.params.id, this.state.name, (err) => {
 			if (err) {
 				Alert.alert(
 					"Error Updating Item",
@@ -72,7 +71,7 @@ export default class Inventory extends Component {
 				return;
 			}
 
-			Meteor.call('inventories.updateAmount', this.props.navigation.state.params.id, this.state.amount.trim(), (amountErr) => {
+			Meteor.call('inventories.updateAmount', this.props.navigation.state.params.id, this.state.amount, (amountErr) => {
 				if (amountErr) {
 					Alert.alert(
 						"Error Updating Item",
