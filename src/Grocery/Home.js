@@ -40,7 +40,7 @@ export default class Home extends Component {
 			badgeValue = list.items.filter(item => {
 				const grocery = groceries.find(grocery => grocery._id == item);
 				return grocery 
-					? grocery.checked
+					? !grocery.checked
 					: false;
 			}).length;
 		}

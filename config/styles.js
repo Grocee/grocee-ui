@@ -24,8 +24,9 @@ const navigationOptions = {
 
 const stylesheet = StyleSheet.create({
 	input: {
-		fontSize: 18,
-		padding: 12
+		padding: 12,
+		height: 50,
+		fontSize: 18
 	},
 	rightButton: {
 		padding: 5
