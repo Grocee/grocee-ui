@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 
-import { colors, stylesheet } from '../../config/styles';
+import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
 
 import { StyleSheet, View, ScrollView, FlatList, Alert, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Icon, ListItem, List, Button } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
+import EditButton from '../components/EditButton';
+import DeleteButton from '../components/DeleteButton';
 
 import Meteor from 'react-native-meteor';
 
@@ -132,27 +134,17 @@ export default class GroceryList extends Component {
 		const navigation = this.props.navigation;
 		const rightButtons = [
 			{
-				text: (<Icon 
-					name='edit'
-					color={colors.tint}
-					size={24}
-					underlayColor='transparent'
-				/>),
-				backgroundColor: 'orange',
-				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				type: 'secondary',
+				text: (<EditButton/>),
+				backgroundColor: editButton.backgroundColor,
+				underlayColor: editButton.underlayColor,
+				type: editButton.type,
 				onPress: () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id })
 			},
 			{
-				text: (<Icon 
-					name='delete'
-					color={colors.tint}
-					size={24}
-					underlayColor='transparent'
-				/>),
-				backgroundColor: 'red',
-				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				type: 'secondary',
+				text: (<DeleteButton/>),
+				backgroundColor: deleteButton.backgroundColor,
+				underlayColor: deleteButton.underlayColor,
+				type: deleteButton.type,
 				onPress: () => Meteor.call('groceries.remove', item.item._id)
 			}
 		];

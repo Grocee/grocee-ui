@@ -22,10 +22,23 @@ const navigationOptions = {
 	}
 };
 
+const editButton = {
+	backgroundColor: 'orange',
+	underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+	type: 'secondary'
+};
+
+const deleteButton = {
+	backgroundColor: 'red',
+	underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+	type: 'secondary'
+}
+
 const stylesheet = StyleSheet.create({
 	input: {
+		padding: 12,
 		height: 50,
-		fontSize: 18
+		fontSize: 18,
 	},
 	rightButton: {
 		padding: 5
@@ -64,4 +77,4 @@ const stylesheet = StyleSheet.create({
 	}
 });
 
-export { colors, navigationOptions, stylesheet };
+export { colors, navigationOptions, editButton, deleteButton, stylesheet };

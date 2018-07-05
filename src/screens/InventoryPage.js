@@ -5,6 +5,7 @@ import settings from '../../config/settings';
 import Meteor, { createContainer } from 'react-native-meteor';
 import Home from '../Inventory/Home';
 import InventoryList from '../Inventory/InventoryList';
+import Inventory from '../Inventory/Inventory';
 import CreateList from '../Inventory/CreateList';
 
 const InventoryPage = StackNavigator(
@@ -16,6 +17,10 @@ const InventoryPage = StackNavigator(
 		InventoryList: {
 			screen: InventoryList,
 			path: 'inventory/list/:listName',
+		},
+		InventoryEdit: {
+			screen: Inventory,
+			path: 'inventory/:id'
 		}
 	}
 )
