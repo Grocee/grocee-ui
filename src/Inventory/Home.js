@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-import {
-	StyleSheet,
-	View,
-	Text,
-	ScrollView,
-	Modal
-} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ScrollView, Alert} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { colors } from '../../config/styles';
-import { List, ListItem, Card, Button, Icon } from 'react-native-elements';
-import settings from '../../config/settings';
+import {colors, stylesheet} from '../../config/styles';
+import { List, ListItem, Icon } from 'react-native-elements';
+import Meteor from 'react-native-meteor';
 
 export default class Home extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.showNewListInput = this.showNewListInput.bind(this);
+
+		this.state = {
+			newListInputVisible: false,
+			newListName: ''
+		};
 	}
 
 	static navigationOptions({ navigation }) {
+		const params = navigation.state.params || {};
 
 		return {
 			headerTitle: "Inventory",
@@ -35,12 +37,47 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('CreateList')}
+						onPress={params.showNewListInput}
 						containerStyle={styles.rightButton}
 					/>
 				</View>
 			)
 		}
+	}
+
+	componentWillMount() {
+		this.props.navigation.setParams({ showNewListInput: this.showNewListInput });
+	}
+
+	showNewListInput() {
+		this.setState(prevState => ({ newListInputVisible: !prevState.newListInputVisible }));
+	}
+
+	addNewList() {
+
+		if (this.state.newListName.length === 0) {
+			console.log('name cannot be empty') // eslint-disable-line
+			this.setState({ newListInputVisible: false });
+			return;
+		}
+
+		Meteor.call('inventorylists.create', this.state.newListName, (err, listId) => {
+
+			if (err) {
+				Alert.alert(
+					"Error Creating New List",
+					err.error,
+					[
+						{ text: "OK", style: 'normal'}
+					],
+					{ cancelable: true }
+				);
+			} else {
+				this.props.navigation.navigate('InventoryList', { id: listId, name: this.state.newListName })
+			}
+		});
+
+		this.setState({ newListInputVisible: false });
 	}
 
 	renderList(list) {
@@ -52,10 +89,6 @@ export default class Home extends Component {
 				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
 			/>
 		);
-	}
-
-	loadList(list) {
-		this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name });
 	}
 
 	renderLists() {
@@ -75,10 +108,26 @@ export default class Home extends Component {
 		}
 	}
 
+	renderNewListInput() {
+		return (
+			<View style={stylesheet.newItem}>
+				<TextInput
+					placeholder="New List"
+					returnKeyType='done'
+					autoCapitalize='words'
+					autoFocus
+					onChangeText={(name) => this.setState({ newListName: name })}
+					onSubmitEditing={() => this.addNewList()}
+				/>
+			</View>
+		);
+	}
+
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<ScrollView style={{ flex: 1}}>
+				{this.state.newListInputVisible ? this.renderNewListInput() : null}
+				<ScrollView style={{ flex: 1 }}>
 					{this.renderLists()}
 				</ScrollView>
 			</SafeAreaView>

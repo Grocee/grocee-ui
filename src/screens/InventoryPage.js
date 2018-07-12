@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import settings from '../../config/settings';
-import Meteor, { createContainer } from 'react-native-meteor';
 import Home from '../Inventory/Home';
 import InventoryList from '../Inventory/InventoryList';
 import Inventory from '../Inventory/Inventory';
-import CreateList from '../Inventory/CreateList';
+import { navigationOptions } from '../../config/styles';
 
 const InventoryPage = StackNavigator(
 	{
@@ -22,22 +19,12 @@ const InventoryPage = StackNavigator(
 			screen: Inventory,
 			path: 'inventory/:id'
 		}
-	}
-)
-
-const MainStack = StackNavigator(
-	{
-		Inventory: {
-			screen: InventoryPage,
-		},
-		CreateList: {
-			screen: CreateList,
-		},
 	},
 	{
-		mode: 'modal',
-		headerMode: 'none'
+		initialRouteName: 'Home',
+		navigationOptions,
+		mode: 'screen'
 	}
-)
+);
 
-export default MainStack;
+export default InventoryPage;
