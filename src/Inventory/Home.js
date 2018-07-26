@@ -50,13 +50,14 @@ export default class Home extends Component {
 	}
 
 	showNewListInput() {
-		this.setState(prevState => ({ newListInputVisible: !prevState.newListInputVisible }));
+		this.setState(prevState => ({
+			newListInputVisible: !prevState.newListInputVisible
+		}));
 	}
 
 	addNewList() {
 
 		if (this.state.newListName.length === 0) {
-			console.log('name cannot be empty') // eslint-disable-line
 			this.setState({ newListInputVisible: false });
 			return;
 		}
