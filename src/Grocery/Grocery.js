@@ -106,10 +106,10 @@ export default class Grocery extends Component {
 				<Button 
 					title="Delete"
 					onPress={() => {
-						Meteor.call('groceries.remove', navigation.state.params.id, (err) => {
+						Meteor.call('groceries.archive', navigation.state.params.id, true, (err) => {
 							if (err) {
 								return Alert.alert(
-									'Error removing Grocery item',
+									'Error removing Grocery item from grocery list',
 									err,
 									[
 										{ text: "OK", style: 'normal'}
@@ -117,7 +117,22 @@ export default class Grocery extends Component {
 									{ cancelable: true }
 								);
 							}
-							navigation.goBack();
+
+							// Remove the archived grocery item from the grocery list
+							Meteor.call('grocerylists.removeItem', navigation.state.params.listId, navigation.state.params.id, (err) => {
+								if (err) {
+									return Alert.alert(
+										'Error removing grocery item from grocery list',
+										err,
+										[
+											{ text: "OK", style: 'normal' }
+										],
+										{ cancelable: true }
+									);
+								}
+
+								navigation.goBack();
+							});
 						});
 					}}
 					backgroundColor={colors.background}/>
