@@ -74,7 +74,15 @@ const stylesheet = StyleSheet.create({
 	},
 	badge: {
 		backgroundColor: 'salmon'
-	}
+	},
+	signOutText: {
+		fontSize: 18,
+		color: 'red',
+		alignItems: 'center',
+		flex: 1,
+		padding: 5,
+		height: 45
+	},
 });
 
 export { colors, navigationOptions, editButton, deleteButton, stylesheet };

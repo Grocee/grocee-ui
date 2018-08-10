@@ -49,7 +49,7 @@ export default class SignIn extends Component {
 			this._handleError('Password cannot be empty.');
 		}
 
-		if (confirmPasswordVisible && password != confirmPassword) {
+		if (confirmPasswordVisible && password !== confirmPassword) {
 			this._handleError('Passwords do not match.');
 			valid = false;
 		}

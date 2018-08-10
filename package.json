@@ -16,6 +16,7 @@
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-meteor": "^1.2.0",
     "react-native-swipeout": "^2.3.3",
+    "react-native-tableview": "^2.3.0",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.5.8"
   },
