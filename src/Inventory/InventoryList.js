@@ -14,7 +14,7 @@ class InventoryList extends Component {
 
 	constructor(props) {
 		super(props);
-		this.dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 		this.state = {
 			newItemInputVisible: false
 		};
@@ -25,13 +25,8 @@ class InventoryList extends Component {
 		const params = navigation.state.params || {};
 
 		return {
-			headerTitle: navigation.state.params.name,
-			headerStyle: {
-				backgroundColor: colors.background,
-			},
-			headerTitleStyle: {
-				color: colors.tint,
-			},
+			headerTitle: params.name,
+			headerBackTitle: "Back",
 			headerRight: (
 				<View style={stylesheet.rightButton} >
 					<Icon 
@@ -81,7 +76,7 @@ class InventoryList extends Component {
 	}
 
 	addNewInventory() {
-		
+
 		if (this.state.name.length === 0) {
 			console.log('name cannot be empty') // eslint-disable-line
 			this.setState({ newItemInputVisible: false });
@@ -99,9 +94,9 @@ class InventoryList extends Component {
 					],
 					{ cancelable: true }
 				);
+			} else {
+				Meteor.call('inventorylists.addItem', this.props.navigation.state.params.id, newItemId);
 			}
-
-			Meteor.call('inventorylists.addItem', this.props.navigation.state.params.id, newItemId);
 		});
 
 		this.setState({ newItemInputVisible: false, name: '' });
@@ -151,7 +146,10 @@ class InventoryList extends Component {
 	renderItems() {
 		
 		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.id);
-		let inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
+		let inventories = [];
+		if (list && list.items) {
+			inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
+		}
 
 		if (inventories.length > 0) {
 			return (
