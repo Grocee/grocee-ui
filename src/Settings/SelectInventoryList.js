@@ -34,11 +34,7 @@ export default class SelectInventoryList extends Component {
 
 	setDefaultList(item) {
 		const inventoryList = this.state.lists[item.selectedIndex];
-
-		// remove the old default list then set a new one
-		Meteor.call('inventorylists.setDefault', this.state.defaultList._id, false);
-		Meteor.call('inventorylists.setDefault', inventoryList._id, true);
-
+		Meteor.call('inventorylists.setDefault', inventoryList._id);
 		this.props.navigation.goBack();
 	}
 
