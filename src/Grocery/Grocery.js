@@ -3,8 +3,8 @@ import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { TextInput, SafeAreaView, Alert } from 'react-native';
-import { Button } from 'react-native-elements';
+import { SafeAreaView, Alert, View } from 'react-native';
+import { Button, Icon, FormLabel, FormInput } from 'react-native-elements';
 
 export default class Grocery extends Component {
 	
@@ -30,6 +30,53 @@ export default class Grocery extends Component {
 			amount,
 			newGrocery
 		}
+	}
+
+	static navigationOptions({ navigation }) {
+		return {
+			headerTitle: 'Grocery',
+			headerLeft: (
+				<Button 
+					title="Cancel"
+					onPress={() => navigation.goBack()}
+					backgroundColor={colors.background}/>
+			),
+			headerRight: (
+				<Button 
+					title="Delete"
+					onPress={() => {
+						Meteor.call('groceries.archive', navigation.state.params.id, true, (err) => {
+							if (err) {
+								return Alert.alert(
+									'Error removing Grocery item from grocery list',
+									err,
+									[
+										{ text: "OK", style: 'normal'}
+									],
+									{ cancelable: true }
+								);
+							}
+
+							// Remove the archived grocery item from the grocery list
+							Meteor.call('grocerylists.removeItem', navigation.state.params.listId, navigation.state.params.id, (err) => {
+								if (err) {
+									return Alert.alert(
+										'Error removing grocery item from grocery list',
+										err,
+										[
+											{ text: "OK", style: 'normal' }
+										],
+										{ cancelable: true }
+									);
+								}
+
+								navigation.goBack();
+							});
+						});
+					}}
+					backgroundColor={colors.background}/>
+			)
+		};
 	}
     
 	addGrocery() {
@@ -93,65 +140,20 @@ export default class Grocery extends Component {
 		});
 	}
 
-	static navigationOptions({ navigation }) {
-		return {
-			headerTitle: 'Grocery',
-			headerLeft: (
-				<Button 
-					title="Cancel"
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}/>
-			),
-			headerRight: (
-				<Button 
-					title="Delete"
-					onPress={() => {
-						Meteor.call('groceries.archive', navigation.state.params.id, true, (err) => {
-							if (err) {
-								return Alert.alert(
-									'Error removing Grocery item from grocery list',
-									err,
-									[
-										{ text: "OK", style: 'normal'}
-									],
-									{ cancelable: true }
-								);
-							}
-
-							// Remove the archived grocery item from the grocery list
-							Meteor.call('grocerylists.removeItem', navigation.state.params.listId, navigation.state.params.id, (err) => {
-								if (err) {
-									return Alert.alert(
-										'Error removing grocery item from grocery list',
-										err,
-										[
-											{ text: "OK", style: 'normal' }
-										],
-										{ cancelable: true }
-									);
-								}
-
-								navigation.goBack();
-							});
-						});
-					}}
-					backgroundColor={colors.background}/>
-			)
-		}
-	}
-
 	render() {
 		// TODO make the text input look nicer
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<TextInput
+				<FormLabel>Name</FormLabel>
+				<FormInput
 					style={stylesheet.input}					
 					onChangeText={(name) => this.setState({ name })}
 					value={this.state.name}
 					placeholder='Add new grocery item'
 					autoCapitalize='words'
 					returnKeyType='next' />
-				<TextInput
+				<FormLabel>Amount</FormLabel>
+				<FormInput
 					style={stylesheet.input}
 					onChangeText={(amount) => this.setState({ amount })}
 					value={this.state.amount}
