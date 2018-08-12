@@ -40,6 +40,9 @@ const stylesheet = StyleSheet.create({
 		height: 50,
 		fontSize: 18,
 	},
+	leftButton: {
+		padding: 5
+	},
 	rightButton: {
 		padding: 5
 	},

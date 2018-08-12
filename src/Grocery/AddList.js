@@ -4,7 +4,7 @@ import Meteor from 'react-native-meteor';
 import { colors, stylesheet } from '../../config/styles';
 
 import { TextInput, SafeAreaView, Alert } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 
 export default class AddGroceryList extends Component {
 	
@@ -13,6 +13,18 @@ export default class AddGroceryList extends Component {
         
 		this.state = {
 			name: ''
+		}
+	}
+
+	static navigationOptions({ navigation }) {
+		return {
+			headerTitle: 'New Grocery List',
+			headerLeft: (
+				<Button 
+					title="Cancel"
+					onPress={() => navigation.goBack()}
+					backgroundColor={colors.background}/>
+			)
 		}
 	}
     
@@ -37,29 +49,24 @@ export default class AddGroceryList extends Component {
 		});
 	}
 
-	static navigationOptions({ navigation }) {
-		return {
-			headerTitle: 'New Grocery List',
-			headerLeft: (
-				<Button 
-					title="Cancel"
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}/>
-			)
-		}
-	}
-
 	render() {
+		const invalidName = !this.state.name || this.state.name == "";
+
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<TextInput
+				<FormLabel>Name</FormLabel>
+				<FormInput
 					style={stylesheet.input}					
 					onChangeText={(name) => this.setState({ name })}
+					shake={invalidName}
 					value={this.state.name}
 					placeholder='Add new grocery list'
 					autoCapitalize='words'
 					returnKeyType='done'
 					onSubmitEditing={() => this.createList()} />
+				{invalidName 
+					? <FormValidationMessage>Name cannot be empty</FormValidationMessage> 
+					: null}
 			</SafeAreaView>
 		)
 	}

@@ -4,57 +4,41 @@ import { colors, stylesheet, editButton, deleteButton } from '../../config/style
 
 import { StyleSheet, View, ScrollView, FlatList, Alert, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Icon, ListItem, List, Button } from 'react-native-elements';
+import { Icon, ListItem, List, Button, Card } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import EditButton from '../components/EditButton';
 import DeleteButton from '../components/DeleteButton';
 
 import Meteor from 'react-native-meteor';
 
-
 export default class GroceryList extends Component {
 
 	constructor(props) {
 		super(props);
 
-		let groceryList = this.props.screenProps.groceryLists.find(list => list._id === this.props.navigation.state.params.id);
-		let groceries = [];
-		if (groceryList && groceryList.items) {
-			groceries = this.props.screenProps.groceries.filter(grocery => groceryList.items.includes(grocery._id));
-		}
-
 		this.state = {
-			name: '',
 			amount: '',
 			isLoading: false,
 			searchNeedle: '',
-			displayChecked: false,
-			groceryList: groceryList || {},
-			groceries
+			displayChecked: false
 		};
-	}
-
-	componentDidUpdate(_prevProps) {
-		// TODO Update groceryList and groceries in the state accordingly
-	}
-
-	getGroceries(groceryLists, groceryListId, allGroceries) {
-		let groceryList = groceryLists.find(list => list._id === groceryListId);
-		let groceries = [];
-		if (groceryList && groceryList.items) {
-			groceries = allGroceries.filter(grocery => groceryList.items.includes(grocery._id));
-		}
-		if (!groceryList) {
-			groceryList = {};
-		}
-
-		return { groceryList , groceries };
 	}
 
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: navigation.state.params.name,
-			headerBackTitle: "Back",
+			headerLeft: (
+				<View style={stylesheet.leftButton}>
+					<Icon 
+						name='chevron-left'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.goBack()}
+						containerStyle={stylesheet.leftButton} />
+				</View>
+			),
+			// TODO make the headerRight three dots dropdown/menu
 			headerRight: (
 				<Button 
 					title="Delete"
@@ -72,9 +56,9 @@ export default class GroceryList extends Component {
 							}
 
 							// Also need to delete all the grocery items in this grocery list
-							// TODO archive instead of delete?
-							this.state.groceries.forEach(grocery => {
-								Meteor.call('groceries.remove', grocery._id);
+							const { groceries } = this.getGroceries();
+							groceries.forEach(grocery => {
+								Meteor.call('groceries.archive', grocery._id, true);
 							});
 
 							navigation.goBack();
@@ -83,6 +67,19 @@ export default class GroceryList extends Component {
 					backgroundColor={colors.background}/>
 			)
 		}
+	}
+
+	getGroceries() {
+		let groceryList = this.props.screenProps.groceryLists.find(list => list._id === this.props.navigation.state.params.id);
+		let groceries = [];
+		if (groceryList && groceryList.items) {
+			groceries = this.props.screenProps.groceries.filter(grocery => groceryList.items.includes(grocery._id));
+		}
+		if (!groceryList) {
+			groceryList = {};
+		}
+
+		return { groceryList , groceries };
 	}
     
 	renderAddButton() {
@@ -101,8 +98,10 @@ export default class GroceryList extends Component {
 	}
 
 	renderGroceries() {
+		const { groceries } = this.getGroceries();
+
 		// Filter based on search results
-		let filteredGroceries = this.state.groceries.filter(grocery => {
+		let filteredGroceries = groceries.filter(grocery => {
 			if (this.state.searchNeedle !== '') {
 				return grocery.name.indexOf(this.state.searchNeedle) >= 0;
 			} else {
@@ -116,8 +115,12 @@ export default class GroceryList extends Component {
 
 		if (filteredGroceries.length == 0) {
 			return (
-				<Text>You do not have any grocery items in this grocery list. Click the + button to add one!</Text>
-			)
+				<Card>
+					<Text style={{ textAlign: 'center' }}>
+						You do not have any grocery items in this grocery list. Click the + button to add one!
+					</Text>
+				</Card>
+			);
 		}
 
 		return (
@@ -165,7 +168,9 @@ export default class GroceryList extends Component {
 		
 		const onPress = () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id });
 		
-		const title = item.item.amount ? `${item.item.amount} ${item.item.name}` : `${item.item.name}`;
+		const title = item.item.amount 
+			? `${item.item.amount} ${item.item.name}` 
+			: `${item.item.name}`;
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
 				<ListItem title={title} onPress={onPress} hideChevron/>

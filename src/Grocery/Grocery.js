@@ -4,7 +4,7 @@ import Meteor from 'react-native-meteor';
 import { colors, stylesheet } from '../../config/styles';
 
 import { SafeAreaView, Alert, View } from 'react-native';
-import { Button, Icon, FormLabel, FormInput } from 'react-native-elements';
+import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
 
 export default class Grocery extends Component {
 	
@@ -24,23 +24,30 @@ export default class Grocery extends Component {
 				amount = grocery.amount;
 			}
 		}
+
 		this.state = {
 			listId: props.navigation.state.params.listId,
 			name,
 			amount,
 			newGrocery
-		}
+		};
 	}
 
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: 'Grocery',
 			headerLeft: (
-				<Button 
-					title="Cancel"
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}/>
+				<View style={stylesheet.leftButton}>
+					<Icon 
+						name='chevron-left'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.goBack()}
+						containerStyle={stylesheet.leftButton} />
+				</View>
 			),
+			// TODO make the headerRight three dots dropdown/menu
 			headerRight: (
 				<Button 
 					title="Delete"
@@ -123,15 +130,27 @@ export default class Grocery extends Component {
 
 		Meteor.call('groceries.updateName', this.props.navigation.state.params.id, this.state.name, (nameErr) => {
 			if (nameErr) {
-				// TODO
-				return;
+				return Alert.alert(
+					'Error updating Grocery item',
+					'Error updating name',
+					[
+						{ text: "OK", style: 'normal'}
+					],
+					{ cancelable: true }
+				);
 			}
 
 			if (this.state.amount) {
 				Meteor.call('groceries.updateAmount', this.props.navigation.state.params.id, this.state.amount, (amountErr) => {
 					if (amountErr) {
-						// TODO
-						return;
+						return Alert.alert(
+							'Error updating Grocery item',
+							'Error updating amount',
+							[
+								{ text: "OK", style: 'normal'}
+							],
+							{ cancelable: true }
+						);
 					}
 				});
 			}
@@ -141,17 +160,21 @@ export default class Grocery extends Component {
 	}
 
 	render() {
-		// TODO make the text input look nicer
+		const invalidName = !this.state.name || this.state.name == "";
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
 				<FormLabel>Name</FormLabel>
 				<FormInput
 					style={stylesheet.input}					
 					onChangeText={(name) => this.setState({ name })}
+					shake={invalidName}
 					value={this.state.name}
 					placeholder='Add new grocery item'
 					autoCapitalize='words'
 					returnKeyType='next' />
+				{invalidName 
+					? <FormValidationMessage>Name cannot be empty</FormValidationMessage> 
+					: null}
 				<FormLabel>Amount</FormLabel>
 				<FormInput
 					style={stylesheet.input}
@@ -163,6 +186,6 @@ export default class Grocery extends Component {
 						? this.addGrocery() 
 						: this.updateGrocery()}/>
 			</SafeAreaView>
-		)
+		);
 	}
 }
