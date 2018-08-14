@@ -138,7 +138,10 @@ class InventoryList extends Component {
 
 		return (
 			<Swipeout right={rightButtons} autoClose='true' backgroundColor='white'>
-				<ListItem title={title} hideChevron />
+				<ListItem
+					title={inventories.item.name}
+					subtitle={inventories.item.amount}
+					hideChevron />
 			</Swipeout>
 		);
 	}

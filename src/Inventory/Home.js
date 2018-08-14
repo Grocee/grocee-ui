@@ -86,7 +86,7 @@ export default class Home extends Component {
 			<ListItem
 				key={list._id}
 				title={list.name}
-				badge={{ value: list.items.length }}
+				badge={{ value: list.items.length, containerStyle: stylesheet.badge }}
 				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
 			/>
 		);
