@@ -152,10 +152,10 @@ export default class Grocery extends Component {
 							{ cancelable: true }
 						);
 					}
+
+					this.props.navigation.goBack();
 				});
 			}
-
-			this.props.navigation.goBack();
 		});
 	}
 
