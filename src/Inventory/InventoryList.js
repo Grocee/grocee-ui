@@ -128,7 +128,7 @@ class InventoryList extends Component {
 			return (
 				<Card>
 					<Text style={{textAlign: 'center'}}>
-						There are no inventory items in this list. Click the + button to add one!
+						There are no inventory items in this list. Tap the + button to add one!
 					</Text>
 				</Card>
 			);

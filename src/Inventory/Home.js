@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Text, TextInput, ScrollView, Alert} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import {colors, stylesheet} from '../../config/styles';
-import { List, ListItem, Icon } from 'react-native-elements';
+import {List, ListItem, Icon, Card} from 'react-native-elements';
 
 export default class Home extends Component {
 
@@ -73,7 +73,11 @@ export default class Home extends Component {
 			);
 		} else {
 			return (
-				<Text>You do not have any inventory lists. Click the top right icon to create one!</Text>
+				<Card>
+					<Text style={{textAlign: 'center'}}>
+						You do not have any inventory lists. Tap the + button to create one!
+					</Text>
+				</Card>
 			);
 		}
 	}
