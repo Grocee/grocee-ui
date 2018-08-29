@@ -38,31 +38,11 @@ export default class GroceryList extends Component {
 						containerStyle={stylesheet.leftButton} />
 				</View>
 			),
-			// TODO make the headerRight three dots dropdown/menu
 			headerRight: (
 				<Button 
-					title="Delete"
+					title="Edit"
 					onPress={() => {
-						Meteor.call('grocerylists.remove', navigation.state.params.id, (err) => {
-							if (err) {
-								return Alert.alert(
-									'Error removing Grocery List',
-									err,
-									[
-										{ text: "OK", style: 'normal'}
-									],
-									{ cancelable: true }
-								);
-							}
-
-							// Also need to delete all the grocery items in this grocery list
-							const { groceries } = this.getGroceries();
-							groceries.forEach(grocery => {
-								Meteor.call('groceries.archive', grocery._id, true);
-							});
-
-							navigation.goBack();
-						});
+						navigation.navigate('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
 					}}
 					backgroundColor={colors.background}/>
 			)
@@ -169,7 +149,7 @@ export default class GroceryList extends Component {
 		const onPress = () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id });
 		
 		const title = item.item.amount 
-			? `${item.item.amount} ${item.item.name}` 
+			? `${item.item.amount} ${item.item.name}`
 			: `${item.item.name}`;
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
