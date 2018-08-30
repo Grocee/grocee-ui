@@ -4,6 +4,7 @@ import Home from '../Inventory/Home';
 import InventoryList from '../Inventory/InventoryList';
 import Inventory from '../Inventory/Inventory';
 import { navigationOptions } from '../../config/styles';
+import AddList from "../Inventory/AddList";
 
 const InventoryPage = StackNavigator(
 	{
@@ -18,7 +19,11 @@ const InventoryPage = StackNavigator(
 		InventoryEdit: {
 			screen: Inventory,
 			path: 'inventory/:id'
-		}
+		},
+		AddList: {
+			screen: AddList,
+			path: 'inventory/addList',
+		},
 	},
 	{
 		initialRouteName: 'Home',

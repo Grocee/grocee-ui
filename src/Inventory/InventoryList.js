@@ -3,14 +3,12 @@ import { StyleSheet, FlatList, ListView, View, Text, TextInput, ScrollView, Acti
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
-import { List, ListItem, Icon } from 'react-native-elements';
+import {List, ListItem, Icon, Card} from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import EditButton from '../components/EditButton';
 import DeleteButton from '../components/DeleteButton';
 
 class InventoryList extends Component {
-
-	//TODO: dismisses the text field if tap anywhere outside the view
 
 	constructor(props) {
 		super(props);
@@ -34,72 +32,38 @@ class InventoryList extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={params.showActionSheet}
+						onPress={ () =>
+							//TODO: need Android solution for this
+							ActionSheetIOS.showActionSheetWithOptions({
+								options: ['Cancel', 'Archive List'],
+								destructiveButtonIndex: 1,
+								cancelButtonIndex: 0,
+							},
+							(buttonIndex) => {
+								if (buttonIndex === 1) {
+									Alert.alert(
+										'Confirm Archive',
+										'Are you are sure you want to archive this list? All the items in this list will also be archived.',
+										[
+											{ text: 'Cancel', style: 'cancel'},
+											{ text: 'Confirm',
+												onPress: () => {
+													Meteor.call('inventorylists.archive', navigation.state.params.id);
+													navigation.goBack();
+												},
+												style: 'destructive'
+											},
+										],
+										{ cancelable: false }
+									)
+								}
+							})
+						}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
 			)
 		}
-	}
-
-	componentWillMount() {
-		this.props.navigation.setParams({ showActionSheet: this.showActionSheet });
-	}
-
-	showActionSheet() {
-		ActionSheetIOS.showActionSheetWithOptions({
-			options: ['Cancel', 'Delete List'],
-			destructiveButtonIndex: 1,
-			cancelButtonIndex: 0,
-		},
-		(buttonIndex) => {
-			if (buttonIndex === 1) {
-				Alert.alert(
-					'Confirm Delete',
-					'Are you are sure you want to delete this list? All the items in this list will also be deleted.',
-					[
-						{ text: 'Cancel', onPress: () => console.log('cancel pressed'), style: 'cancel'},
-						{ text: 'Confirm', onPress: () => console.log('Confirm pressed'), style: 'destructive' },
-					],
-					{ cancelable: false }
-				)
-			}
-		});
-	}
-
-	deleteList() {
-		console.log('Deleting this list!');
-
-		// TODO: perform actual deletion
-
-		this.props.navigation.goBack();
-	}
-
-	addNewInventory() {
-
-		if (this.state.name.length === 0) {
-			console.log('name cannot be empty') // eslint-disable-line
-			this.setState({ newItemInputVisible: false });
-			return;
-		}
-
-		Meteor.call('inventories.insert', this.state.name, (err, newItemId) => {
-			
-			if (err) {
-				Alert.alert(
-					"Error Creating Item",
-					err.error,
-					[
-						{ text: "OK", style: 'normal'}
-					],
-					{ cancelable: true }
-				);
-			} else {
-				Meteor.call('inventorylists.addItem', this.props.navigation.state.params.id, newItemId);
-			}
-		});
-
-		this.setState({ newItemInputVisible: false, name: '' });
 	}
 
 	renderItem(inventories) {
@@ -117,24 +81,20 @@ class InventoryList extends Component {
 				backgroundColor: deleteButton.backgroundColor,
 				underlayColor: deleteButton.underlayColor,
 				type: deleteButton.type,
-				onPress: () => 	Meteor.call('inventories.remove', inventories.item._id, (err) => {
+				onPress: () => 	Meteor.call('inventories.archive', inventories.item._id, (err) => {
 					if (err) {
 						Alert.alert(
-							"Error Deleting Item",
+							"Error Archiving Item",
 							err.reason,
 							[
 								{ text: "OK", style: 'normal' }
 							],
 							{ cancelable: true }
 						);
-					} else {
-						Meteor.call('inventorylists.removeItem', listId, inventories.item._id);
 					}
 				})
 			}
 		];
-
-		const title = inventories.item.amount ? `${inventories.item.name} (${inventories.item.amount})` : `${inventories.item.name}`;
 
 		return (
 			<Swipeout right={rightButtons} autoClose='true' backgroundColor='white'>
@@ -151,7 +111,7 @@ class InventoryList extends Component {
 		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.id);
 		let inventories = [];
 		if (list && list.items) {
-			inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id));
+			inventories = this.props.screenProps.inventories.filter(inventory => list.items.includes(inventory._id) && !inventory.archived);
 		}
 
 		if (inventories.length > 0) {
@@ -166,13 +126,18 @@ class InventoryList extends Component {
 			);
 		} else {
 			return (
-				<Text>There are no inventory items in this list.</Text>
+				<Card>
+					<Text style={{textAlign: 'center'}}>
+						There are no inventory items in this list. Tap the + button to add one!
+					</Text>
+				</Card>
 			);
 		}
 
 	}
 
 	renderAddButton() {
+		const navigation = this.props.navigation;
 		return (
 			<View style={stylesheet.fab}>
 				<Icon
@@ -180,31 +145,16 @@ class InventoryList extends Component {
 					raised
 					reverse
 					color={colors.background}
-					onPress={() => this.setState(prevState => ({ newItemInputVisible: !prevState.newItemInputVisible }))}
+					onPress={() => navigation.navigate('InventoryEdit', { listId: navigation.state.params.id })}
 				/>
 			</View>
 		);
 	}
 
-	renderNewItemTextInput() {
-		return (
-			<View style={stylesheet.newItem}>
-				<TextInput
-					placeholder="Item name"
-					returnKeyType='done'
-					autoCapitalize='words'
-					autoFocus
-					onChangeText={(name) => this.setState({ name })}
-					onSubmitEditing={() => this.addNewInventory()}
-				/>
-			</View>
-		);
-	}
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				{this.state.newItemInputVisible ? this.renderNewItemTextInput() : null}
 				<ScrollView style={{ flex: 1 }}>
 					{this.renderItems()}
 				</ScrollView>

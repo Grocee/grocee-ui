@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Text, TextInput, ScrollView, Alert} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import {colors, stylesheet} from '../../config/styles';
-import { List, ListItem, Icon } from 'react-native-elements';
-import Meteor from 'react-native-meteor';
+import {List, ListItem, Icon, Card} from 'react-native-elements';
 
 export default class Home extends Component {
 
 	constructor(props) {
 		super(props);
-
-		this.showNewListInput = this.showNewListInput.bind(this);
 
 		this.state = {
 			newListInputVisible: false,
@@ -19,8 +16,6 @@ export default class Home extends Component {
 	}
 
 	static navigationOptions({ navigation }) {
-		const params = navigation.state.params || {};
-
 		return {
 			headerTitle: "Inventory",
 			headerStyle: {
@@ -37,7 +32,7 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={params.showNewListInput}
+						onPress={() => navigation.navigate('AddList')}
 						containerStyle={styles.rightButton}
 					/>
 				</View>
@@ -45,48 +40,22 @@ export default class Home extends Component {
 		}
 	}
 
-	componentWillMount() {
-		this.props.navigation.setParams({ showNewListInput: this.showNewListInput });
-	}
-
-	showNewListInput() {
-		this.setState(prevState => ({
-			newListInputVisible: !prevState.newListInputVisible
-		}));
-	}
-
-	addNewList() {
-
-		if (this.state.newListName.length === 0) {
-			this.setState({ newListInputVisible: false });
-			return;
-		}
-
-		Meteor.call('inventorylists.create', this.state.newListName, (err, listId) => {
-
-			if (err) {
-				Alert.alert(
-					"Error Creating New List",
-					err.error,
-					[
-						{ text: "OK", style: 'normal'}
-					],
-					{ cancelable: true }
-				);
-			} else {
-				this.props.navigation.navigate('InventoryList', { id: listId, name: this.state.newListName })
-			}
-		});
-
-		this.setState({ newListInputVisible: false });
-	}
-
 	renderList(list) {
+
+		const inventories = this.props.screenProps.inventories;
+
+		let badgeValue = 0;
+		if (list.items) {
+			badgeValue = list.items.filter(item => {
+				const inventory = inventories.find(inventory => inventory._id === item);
+				return inventory ? !inventory.archived : false
+			}).length;
+		}
 		return (
 			<ListItem
 				key={list._id}
 				title={list.name}
-				badge={{ value: list.items.length, containerStyle: stylesheet.badge }}
+				badge={{ value: badgeValue, containerStyle: stylesheet.badge }}
 				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
 			/>
 		);
@@ -94,7 +63,7 @@ export default class Home extends Component {
 
 	renderLists() {
 
-		let lists = this.props.screenProps.inventoryLists;
+		let lists = this.props.screenProps.inventoryLists.filter(list => !list.archived);
 
 		if (lists.length > 0) {
 			return (
@@ -104,30 +73,18 @@ export default class Home extends Component {
 			);
 		} else {
 			return (
-				<Text>You do not have any inventory lists. Click the top right icon to create one!</Text>
+				<Card>
+					<Text style={{textAlign: 'center'}}>
+						You do not have any inventory lists. Tap the + button to create one!
+					</Text>
+				</Card>
 			);
 		}
-	}
-
-	renderNewListInput() {
-		return (
-			<View style={stylesheet.newItem}>
-				<TextInput
-					placeholder="New List"
-					returnKeyType='done'
-					autoCapitalize='words'
-					autoFocus
-					onChangeText={(name) => this.setState({ newListName: name })}
-					onSubmitEditing={() => this.addNewList()}
-				/>
-			</View>
-		);
 	}
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				{this.state.newListInputVisible ? this.renderNewListInput() : null}
 				<ScrollView style={{ flex: 1 }}>
 					{this.renderLists()}
 				</ScrollView>
