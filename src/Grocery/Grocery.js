@@ -5,6 +5,7 @@ import { colors, stylesheet } from '../../config/styles';
 
 import { SafeAreaView, Alert, View } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
+import { Dropdown } from 'react-native-material-dropdown';
 
 export default class Grocery extends Component {
 	
@@ -25,11 +26,18 @@ export default class Grocery extends Component {
 			}
 		}
 
+		const groceryListsDropdown = this.props.screenProps.groceryLists.map((list) => ({
+			value: list._id,
+			label: list.name
+		}));
+
 		this.state = {
 			listId: props.navigation.state.params.listId,
 			name,
 			amount,
-			newGrocery
+			newGrocery,
+			groceryListsDropdown,
+			selectedGroceryList: props.navigation.state.params.listId
 		};
 	}
 
@@ -159,6 +167,13 @@ export default class Grocery extends Component {
 		});
 	}
 
+	onChangeGroceryList(value) {
+		// TODO disable this when adding new grocery item
+		this.setState({
+			selectedGroceryList: value
+		});
+	}
+
 	render() {
 		const invalidName = !this.state.name || this.state.name == "";
 		return (
@@ -185,6 +200,13 @@ export default class Grocery extends Component {
 					onSubmitEditing={() => this.state.newGrocery 
 						? this.addGrocery() 
 						: this.updateGrocery()}/>
+				<View style={stylesheet.container}>
+					<Dropdown
+						value={this.state.selectedGroceryList}
+						label='Grocery List'
+						data={this.state.groceryListsDropdown}
+						onChangeText={(value, index, data) => this.onChangeGroceryList(value)} />
+				</View>
 			</SafeAreaView>
 		);
 	}
