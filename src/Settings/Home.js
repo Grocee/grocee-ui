@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { colors, stylesheet } from '../../config/styles';
 import { StyleSheet } from 'react-native';
-import { Text } from 'react-native-elements';
 import Meteor from 'react-native-meteor';
 import { SafeAreaView } from 'react-navigation';
-import TableView from 'react-native-tableview'
-const { Section, Item } = TableView;
+
+import { colors } from '../../config/styles';
+import { List, ListItem } from 'react-native-elements';
 
 export default class Home extends Component {
 
-	static navigationOptions({ navigation }) {
+	static navigationOptions() {
 		return {
 			headerTitle: 'Settings',
 			headerStyle: {
@@ -29,25 +28,17 @@ export default class Home extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<TableView
-					style={{ flex: 1 }}
-					tableViewStyle={TableView.Consts.Style.Grouped}
-					tableViewCellStyle={TableView.Consts.CellStyle.Default}>
-					<Section label="General">
-						<Item
-							accessoryType={TableView.Consts.AccessoryType.DisclosureIndicator}
-							onPress={() => this.props.navigation.navigate('SelectInventoryList')}>
-							Default Inventory List
-						</Item>
-					</Section>
-					<Section>
-						<Item
-							onPress={() => this.handleSignOut()}
-							style={stylesheet.signOutText}>
-							Sign Out
-						</Item>
-					</Section>
-				</TableView>
+				<List>
+					<ListItem
+						title="Default Inventory List"
+						onPress={() => this.props.navigation.navigate('SelectInventoryList')} />
+				</List>
+				<List>
+					<ListItem
+						title="Sign Out"
+						onPress={() => this.handleSignOut()}
+						hideChevron />
+				</List>
 			</SafeAreaView>
 		);
 	}

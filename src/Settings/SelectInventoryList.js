@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Meteor, { Accounts } from 'react-native-meteor';
-import TableView from 'react-native-tableview'
-const { Section, Item } = TableView;
+import Meteor from 'react-native-meteor';
+
+import { List, ListItem } from 'react-native-elements';
 
 export default class SelectInventoryList extends Component {
 
@@ -26,15 +26,14 @@ export default class SelectInventoryList extends Component {
 
 	}
 
-	static navigationOptions({ navigation }) {
+	static navigationOptions() {
 		return {
 			headerTitle: 'Default Inventory List'
 		};
 	}
 
-	setDefaultList(item) {
-		const inventoryList = this.state.lists[item.selectedIndex];
-		Meteor.call('inventorylists.setDefault', inventoryList._id);
+	setDefaultList(listId) {
+		Meteor.call('inventorylists.setDefault', listId);
 		this.props.navigation.goBack();
 	}
 
@@ -42,23 +41,17 @@ export default class SelectInventoryList extends Component {
 
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<TableView
-					style={{ flex: 1 }}
-					tableViewStyle={TableView.Consts.Style.Grouped}
-					tableViewCellStyle={TableView.Consts.CellStyle.Default}>
-					<Section>
-						{this.state.lists.map(list =>
-							<Item
-								onPress={(item) => this.setDefaultList(item)}
-								key={list._id}
-								accessoryType={list.isDefault
-									? TableView.Consts.AccessoryType.Checkmark
-									: TableView.Consts.AccessoryType.None}>
-								{list.name}
-							</Item>
-						)}
-					</Section>
-				</TableView>
+				<List>
+					{this.state.lists.map((list) => 
+						<ListItem
+							title={list.name}
+							onPress={() => this.setDefaultList(list._id)}
+							key={list._id}
+							rightIcon={list.isDefault 
+								? {name: 'done'} 
+								: {}} />
+					)}
+				</List>
 			</SafeAreaView>
 		);
 	}
