@@ -168,9 +168,21 @@ export default class Grocery extends Component {
 	}
 
 	onChangeGroceryList(value) {
-		// TODO disable this when adding new grocery item
 		this.setState({
 			selectedGroceryList: value
+		});
+
+		Meteor.call('grocerylists.moveItem', this.props.navigation.state.params.id, this.props.navigation.state.params.listId, value, (moveGroceryErr) => {
+			if (moveGroceryErr) {
+				return Alert.alert(
+					'Error moving Grocery item',
+					'Error moving Grocery item to new list',
+					[
+						{ text: "OK", style: 'normal' }
+					],
+					{ cancelable: true }
+				);
+			}
 		});
 	}
 
@@ -205,7 +217,8 @@ export default class Grocery extends Component {
 						value={this.state.selectedGroceryList}
 						label='Grocery List'
 						data={this.state.groceryListsDropdown}
-						onChangeText={(value, index, data) => this.onChangeGroceryList(value)} />
+						onChangeText={(value, index, data) => this.onChangeGroceryList(value)}
+						disabled={this.state.newGrocery} />
 				</View>
 			</SafeAreaView>
 		);
