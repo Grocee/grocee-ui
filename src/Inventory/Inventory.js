@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Meteor from 'react-native-meteor';
 import {colors, stylesheet} from '../../config/styles';
 import {Alert, SafeAreaView, View} from 'react-native';
-import {Button, FormInput, FormLabel, FormValidationMessage} from 'react-native-elements';
+import {Button, FormInput, FormLabel, FormValidationMessage, Icon} from 'react-native-elements';
 import {Dropdown} from 'react-native-material-dropdown';
 
 export default class Inventory extends Component {
@@ -14,10 +14,6 @@ export default class Inventory extends Component {
 		let name = '';
 		let amount = null;
 		let isNew = true;
-
-		this.onChangeText = this.onChangeText.bind(this);
-
-		this.nameRef = this.updateRef.bind(this, 'dropdown');
 
 		if (id) {
 
@@ -31,32 +27,20 @@ export default class Inventory extends Component {
 			}
 		}
 
-
-		// Drop down uses attribute `name` to display the options
-		let lists = this.props.screenProps.inventoryLists;
-		lists.forEach(list => {
-			list.value = list.name;
-		});
-
-		lists = lists.sort(function (a, b) {
-			return a.name - b.name;
-		});
-
-		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.listId);
+		const dropdown = this.props.screenProps.inventoryLists.map((list) => ({
+			value: list._id,
+			label: list.name
+		}));
 
 		this.state = {
 			name,
 			amount,
 			isNew,
-			lists,
-			ownerList: list.name,
-			listId: list._id
+			dropdown,
+			listId: props.navigation.state.params.listId,
+			selectedList: props.navigation.state.params.listId,
 		};
 
-	}
-
-	updateRef(name, ref) {
-		this[name] = ref;
 	}
 
 
@@ -71,11 +55,15 @@ export default class Inventory extends Component {
 			},
 			// save button for editing?
 			headerLeft: (
-				<Button 
-					title='Cancel'
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}
-				/>
+				<View style={stylesheet.leftButton}>
+					<Icon
+						name='chevron-left'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.goBack()}
+						containerStyle={stylesheet.leftButton} />
+				</View>
 			)
 		}
 	}
@@ -111,7 +99,7 @@ export default class Inventory extends Component {
 			return;
 		}
 
-		Meteor.call('inventories.update', this.props.navigation.state.params.id, this.state.name, this.state.listId,
+		Meteor.call('inventories.update', this.props.navigation.state.params.id, this.state.name, this.state.selectedList,
 			this.state.amount, (err) => {
 				if (err) {
 					Alert.alert(
@@ -129,10 +117,21 @@ export default class Inventory extends Component {
 			});
 	}
 
-	onChangeText(text) {
+	onChangeInventoryList(value) {
+		this.setState({ selectedList: value });
 
-		let ref = this['dropdown'];
-		console.log(ref.selectedItem());
+		Meteor.call('inventorylists.moveItem', this.props.navigation.state.params.id, this.props.navigation.state.params.listId, value, (error) => {
+			if (error) {
+				return Alert.alert(
+					'Error moving Inventory item',
+					'Error moving Inventory item to new list',
+					[
+						{ text: "OK", style: 'normal' }
+					],
+					{ cancelable: true }
+				);
+			}
+		});
 	}
 
 	render() {
@@ -175,11 +174,10 @@ export default class Inventory extends Component {
 				{!this.state.isNew
 					? <View style={{ marginLeft: 20, marginRight: 20 }} >
 						<Dropdown
-							ref={this.nameRef}
-							label='List'
-							data={this.state.lists}
-							//value={this.state.ownerList}
-							onChangeText={this.onChangeText}
+							label='Inventory List'
+							data={this.state.dropdown}
+							value={this.state.selectedList}
+							onChangeText={(value, index, data) => this.onChangeInventoryList(value)}
 						/>
 					</View> : null}
 			</SafeAreaView>
