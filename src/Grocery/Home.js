@@ -23,7 +23,7 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('AddList')}
+						onPress={() => navigation.navigate('AddList', {})}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>

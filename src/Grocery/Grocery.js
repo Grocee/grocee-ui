@@ -5,6 +5,7 @@ import { colors, stylesheet } from '../../config/styles';
 
 import { SafeAreaView, Alert, View } from 'react-native';
 import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
+import { Dropdown } from 'react-native-material-dropdown';
 
 export default class Grocery extends Component {
 	
@@ -25,11 +26,18 @@ export default class Grocery extends Component {
 			}
 		}
 
+		const groceryListsDropdown = this.props.screenProps.groceryLists.map((list) => ({
+			value: list._id,
+			label: list.name
+		}));
+
 		this.state = {
 			listId: props.navigation.state.params.listId,
 			name,
 			amount,
-			newGrocery
+			newGrocery,
+			groceryListsDropdown,
+			selectedGroceryList: props.navigation.state.params.listId
 		};
 	}
 
@@ -159,6 +167,25 @@ export default class Grocery extends Component {
 		});
 	}
 
+	onChangeGroceryList(value) {
+		this.setState({
+			selectedGroceryList: value
+		});
+
+		Meteor.call('grocerylists.moveItem', this.props.navigation.state.params.id, this.props.navigation.state.params.listId, value, (moveGroceryErr) => {
+			if (moveGroceryErr) {
+				return Alert.alert(
+					'Error moving Grocery item',
+					'Error moving Grocery item to new list',
+					[
+						{ text: "OK", style: 'normal' }
+					],
+					{ cancelable: true }
+				);
+			}
+		});
+	}
+
 	render() {
 		const invalidName = !this.state.name || this.state.name == "";
 		return (
@@ -185,6 +212,14 @@ export default class Grocery extends Component {
 					onSubmitEditing={() => this.state.newGrocery 
 						? this.addGrocery() 
 						: this.updateGrocery()}/>
+				<View style={stylesheet.container}>
+					<Dropdown
+						value={this.state.selectedGroceryList}
+						label='Grocery List'
+						data={this.state.groceryListsDropdown}
+						onChangeText={(value, index, data) => this.onChangeGroceryList(value)}
+						disabled={this.state.newGrocery} />
+				</View>
 			</SafeAreaView>
 		);
 	}

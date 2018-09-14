@@ -86,6 +86,11 @@ const stylesheet = StyleSheet.create({
 		padding: 5,
 		height: 45
 	},
+	container: {
+		marginHorizontal: 8,
+		marginVertical: 8,
+		paddingHorizontal: 8,
+	}
 });
 
 export { colors, navigationOptions, editButton, deleteButton, stylesheet };
