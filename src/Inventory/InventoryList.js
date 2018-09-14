@@ -96,11 +96,14 @@ class InventoryList extends Component {
 			}
 		];
 
+		const onPress = () => this.props.navigation.navigate('InventoryEdit', { listId: listId, id: inventories.item._id });
+
 		return (
 			<Swipeout right={rightButtons} autoClose='true' backgroundColor='white'>
 				<ListItem
 					title={inventories.item.name}
 					subtitle={inventories.item.amount}
+					onPress={onPress}
 					hideChevron />
 			</Swipeout>
 		);

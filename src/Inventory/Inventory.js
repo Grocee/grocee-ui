@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Meteor from 'react-native-meteor';
-import { colors, stylesheet } from '../../config/styles';
-import { TextInput, SafeAreaView, Alert, Text, View } from 'react-native';
-import {Button, FormLabel, FormInput, FormValidationMessage} from 'react-native-elements';
+import {colors, stylesheet} from '../../config/styles';
+import {Alert, SafeAreaView, View} from 'react-native';
+import {Button, FormInput, FormLabel, FormValidationMessage} from 'react-native-elements';
+import {Dropdown} from 'react-native-material-dropdown';
 
 export default class Inventory extends Component {
 	
@@ -13,6 +14,10 @@ export default class Inventory extends Component {
 		let name = '';
 		let amount = null;
 		let isNew = true;
+
+		this.onChangeText = this.onChangeText.bind(this);
+
+		this.nameRef = this.updateRef.bind(this, 'dropdown');
 
 		if (id) {
 
@@ -26,8 +31,34 @@ export default class Inventory extends Component {
 			}
 		}
 
-		this.state = { name, amount, isNew }
+
+		// Drop down uses attribute `name` to display the options
+		let lists = this.props.screenProps.inventoryLists;
+		lists.forEach(list => {
+			list.value = list.name;
+		});
+
+		lists = lists.sort(function (a, b) {
+			return a.name - b.name;
+		});
+
+		let list = this.props.screenProps.inventoryLists.find(list => list._id === this.props.navigation.state.params.listId);
+
+		this.state = {
+			name,
+			amount,
+			isNew,
+			lists,
+			ownerList: list.name,
+			listId: list._id
+		};
+
 	}
+
+	updateRef(name, ref) {
+		this[name] = ref;
+	}
+
 
 	static navigationOptions({ navigation }) {
 		return {
@@ -38,6 +69,7 @@ export default class Inventory extends Component {
 			headerTitleStyle: {
 				color: colors.tint,
 			},
+			// save button for editing?
 			headerLeft: (
 				<Button 
 					title='Cancel'
@@ -79,21 +111,28 @@ export default class Inventory extends Component {
 			return;
 		}
 
-		Meteor.call('inventories.update', this.props.navigation.state.params.id, this.state.name, this.state.amount, (err) => {
-			if (err) {
-				Alert.alert(
-					"Error Updating Item",
-					err.reason,
-					[
-						{ text: "OK", style: 'normal' }
-					],
-					{ cancelable: true }
-				);
-				return;
-			}
+		Meteor.call('inventories.update', this.props.navigation.state.params.id, this.state.name, this.state.listId,
+			this.state.amount, (err) => {
+				if (err) {
+					Alert.alert(
+						"Error Updating Item",
+						err.reason,
+						[
+							{ text: "OK", style: 'normal' }
+						],
+						{ cancelable: true }
+					);
+					return;
+				}
 
-			this.props.navigation.goBack();
-		});
+				this.props.navigation.goBack();
+			});
+	}
+
+	onChangeText(text) {
+
+		let ref = this['dropdown'];
+		console.log(ref.selectedItem());
 	}
 
 	render() {
@@ -133,6 +172,16 @@ export default class Inventory extends Component {
 						: this.updateInventory()
 					}
 				/>
+				{!this.state.isNew
+					? <View style={{ marginLeft: 20, marginRight: 20 }} >
+						<Dropdown
+							ref={this.nameRef}
+							label='List'
+							data={this.state.lists}
+							//value={this.state.ownerList}
+							onChangeText={this.onChangeText}
+						/>
+					</View> : null}
 			</SafeAreaView>
 		)
 	}
