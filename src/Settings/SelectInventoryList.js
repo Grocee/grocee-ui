@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { List, ListItem } from 'react-native-elements';
@@ -40,17 +40,19 @@ export default class SelectInventoryList extends Component {
 
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<List>
-					{this.state.lists.map((list) => 
-						<ListItem
-							title={list.name}
-							onPress={() => this.setDefaultList(list._id)}
-							key={list._id}
-							rightIcon={list.isDefault 
-								? {name: 'done'} 
-								: {}} />
-					)}
-				</List>
+				<ScrollView>
+					<List>
+						{this.state.lists.map((list) => 
+							<ListItem
+								title={list.name}
+								onPress={() => this.setDefaultList(list._id)}
+								key={list._id}
+								rightIcon={list.isDefault 
+									? {name: 'done'} 
+									: {}} />
+						)}
+					</List>
+				</ScrollView>
 			</SafeAreaView>
 		);
 	}

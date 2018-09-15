@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import Meteor from 'react-native-meteor';
 import { SafeAreaView } from 'react-navigation';
 
@@ -28,17 +28,19 @@ export default class Home extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<List>
-					<ListItem
-						title="Default Inventory List"
-						onPress={() => this.props.navigation.navigate('SelectInventoryList')} />
-				</List>
-				<List>
-					<ListItem
-						title="Sign Out"
-						onPress={() => this.handleSignOut()}
-						hideChevron />
-				</List>
+				<ScrollView>
+					<List>
+						<ListItem
+							title="Default Inventory List"
+							onPress={() => this.props.navigation.navigate('SelectInventoryList')} />
+					</List>
+					<List>
+						<ListItem
+							title="Sign Out"
+							onPress={() => this.handleSignOut()}
+							hideChevron />
+					</List>
+				</ScrollView>
 			</SafeAreaView>
 		);
 	}
