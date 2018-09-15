@@ -10,6 +10,7 @@ const colors = {
 	buttonText: '#FFFFFF',
 	inputBackground: '#FFFFFF',
 	inputDivider: '#E4E2E5',
+	textFieldTint: 'dimgray'
 };
 
 const navigationOptions = {

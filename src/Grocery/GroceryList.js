@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
 
-import { StyleSheet, View, ScrollView, FlatList, Alert, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, FlatList, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Icon, ListItem, List, Button, Card } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
