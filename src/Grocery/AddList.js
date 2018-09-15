@@ -128,11 +128,12 @@ export default class AddGroceryList extends Component {
 						onSubmitEditing={() => this.state.newGroceryList
 							? this.createList()
 							: this.updateList()}
-						tintColor={'dimgray'}
+						tintColor={colors.textFieldTint}
 						error={this.state.showError && invalidName 
 							? 'Name cannot be empty'
 							: null}
-						shake={invalidName} />
+						shake={invalidName}
+						autoFocus />
 				</View>
 			</SafeAreaView>
 		)
