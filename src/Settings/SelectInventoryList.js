@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import Meteor, { Accounts } from 'react-native-meteor';
+import Meteor from 'react-native-meteor';
 import TableView from 'react-native-tableview'
 const { Section, Item } = TableView;
 
@@ -28,7 +28,7 @@ export default class SelectInventoryList extends Component {
 
 	static navigationOptions({ navigation }) {
 		return {
-			headerTitle: 'Default Inventory List'
+			headerTitle: 'Select Inventory List'
 		};
 	}
 

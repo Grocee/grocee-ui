@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { colors, stylesheet } from '../../config/styles';
 import { StyleSheet } from 'react-native';
-import { Text } from 'react-native-elements';
 import Meteor from 'react-native-meteor';
 import { SafeAreaView } from 'react-navigation';
 import TableView from 'react-native-tableview'
