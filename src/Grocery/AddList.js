@@ -44,16 +44,6 @@ export default class AddGroceryList extends Component {
 						onPress={() => navigation.goBack()}
 						containerStyle={stylesheet.leftButton} />
 				</View>
-			),
-			headerRight: (
-				<Button
-					title="Delete" // use icon instead?
-					onPress={() => {
-						// todo
-
-						navigation.goBack();
-					}}
-					backgroundColor={colors.background} />
 			)
 		}
 	}
