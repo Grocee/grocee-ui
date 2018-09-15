@@ -206,6 +206,9 @@ export default class Grocery extends Component {
 						autoCapitalize='words'
 						returnKeyType='next'
 						tintColor={colors.textFieldTint}
+						onSubmitEditing={() => {
+							this.amountInput.focus()
+						}}
 						error={this.state.showError && invalidName 
 							? 'Name cannot be empty'
 							: null}
@@ -213,6 +216,9 @@ export default class Grocery extends Component {
 
 					<TextField 
 						label='Amount'
+						ref={(input) => {
+							this.amountInput = input;
+						}}
 						value={this.state.amount}
 						onChangeText={(amount) => this.setState({ amount })}
 						returnKeyType='next'

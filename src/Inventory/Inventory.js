@@ -161,6 +161,9 @@ export default class Inventory extends Component {
 					
 					<TextField
 						label='Amount'
+						ref={(input) => {
+							this.amountInput = input;
+						}}
 						value={this.state.amount}
 						onChangeText={(amount) => this.setState({ amount })}
 						returnKeyType='done'
