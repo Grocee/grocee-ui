@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, FlatList, ListView, View, Text, TextInput, ScrollView, ActionSheetIOS, Alert } from 'react-native';
+import { StyleSheet, FlatList, View, Text, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
@@ -32,33 +32,6 @@ class InventoryList extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={ () =>
-							//TODO: need Android solution for this
-							ActionSheetIOS.showActionSheetWithOptions({
-								options: ['Cancel', 'Archive List'],
-								destructiveButtonIndex: 1,
-								cancelButtonIndex: 0,
-							},
-							(buttonIndex) => {
-								if (buttonIndex === 1) {
-									Alert.alert(
-										'Confirm Archive',
-										'Are you are sure you want to archive this list? All the items in this list will also be archived.',
-										[
-											{ text: 'Cancel', style: 'cancel'},
-											{ text: 'Confirm',
-												onPress: () => {
-													Meteor.call('inventorylists.archive', navigation.state.params.id);
-													navigation.goBack();
-												},
-												style: 'destructive'
-											},
-										],
-										{ cancelable: false }
-									)
-								}
-							})
-						}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
