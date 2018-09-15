@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Meteor from 'react-native-meteor';
-import { colors, stylesheet } from '../../config/styles';
-import { TextInput, SafeAreaView, Alert, Text, View } from 'react-native';
-import {Button, FormLabel, FormInput, FormValidationMessage} from 'react-native-elements';
+import {colors, stylesheet} from '../../config/styles';
+import {Alert, SafeAreaView, View} from 'react-native';
+import {Button, FormInput, FormLabel, FormValidationMessage, Icon} from 'react-native-elements';
+import {Dropdown} from 'react-native-material-dropdown';
 
 export default class Inventory extends Component {
 	
@@ -26,8 +27,22 @@ export default class Inventory extends Component {
 			}
 		}
 
-		this.state = { name, amount, isNew }
+		const dropdown = this.props.screenProps.inventoryLists.map((list) => ({
+			value: list._id,
+			label: list.name
+		}));
+
+		this.state = {
+			name,
+			amount,
+			isNew,
+			dropdown,
+			listId: props.navigation.state.params.listId,
+			selectedList: props.navigation.state.params.listId,
+		};
+
 	}
+
 
 	static navigationOptions({ navigation }) {
 		return {
@@ -38,12 +53,17 @@ export default class Inventory extends Component {
 			headerTitleStyle: {
 				color: colors.tint,
 			},
+			// save button for editing?
 			headerLeft: (
-				<Button 
-					title='Cancel'
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}
-				/>
+				<View style={stylesheet.leftButton}>
+					<Icon
+						name='chevron-left'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.goBack()}
+						containerStyle={stylesheet.leftButton} />
+				</View>
 			)
 		}
 	}
@@ -79,20 +99,38 @@ export default class Inventory extends Component {
 			return;
 		}
 
-		Meteor.call('inventories.update', this.props.navigation.state.params.id, this.state.name, this.state.amount, (err) => {
-			if (err) {
-				Alert.alert(
-					"Error Updating Item",
-					err.reason,
+		Meteor.call('inventories.update', this.props.navigation.state.params.id, this.state.name, this.state.selectedList,
+			this.state.amount, (err) => {
+				if (err) {
+					Alert.alert(
+						"Error Updating Item",
+						err.reason,
+						[
+							{ text: "OK", style: 'normal' }
+						],
+						{ cancelable: true }
+					);
+					return;
+				}
+
+				this.props.navigation.goBack();
+			});
+	}
+
+	onChangeInventoryList(value) {
+		this.setState({ selectedList: value });
+
+		Meteor.call('inventorylists.moveItem', this.props.navigation.state.params.id, this.props.navigation.state.params.listId, value, (error) => {
+			if (error) {
+				return Alert.alert(
+					'Error moving Inventory item',
+					'Error moving Inventory item to new list',
 					[
 						{ text: "OK", style: 'normal' }
 					],
 					{ cancelable: true }
 				);
-				return;
 			}
-
-			this.props.navigation.goBack();
 		});
 	}
 
@@ -133,6 +171,15 @@ export default class Inventory extends Component {
 						: this.updateInventory()
 					}
 				/>
+				{!this.state.isNew
+					? <View style={{ marginLeft: 20, marginRight: 20 }} >
+						<Dropdown
+							label='Inventory List'
+							data={this.state.dropdown}
+							value={this.state.selectedList}
+							onChangeText={(value, index, data) => this.onChangeInventoryList(value)}
+						/>
+					</View> : null}
 			</SafeAreaView>
 		)
 	}

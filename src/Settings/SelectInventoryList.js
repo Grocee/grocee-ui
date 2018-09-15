@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
-
 import { List, ListItem } from 'react-native-elements';
 
 export default class SelectInventoryList extends Component {
@@ -28,7 +27,7 @@ export default class SelectInventoryList extends Component {
 
 	static navigationOptions() {
 		return {
-			headerTitle: 'Default Inventory List'
+			headerTitle: 'Select Inventory List'
 		};
 	}
 
