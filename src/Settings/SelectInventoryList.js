@@ -47,6 +47,7 @@ export default class SelectInventoryList extends Component {
 								title={list.name}
 								onPress={() => this.setDefaultList(list._id)}
 								key={list._id}
+								hideChevron={!list.isDefault}
 								rightIcon={list.isDefault 
 									? {name: 'done'} 
 									: {}} />

@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import Meteor from 'react-native-meteor';
 import {colors, stylesheet} from '../../config/styles';
 import {Alert, SafeAreaView, View} from 'react-native';
-import {Button, FormInput, FormLabel, FormValidationMessage, Icon} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import {Dropdown} from 'react-native-material-dropdown';
+import { TextField } from 'react-native-material-textfield';
 
 export default class Inventory extends Component {
 	
@@ -12,7 +13,7 @@ export default class Inventory extends Component {
 		
 		const id = props.navigation.state.params.id;
 		let name = '';
-		let amount = null;
+		let amount = '';
 		let isNew = true;
 
 		if (id) {
@@ -75,7 +76,10 @@ export default class Inventory extends Component {
 			return
 		}
 
-		Meteor.call('inventories.insert', this.state.name, this.state.amount, this.props.navigation.state.params.listId,
+		const amount = this.state.amount.trim().length > 0 
+			? this.state.amount 
+			: null;
+		Meteor.call('inventories.insert', this.state.name, amount, this.props.navigation.state.params.listId,
 			(err) => {
 				if (err) {
 					Alert.alert(
@@ -140,46 +144,45 @@ export default class Inventory extends Component {
 
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<FormLabel>Name</FormLabel>
-				<FormInput
-					style={stylesheet.input}
-					onChangeText={(name) => this.setState({ name, submitted: false })}
-					value={this.state.name}
-					autoFocus
-					autoCapitalize='words'
-					returnKeyType='next'
-					onSubmitEditing={() => {
-						this.amountInput.focus()
-					}}
-					blurOnSubmit={false}
-				/>
-				{invalidName && this.state.submitted
-					? <FormValidationMessage>Name cannot be empty</FormValidationMessage>
-					: null}
-				<FormLabel>Amount</FormLabel>
-				<FormInput
-					style={stylesheet.input}
-					ref={(input) => {
-						this.amountInput = input;
-					}}
-					onChangeText={(amount) => this.setState({ amount })}
-					value={this.state.amount}
-					placeholder='Amount'
-					returnKeyType='done'
-					onSubmitEditing={() => this.state.isNew
-						? this.addInventory()
-						: this.updateInventory()
-					}
-				/>
-				{!this.state.isNew
-					? <View style={{ marginLeft: 20, marginRight: 20 }} >
-						<Dropdown
+				<View style={stylesheet.container}>
+					<TextField
+						label='Name'
+						value={this.state.name}
+						onChangeText={(name) => this.setState({ name, submitted: false })}
+						returnKeyType='next'
+						onSubmitEditing={() => {
+							this.amountInput.focus()
+						}}
+						tintColor={colors.textFieldTint}
+						error={this.state.submitted && invalidName
+							? 'Name cannot be empty'
+							: null}
+						shake={invalidName}
+						autoFocus
+						autoCapitalize='words'
+						blurOnSubmit={false} />
+					
+					<TextField
+						label='Amount'
+						ref={(input) => {
+							this.amountInput = input;
+						}}
+						value={this.state.amount}
+						onChangeText={(amount) => this.setState({ amount })}
+						returnKeyType='done'
+						onSubmitEditing={() => this.state.isNew
+							? this.addInventory()
+							: this.updateInventory()}
+						tintColor={colors.textFieldTint} />
+
+					{!this.state.isNew
+						? <Dropdown
 							label='Inventory List'
 							data={this.state.dropdown}
 							value={this.state.selectedList}
-							onChangeText={(value, index, data) => this.onChangeInventoryList(value)}
-						/>
-					</View> : null}
+							onChangeText={(value) => this.onChangeInventoryList(value)} />
+						: null}
+				</View>
 			</SafeAreaView>
 		)
 	}

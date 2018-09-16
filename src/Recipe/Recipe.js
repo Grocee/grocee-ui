@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import Meteor from 'react-native-meteor';
 
-import { stylesheet } from '../../config/styles';
+import { stylesheet, colors } from '../../config/styles';
 
-import { SafeAreaView, Alert, Platform } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import { SafeAreaView, Alert, Platform, View } from 'react-native';
+import { TextField } from 'react-native-material-textfield';
 
 export default class Recipe extends Component {
 
@@ -97,44 +97,44 @@ export default class Recipe extends Component {
 
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<FormLabel>Name</FormLabel>
-				<FormInput
-					style={stylesheet.input}
-					onChangeText={(name) => this.setState({ name, submitted: false })}
-					value={this.state.name}
-					placeholder='Add new recipe'
-					autoFocus
-					autoCapitalize='words'
-					returnKeyType='next'
-					onSubmitEditing={() => {
-						this.urlInput.focus()
-					}}
-					blurOnSubmit={false}
-				/>
-				{invalidName && this.state.submitted
-					? <FormValidationMessage>Name cannot be empty</FormValidationMessage>
-					: null}
-				<FormLabel>URL</FormLabel>
-				<FormInput
-					style={stylesheet.input}
-					ref={(input) => {
-						this.urlInput = input;
-					}}
-					onChangeText={(url) => this.setState({ url, submitted: false })}
-					value={this.state.url}
-					placeholder='Add recipe URL'
-					returnKeyType='done'
-					autoCorrect={false}
-					keyboardType={Platform.OS === 'ios' ? 'url' : 'default'} // url keyboard type only available in iOS
-					autoCapitalize='none'
-					onSubmitEditing={() => this.state.isNew
-						? this.addRecipe()
-						: this.updateRecipe()
-					}
-				/>
-				{invalidURL && this.state.submitted
-					? <FormValidationMessage>URL is invalid</FormValidationMessage>
-					: null}
+				<View style={stylesheet.container}>
+					<TextField
+						label='Name'
+						value={this.state.name}
+						onChangeText={(name) => this.setState({ name, submitted: false })}
+						returnKeyType='next'
+						onSubmitEditing={() => {
+							this.urlInput.focus()
+						}}
+						tintColor={colors.textFieldTint}
+						error={this.state.submitted && invalidName 
+							? 'Name cannot be empty'
+							: null}
+						shake={invalidName}
+						autoFocus
+						autoCapitalize='words'
+						blurOnSubmit={false} />
+
+					<TextField
+						label='URL'
+						ref={(input) => {
+							this.urlInput = input;
+						}}
+						value={this.state.url}
+						onChangeText={(url) => this.setState({ url, submitted: false })}
+						returnKeyType='done'
+						keyboardType={Platform.OS === 'ios' ? 'url' : 'default'} // url keyboard type only available in iOS 
+						onSubmitEditing={() => this.state.isNew
+							? this.addRecipe()
+							: this.updateRecipe()}
+						tintColor={colors.textFieldTint}
+						error={invalidURL && this.state.submitted
+							? 'URL is invalid'
+							: null}
+						shake={invalidURL}
+						autoCapitalize='none'
+						autoCorrect='false' />
+				</View>
 			</SafeAreaView>
 		)
 	}

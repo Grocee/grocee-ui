@@ -4,8 +4,9 @@ import Meteor from 'react-native-meteor';
 import { colors, stylesheet } from '../../config/styles';
 
 import { SafeAreaView, Alert, View } from 'react-native';
-import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
+import { TextField } from 'react-native-material-textfield';
 
 export default class Grocery extends Component {
 	
@@ -14,7 +15,7 @@ export default class Grocery extends Component {
 		
 		const groceryId = props.navigation.state.params.id;
 		let name = '';
-		let amount = null;
+		let amount = '';
 		let newGrocery = true;
 		if (groceryId) {
 			newGrocery = false;
@@ -34,6 +35,7 @@ export default class Grocery extends Component {
 		this.state = {
 			listId: props.navigation.state.params.listId,
 			name,
+			showError: !newGrocery,
 			amount,
 			newGrocery,
 			groceryListsDropdown,
@@ -55,7 +57,6 @@ export default class Grocery extends Component {
 						containerStyle={stylesheet.leftButton} />
 				</View>
 			),
-			// TODO make the headerRight three dots dropdown/menu
 			headerRight: (
 				<Button 
 					title="Delete"
@@ -106,7 +107,10 @@ export default class Grocery extends Component {
 			);
 		}
 
-		Meteor.call('groceries.insert', this.state.name, this.state.amount, (err, groceryId) => {
+		const amount = this.state.amount.trim().length > 0 
+			? this.state.amount 
+			: null;
+		Meteor.call('groceries.insert', this.state.name, amount, (err, groceryId) => {
 			if (err) {
 				Alert.alert(
 					'Error creating Grocery item',
@@ -167,6 +171,13 @@ export default class Grocery extends Component {
 		});
 	}
 
+	onChangeName(name) {
+		this.setState({
+			name,
+			showError: true
+		});
+	}
+
 	onChangeGroceryList(value) {
 		this.setState({
 			selectedGroceryList: value
@@ -190,35 +201,43 @@ export default class Grocery extends Component {
 		const invalidName = !this.state.name || this.state.name == "";
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<FormLabel>Name</FormLabel>
-				<FormInput
-					style={stylesheet.input}					
-					onChangeText={(name) => this.setState({ name })}
-					shake={invalidName}
-					value={this.state.name}
-					placeholder='Add new grocery item'
-					autoCapitalize='words'
-					returnKeyType='next' />
-				{invalidName 
-					? <FormValidationMessage>Name cannot be empty</FormValidationMessage> 
-					: null}
-				<FormLabel>Amount</FormLabel>
-				<FormInput
-					style={stylesheet.input}
-					onChangeText={(amount) => this.setState({ amount })}
-					value={this.state.amount}
-					placeholder='Add new grocery amount'
-					returnKeyType='done'
-					onSubmitEditing={() => this.state.newGrocery 
-						? this.addGrocery() 
-						: this.updateGrocery()}/>
 				<View style={stylesheet.container}>
-					<Dropdown
-						value={this.state.selectedGroceryList}
-						label='Grocery List'
-						data={this.state.groceryListsDropdown}
-						onChangeText={(value, index, data) => this.onChangeGroceryList(value)}
-						disabled={this.state.newGrocery} />
+					<TextField
+						label='Name'
+						value={this.state.name}
+						onChangeText={(name) => this.onChangeName(name)}
+						autoCapitalize='words'
+						returnKeyType='next'
+						tintColor={colors.textFieldTint}
+						onSubmitEditing={() => {
+							this.amountInput.focus()
+						}}
+						error={this.state.showError && invalidName 
+							? 'Name cannot be empty'
+							: null}
+						shake={invalidName} />
+
+					<TextField 
+						label='Amount'
+						ref={(input) => {
+							this.amountInput = input;
+						}}
+						value={this.state.amount}
+						onChangeText={(amount) => this.setState({ amount })}
+						returnKeyType='done'
+						tintColor={colors.textFieldTint}
+						onSubmitEditing={() => this.state.newGrocery
+							? this.addGrocery()
+							: this.updateGrocery()} />
+
+					{this.state.newGrocery 
+						? null 
+						: <Dropdown
+							value={this.state.selectedGroceryList}
+							label='Grocery List'
+							data={this.state.groceryListsDropdown}
+							onChangeText={(value) => this.onChangeGroceryList(value)}
+							disabled={this.state.newGrocery} />}
 				</View>
 			</SafeAreaView>
 		);

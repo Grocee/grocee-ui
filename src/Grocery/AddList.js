@@ -4,7 +4,8 @@ import Meteor from 'react-native-meteor';
 import { colors, stylesheet } from '../../config/styles';
 
 import { Alert, SafeAreaView, View } from 'react-native';
-import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
+import { TextField } from 'react-native-material-textfield';
 
 export default class AddGroceryList extends Component {
 	
@@ -25,7 +26,8 @@ export default class AddGroceryList extends Component {
 
 		this.state = {
 			name,
-			newGroceryList
+			newGroceryList,
+			showError: !newGroceryList
 		};
 	}
 
@@ -42,18 +44,15 @@ export default class AddGroceryList extends Component {
 						onPress={() => navigation.goBack()}
 						containerStyle={stylesheet.leftButton} />
 				</View>
-			),
-			headerRight: (
-				<Button
-					title="Delete" // use icon instead?
-					onPress={() => {
-						// todo
-
-						navigation.goBack();
-					}}
-					backgroundColor={colors.background} />
 			)
 		}
+	}
+
+	onChangeName(name) {
+		this.setState({
+			name,
+			showError: true
+		});
 	}
     
 	createList() {
@@ -110,21 +109,22 @@ export default class AddGroceryList extends Component {
 
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<FormLabel>Name</FormLabel>
-				<FormInput
-					style={stylesheet.input}					
-					onChangeText={(name) => this.setState({ name })}
-					shake={invalidName}
-					value={this.state.name}
-					placeholder='Add new grocery list'
-					autoCapitalize='words'
-					returnKeyType='done'
-					onSubmitEditing={() => this.state.newGroceryList
-						? this.createList()
-						: this.updateList()} />
-				{invalidName 
-					? <FormValidationMessage>Name cannot be empty</FormValidationMessage> 
-					: null}
+				<View style={stylesheet.container}>
+					<TextField
+						label='Name'
+						value={this.state.name}
+						onChangeText={(name) => this.onChangeName(name)}
+						returnKeyType='done'
+						onSubmitEditing={() => this.state.newGroceryList
+							? this.createList()
+							: this.updateList()}
+						tintColor={colors.textFieldTint}
+						error={this.state.showError && invalidName 
+							? 'Name cannot be empty'
+							: null}
+						shake={invalidName}
+						autoFocus />
+				</View>
 			</SafeAreaView>
 		)
 	}

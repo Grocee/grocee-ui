@@ -3,8 +3,9 @@ import Meteor from 'react-native-meteor';
 
 import { colors, stylesheet } from '../../config/styles';
 
-import { SafeAreaView, Alert } from 'react-native';
-import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import { SafeAreaView, Alert, View } from 'react-native';
+import { Button } from 'react-native-elements';
+import { TextField } from 'react-native-material-textfield';
 
 export default class AddInventoryList extends Component {
 
@@ -58,19 +59,19 @@ export default class AddInventoryList extends Component {
 
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
-				<FormLabel>Name</FormLabel>
-				<FormInput
-					style={stylesheet.input}
-					onChangeText={(name) => this.setState({ name, submitted: false })}
-					autoFocus
-					value={this.state.name}
-					placeholder='Add new inventory list'
-					autoCapitalize='words'
-					returnKeyType='done'
-					onSubmitEditing={() => this.createList()} />
-				{invalidName && this.state.submitted
-					? <FormValidationMessage>Name cannot be empty</FormValidationMessage>
-					: null}
+				<View style={stylesheet.container}>
+					<TextField
+						label='Name'
+						value={this.state.name}
+						onChangeText={(name) => this.setState({ name, submitted: false })}
+						returnKeyType='done'
+						onSubmitEditing={() => this.createList()}
+						tintColor={colors.textFieldTint}
+						error={this.state.submitted && invalidName 
+							? 'Name cannot be empty'
+							: null}
+						shake={invalidName} />
+				</View>
 			</SafeAreaView>
 		)
 	}
