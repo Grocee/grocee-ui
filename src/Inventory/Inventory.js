@@ -13,7 +13,7 @@ export default class Inventory extends Component {
 		
 		const id = props.navigation.state.params.id;
 		let name = '';
-		let amount = null;
+		let amount = '';
 		let isNew = true;
 
 		if (id) {
@@ -76,7 +76,10 @@ export default class Inventory extends Component {
 			return
 		}
 
-		Meteor.call('inventories.insert', this.state.name, this.state.amount, this.props.navigation.state.params.listId,
+		const amount = this.state.amount.trim().length > 0 
+			? this.state.amount 
+			: null;
+		Meteor.call('inventories.insert', this.state.name, amount, this.props.navigation.state.params.listId,
 			(err) => {
 				if (err) {
 					Alert.alert(

@@ -107,7 +107,10 @@ export default class Grocery extends Component {
 			);
 		}
 
-		Meteor.call('groceries.insert', this.state.name, this.state.amount, (err, groceryId) => {
+		const amount = this.state.amount.trim().length > 0 
+			? this.state.amount 
+			: null;
+		Meteor.call('groceries.insert', this.state.name, amount, (err, groceryId) => {
 			if (err) {
 				Alert.alert(
 					'Error creating Grocery item',
