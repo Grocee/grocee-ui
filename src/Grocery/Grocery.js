@@ -224,7 +224,7 @@ export default class Grocery extends Component {
 						}}
 						value={this.state.amount}
 						onChangeText={(amount) => this.setState({ amount })}
-						returnKeyType='next'
+						returnKeyType='done'
 						tintColor={colors.textFieldTint}
 						onSubmitEditing={() => this.state.newGrocery
 							? this.addGrocery()
