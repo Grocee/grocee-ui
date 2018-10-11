@@ -8,6 +8,18 @@ import { List, ListItem } from 'react-native-elements';
 
 export default class Home extends Component {
 
+	constructor(props) {
+		super(props);
+
+		let email = ''
+
+		if (this.props.screenProps.user.emails.length > 0) {
+			email = this.props.screenProps.user.emails[0].address
+		}
+
+		this.state = { email }
+	}
+
 	static navigationOptions() {
 		return {
 			headerTitle: 'Settings',
@@ -21,9 +33,6 @@ export default class Home extends Component {
 			alignItems: 'center',
 		};
 	}
-	handleSignOut() {
-		Meteor.logout();
-	}
 
 	render() {
 		return (
@@ -31,14 +40,12 @@ export default class Home extends Component {
 				<ScrollView>
 					<List>
 						<ListItem
+							title="Account"
+							subtitle={this.state.email}
+							onPress={() => this.props.navigation.navigate('Account')} />
+						<ListItem
 							title="Default Inventory List"
 							onPress={() => this.props.navigation.navigate('SelectInventoryList')} />
-					</List>
-					<List>
-						<ListItem
-							title="Sign Out"
-							onPress={() => this.handleSignOut()}
-							hideChevron />
 					</List>
 				</ScrollView>
 			</SafeAreaView>

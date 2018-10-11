@@ -19,6 +19,7 @@ const App = (props) => {
 	const { status, user, loggingIn } = props;
 
 	const data = {
+		user: props.user,
 		recipes: props.recipes,
 		groceries: props.groceries,
 		groceryLists: props.groceryLists,

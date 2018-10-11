@@ -3,6 +3,7 @@ import { StackNavigator } from 'react-navigation';
 import { navigationOptions } from "../../config/styles";
 import Home from '../Settings/Home';
 import SelectInventoryList from '../Settings/SelectInventoryList';
+import Account from '../Settings/Account';
 
 const SettingsPage = StackNavigator(
 	{
@@ -13,6 +14,10 @@ const SettingsPage = StackNavigator(
 		SelectInventoryList: {
 			screen: SelectInventoryList,
 			path: 'selectInventoryList'
+		},
+		Account: {
+			screen: Account,
+			path: 'account'
 		},
 
 	},
