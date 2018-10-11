@@ -20,5 +20,6 @@ export default StyleSheet.create({
 	inputWrapper: {
 		backgroundColor: colors.inputBackground,
 		width: window.width,
+		padding: 12
 	},
 });
