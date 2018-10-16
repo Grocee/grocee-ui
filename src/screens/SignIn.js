@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, LayoutAnimation, Image, View, Text } from 'react-native';
+import { StyleSheet, Dimensions, LayoutAnimation, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { colors } from '../../config/styles';
-import logoImage from '../../images/rn-logo.png';
-import GenericTextInput, {InputWrapper } from '../components/GenericTextInput';
+import { InputWrapper } from '../components/GenericTextInput';
 import Button from '../components/Button';
 import Meteor, { Accounts } from 'react-native-meteor';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
+import { TextField } from 'react-native-material-textfield';
 
 export default class SignIn extends Component {
 	constructor(props) {
@@ -94,32 +93,49 @@ export default class SignIn extends Component {
 		return (
 			<SafeAreaView style={styles.container}>
 				<View style={styles.header}>
-					<Image
-						style={styles.logo}
-						source={logoImage}
-					/>
 					<Text style={styles.headerText}>grocee</Text>
 				</View>
 
 				<InputWrapper>
-					<GenericTextInput
-						placeholder='email address'
+					<TextField
 						onChangeText={(email) => this.setState({ email })}
-						borderTop
 						keyboardType='email-address'
+						onSubmitEditing={() => {
+							this.passwordInput.focus()
+						}}
+						label='Email Address'
+						autoCapitalize='none'
+						tintColor={colors.textFieldTint}
+						returnKeyType='next'
 					/>
-					<GenericTextInput
-						placeholder='password'
+					<TextField
+						label='Password'
+						ref={(input) => {
+							this.passwordInput = input
+						}}
 						onChangeText={(password) => this.setState({ password })}
+						autoCapitalize='none'
 						secureTextEntry
-						borderTop
+						tintColor={colors.textFieldTint}
+						onSubmitEditing={() => !this.state.confirmPasswordVisible
+							? this._handleSignIn()
+							: this.confirmPasswordInput.focus()
+						}
+						returnKeyType={this.state.confirmPasswordVisible
+							? 'next'
+							: 'done'}
 					/>
-					{this.state.confirmPasswordVisible ?
-						<GenericTextInput
-							placeholder='confirm password'
+					{this.state.confirmPasswordVisible
+						? <TextField
+							label='Confirm Password'
+							ref={(input) => {
+								this.confirmPasswordInput = input
+							}}
 							onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+							onSubmitEditing={() => this._handleCreateAccount()}
 							secureTextEntry
 							borderTop
+							tintColor={colors.textFieldTint}
 						/>
 						: null}
 				</InputWrapper>
@@ -133,7 +149,7 @@ export default class SignIn extends Component {
 					<Button text='Create Account' onPress={() => this._handleCreateAccount()} />
 				</View>
 
-				<KeyboardSpacer />
+				<KeyboardSpacer/>
 
 			</SafeAreaView>
 		);
@@ -171,7 +187,7 @@ const styles = StyleSheet.create({
 	},
 	headerText: {
 		fontSize: 30,
-		color: colors.headerText,
+		color: colors.background,
 		fontWeight: '600',
 		fontStyle: 'italic',
 	},

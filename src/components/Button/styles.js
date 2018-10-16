@@ -5,7 +5,7 @@ export default StyleSheet.create({
 	button: {
 		paddingVertical: 10,
 		paddingHorizontal: 20,
-		backgroundColor: colors.buttonBackground,
+		backgroundColor: colors.background,
 		margin: 5,
 	},
 	buttonText: {
