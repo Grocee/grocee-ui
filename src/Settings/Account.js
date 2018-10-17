@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import {StyleSheet, ScrollView, View, Alert} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
-import { List, ListItem, Button } from 'react-native-elements';
+import { List, ListItem } from 'react-native-elements';
 import {stylesheet} from "../../config/styles";
 import { TextField } from 'react-native-material-textfield';
+import { Accounts } from 'react-native-meteor';
 
 export default class Account extends Component {
 
@@ -21,7 +22,13 @@ export default class Account extends Component {
 			verifiedEmail = emails[0].verified;
 		}
 
-		this.state = { email, verifiedEmail }
+		this.state = {
+			email,
+			verifiedEmail,
+			profileEdited: false,
+			firstName: this.props.screenProps.user.firstName,
+			lastName: this.props.screenProps.user.lastName
+		}
 	}
 
 	static navigationOptions() {
@@ -35,7 +42,28 @@ export default class Account extends Component {
 	}
 
 	handleSendEmailVerification() {
-		// do something
+		Meteor.call('userData.resendEmail');
+	}
+
+	handleChangePassword() {
+		Accounts.forgotPassword(this.state.email);
+	}
+
+	handleUpdateProfile() {
+		Meteor.call('accounts.updateNames', this.state.firstName, this.state.lastName, (err) => {
+			if (err) {
+				return Alert.alert(
+					'Error updating names',
+					err,
+					[
+						{ text: "OK", style: 'normal'}
+					],
+					{ cancelable: true }
+				);
+			}
+
+			this.props.navigation.goBack();
+		});
 	}
 
 	render() {
@@ -46,65 +74,45 @@ export default class Account extends Component {
 					<View style={stylesheet.container}>
 						<TextField
 							label='First Name'
+							value={this.state.firstName}
+							onChangeText={(name) => this.setState({ firstName: name, profileEdited: true })}
 						/>
 						<TextField
 							label='Last Name'
+							value={this.state.lastName}
+							onChangeText={(name) => this.setState({ lastName: name, profileEdited: true })}
 						/>
 						<TextField
 							label='Email Address'
 							value={this.state.email}
 						/>
 					</View>
-					{/*<View style={{ alignItems: 'center' }}>*/}
-						{/*<Button*/}
-							{/*title="Change Password"*/}
-							{/*titleStyle={{ fontWeight: "400" }}*/}
-							{/*buttonStyle={{*/}
-								{/*backgroundColor: "rgba(92, 99,216, 1)",*/}
-								{/*width: 300,*/}
-								{/*height: 45,*/}
-								{/*borderColor: "transparent",*/}
-								{/*borderWidth: 0,*/}
-								{/*borderRadius: 5,*/}
-								{/*justifyContent: 'center',*/}
-
-							{/*}}*/}
-							{/*containerStyle={{ marginTop: 20 }}*/}
-							{/*//onPress={}*/}
-						{/*/>*/}
-					{/*</View>*/}
-					{/*<View style={{ alignItems: 'center' }}>*/}
-						{/*<Button*/}
-							{/*title="Sign Out"*/}
-							{/*titleStyle={{ fontWeight: "400" }}*/}
-							{/*buttonStyle={{*/}
-								{/*backgroundColor: "rgba(92, 99,216, 1)",*/}
-								{/*width: 300,*/}
-								{/*height: 45,*/}
-								{/*borderColor: "transparent",*/}
-								{/*borderWidth: 0,*/}
-								{/*borderRadius: 5,*/}
-								{/*justifyContent: 'center',*/}
-
-							{/*}}*/}
-							{/*containerStyle={{ marginTop: 20 }}*/}
-							{/*onPress={() => this.handleSignOut()}*/}
-						{/*/>*/}
-					{/*</View>*/}
+					{this.state.profileEdited
+						? <List>
+							<ListItem
+								title='Save Changes'
+								onPress={() => this.handleUpdateProfile()}
+								hideChevron
+							/>
+						</List>
+						: null}
 					<List>
 						{!this.state.verifiedEmail
-						? <ListItem
+							? <ListItem
 								title='Verify Email'
 								onPress={() => this.handleSendEmailVerification()}
 								hideChevron
 							/>
-						: null}
+							: null}
 						<ListItem
 							title='Change Password'
+							onPress={() => this.handleChangePassword()}
 							hideChevron
 						/>
+					</List>
+					<List>
 						<ListItem
-							title="Sign Out"
+							title='Sign Out'
 							onPress={() => this.handleSignOut()}
 							hideChevron />
 					</List>

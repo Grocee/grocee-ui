@@ -45,6 +45,7 @@ export default createContainer(() => {
 	Meteor.subscribe('grocerylists');
 	Meteor.subscribe('inventories');
 	Meteor.subscribe('inventorylists');
+	Meteor.subscribe('Meteor.users.names');
 
 	return {
 		status: Meteor.status(),
