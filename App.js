@@ -19,6 +19,7 @@ const App = (props) => {
 	const { status, user, loggingIn } = props;
 
 	const data = {
+		user: props.user,
 		recipes: props.recipes,
 		groceries: props.groceries,
 		groceryLists: props.groceryLists,
@@ -44,6 +45,7 @@ export default createContainer(() => {
 	Meteor.subscribe('grocerylists');
 	Meteor.subscribe('inventories');
 	Meteor.subscribe('inventorylists');
+	Meteor.subscribe('Meteor.users.names');
 
 	return {
 		status: Meteor.status(),
