@@ -123,7 +123,6 @@ export default class Recipe extends Component {
 						value={this.state.url}
 						onChangeText={(url) => this.setState({ url, submitted: false })}
 						returnKeyType='done'
-						keyboardType={Platform.OS === 'ios' ? 'url' : 'default'} // url keyboard type only available in iOS 
 						onSubmitEditing={() => this.state.isNew
 							? this.addRecipe()
 							: this.updateRecipe()}
@@ -133,7 +132,7 @@ export default class Recipe extends Component {
 							: null}
 						shake={invalidURL}
 						autoCapitalize='none'
-						autoCorrect='false' />
+						autoCorrect={false} />
 				</View>
 			</SafeAreaView>
 		)
