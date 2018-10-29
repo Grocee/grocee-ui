@@ -152,7 +152,7 @@ export default class Grocery extends Component {
 				);
 			}
 
-			if (this.state.amount) {
+			if (this.state.amount != null) {
 				Meteor.call('groceries.updateAmount', this.props.navigation.state.params.id, this.state.amount, (amountErr) => {
 					if (amountErr) {
 						return Alert.alert(
