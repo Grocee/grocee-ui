@@ -31,7 +31,12 @@ export default class AddGroceryList extends Component {
 		};
 	}
 
-	static navigationOptions({ navigation }) {
+	static navigationOptions({ navigation, screenProps }) {
+		let name = '';
+		const groceryList = screenProps.groceryLists.find(groceryList => groceryList._id === navigation.state.params.id);
+		if (groceryList) {
+			name = groceryList.name;
+		}
 		return {
 			headerTitle: 'Grocery List',
 			headerLeft: (
@@ -41,7 +46,7 @@ export default class AddGroceryList extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.goBack()}
+						onPress={() => navigation.replace('GroceryList', {id: navigation.state.params.id, name})}
 						containerStyle={stylesheet.leftButton} />
 				</View>
 			)
@@ -100,7 +105,7 @@ export default class AddGroceryList extends Component {
 				);
 			}
 
-			this.props.navigation.goBack();
+			this.props.navigation.replace('GroceryList', {id: this.props.navigation.state.params.id, name: this.state.name});
 		});
 	}
 
