@@ -42,11 +42,11 @@ export default class Account extends Component {
 	}
 
 	handleSendEmailVerification() {
-		Meteor.call('userData.resendEmail');
+		Meteor.call('accounts.resendVerificationEmail');
 	}
 
-	handleChangePassword() {
-		Accounts.forgotPassword(this.state.email);
+	handlePasswordReset() {
+		Meteor.call('accounts.sendPasswordResetEmail');
 	}
 
 	handleUpdateProfile() {
@@ -105,8 +105,8 @@ export default class Account extends Component {
 							/>
 							: null}
 						<ListItem
-							title='Change Password'
-							onPress={() => this.handleChangePassword()}
+							title='Forgot Password'
+							onPress={() => this.handlePasswordReset()}
 							hideChevron
 						/>
 					</List>
