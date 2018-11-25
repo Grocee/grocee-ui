@@ -5,7 +5,6 @@ import { colors } from '../../config/styles';
 import { InputWrapper } from '../components/GenericTextInput';
 import Button from '../components/Button';
 import Meteor, { Accounts } from 'react-native-meteor';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextField } from 'react-native-material-textfield';
 
 export default class SignIn extends Component {
@@ -148,8 +147,6 @@ export default class SignIn extends Component {
 					<Button text='Sign In' onPress={() => this._handleSignIn()} />
 					<Button text='Create Account' onPress={() => this._handleCreateAccount()} />
 				</View>
-
-				<KeyboardSpacer/>
 
 			</SafeAreaView>
 		);
