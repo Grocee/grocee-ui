@@ -148,12 +148,13 @@ export default class GroceryList extends Component {
 		
 		const onPress = () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id });
 		
-		const title = item.item.amount 
-			? `${item.item.amount} ${item.item.name}`
-			: `${item.item.name}`;
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
-				<ListItem title={title} onPress={onPress} hideChevron/>
+				<ListItem
+					title={item.item.name}
+					subtitle={item.item.amount}
+					onPress={onPress}
+					hideChevron/>
 			</Swipeout>
 		);
 	}
