@@ -41,21 +41,27 @@ export default class Home extends Component {
 	}
 
 	renderList(list) {
-
 		const inventories = this.props.screenProps.inventories;
 
+		// Only include inventory items that are not archived in the badge count
 		let badgeValue = 0;
 		if (list.items) {
 			badgeValue = list.items.filter(item => {
 				const inventory = inventories.find(inventory => inventory._id === item);
-				return inventory ? !inventory.archived : false
+				return inventory 
+					? !inventory.archived 
+					: false
 			}).length;
 		}
+		const badge = badgeValue > 0 
+			? { value: badgeValue, containerStyle: stylesheet.badge } 
+			: null;
+
 		return (
 			<ListItem
 				key={list._id}
 				title={list.name}
-				badge={{ value: badgeValue, containerStyle: stylesheet.badge }}
+				badge={badge}
 				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
 			/>
 		);
