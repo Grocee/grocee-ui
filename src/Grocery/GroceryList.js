@@ -32,7 +32,7 @@ export default class GroceryList extends Component {
 				<Button 
 					title="Edit"
 					onPress={() => {
-						navigation.replace('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
+						navigation.navigate('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
 					}}
 					backgroundColor={colors.background}/>
 			)
