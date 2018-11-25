@@ -21,12 +21,7 @@ export default class AddInventoryList extends Component {
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: 'New Inventory List',
-			headerLeft: (
-				<Button
-					title="Cancel"
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}/>
-			)
+			headerBackTitle: "Back",
 		}
 	}
 

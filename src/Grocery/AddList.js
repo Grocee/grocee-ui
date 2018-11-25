@@ -39,17 +39,7 @@ export default class AddGroceryList extends Component {
 		}
 		return {
 			headerTitle: 'Grocery List',
-			headerLeft: (
-				<View style={stylesheet.leftButton}>
-					<Icon 
-						name='chevron-left'
-						color={colors.tint}
-						size={24}
-						underlayColor='transparent'
-						onPress={() => navigation.replace('GroceryList', {id: navigation.state.params.id, name})}
-						containerStyle={stylesheet.leftButton} />
-				</View>
-			)
+			headerBackTitle: "Back",
 		}
 	}
 
