@@ -3,7 +3,7 @@ import { StyleSheet, FlatList, View, Text, ScrollView, Alert } from 'react-nativ
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
-import {List, ListItem, Icon, Card} from 'react-native-elements';
+import {List, ListItem, Icon, Card, Button} from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import EditButton from '../components/EditButton';
 import DeleteButton from '../components/DeleteButton';
@@ -26,15 +26,12 @@ class InventoryList extends Component {
 			headerTitle: params.name,
 			headerBackTitle: "Back",
 			headerRight: (
-				<View style={stylesheet.rightButton} >
-					<Icon 
-						name='more-horiz'
-						color={colors.tint}
-						size={24}
-						underlayColor='transparent'
-						containerStyle={stylesheet.rightButton}
-					/>
-				</View>
+				<Button 
+					title="Edit"
+					onPress={() => {
+						navigation.navigate('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
+					}}
+					backgroundColor={colors.background}/>
 			)
 		}
 	}
