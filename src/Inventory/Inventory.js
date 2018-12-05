@@ -54,18 +54,7 @@ export default class Inventory extends Component {
 			headerTitleStyle: {
 				color: colors.tint,
 			},
-			// save button for editing?
-			headerLeft: (
-				<View style={stylesheet.leftButton}>
-					<Icon
-						name='chevron-left'
-						color={colors.tint}
-						size={24}
-						underlayColor='transparent'
-						onPress={() => navigation.goBack()}
-						containerStyle={stylesheet.leftButton} />
-				</View>
-			)
+			headerBackTitle: "Back",
 		}
 	}
 

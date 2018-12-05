@@ -12,28 +12,40 @@ export default class AddInventoryList extends Component {
 	constructor(props) {
 		super(props);
 
+		const inventoryListId = props.navigation.state.params.id;
+		let name = '';
+		let newInventoryList = true;
+		if (inventoryListId) {
+			newInventoryList = false;
+
+			const inventoryList = this.props.screenProps.inventoryLists.find(inventoryList => inventoryList._id === inventoryListId);
+			if (inventoryList) {
+				name = inventoryList.name;
+			}
+		}
+
 		this.state = {
-			name: '',
-			submitted: false,
+			name,
+			newInventoryList,
+			submitted: !newInventoryList
 		}
 	}
 
 	static navigationOptions({ navigation }) {
 		return {
-			headerTitle: 'New Inventory List',
-			headerLeft: (
-				<Button
-					title="Cancel"
-					onPress={() => navigation.goBack()}
-					backgroundColor={colors.background}/>
-			)
+			headerTitle: 'Inventory List',
+			headerBackTitle: "Back",
 		}
 	}
 
+	onChangeName(name) {
+		this.setState({
+			name,
+			submitted: true
+		});
+	}
+
 	createList() {
-
-		this.setState({ submitted: true });
-
 		if (this.state.name.length === 0) {
 			return
 		}
@@ -54,6 +66,34 @@ export default class AddInventoryList extends Component {
 		});
 	}
 
+	updateList() {
+		if (this.state.name.length === 0) {
+			return Alert.alert(
+				'Error updating Inventory list',
+				'Inventory List name must not be empty',
+				[
+					{ text: "OK", style: "normal" }
+				],
+				{ cancelable: true }
+			)
+		}
+
+		Meteor.call('inventorylists.updateName', this.props.navigation.state.params.id, this.state.name, (err) => {
+			if (err) {
+				return Alert.alert(
+					'Error updating Inventory List',
+					'Error updating name',
+					[
+						{ text: "OK", style: "normal" }
+					],
+					{ cancelable: true }
+				)
+			}
+			
+			this.props.navigation.replace('InventoryList', {id: this.props.navigation.state.params.id, name: this.state.name});
+		});
+	}
+
 	render() {
 		const invalidName = !this.state.name || this.state.name === '';
 
@@ -63,14 +103,17 @@ export default class AddInventoryList extends Component {
 					<TextField
 						label='Name'
 						value={this.state.name}
-						onChangeText={(name) => this.setState({ name, submitted: false })}
+						onChangeText={(name) => this.onChangeName(name)}
 						returnKeyType='done'
-						onSubmitEditing={() => this.createList()}
+						onSubmitEditing={() => this.state.newInventoryList
+							? this.createList()
+							: this.updateList()}
 						tintColor={colors.textFieldTint}
 						error={this.state.submitted && invalidName 
 							? 'Name cannot be empty'
 							: null}
-						shake={invalidName} />
+						shake={invalidName}
+						autoFocus />
 				</View>
 			</SafeAreaView>
 		)

@@ -46,17 +46,7 @@ export default class Grocery extends Component {
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: 'Grocery',
-			headerLeft: (
-				<View style={stylesheet.leftButton}>
-					<Icon 
-						name='chevron-left'
-						color={colors.tint}
-						size={24}
-						underlayColor='transparent'
-						onPress={() => navigation.goBack()}
-						containerStyle={stylesheet.leftButton} />
-				</View>
-			),
+			headerBackTitle: "Back",
 			headerRight: (
 				<Button 
 					title="Delete"

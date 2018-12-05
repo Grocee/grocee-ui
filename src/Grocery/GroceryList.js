@@ -27,22 +27,12 @@ export default class GroceryList extends Component {
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: navigation.state.params.name,
-			headerLeft: (
-				<View style={stylesheet.leftButton}>
-					<Icon 
-						name='chevron-left'
-						color={colors.tint}
-						size={24}
-						underlayColor='transparent'
-						onPress={() => navigation.goBack()}
-						containerStyle={stylesheet.leftButton} />
-				</View>
-			),
+			headerBackTitle: "Back",
 			headerRight: (
 				<Button 
 					title="Edit"
 					onPress={() => {
-						navigation.replace('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
+						navigation.navigate('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
 					}}
 					backgroundColor={colors.background}/>
 			)
@@ -148,12 +138,13 @@ export default class GroceryList extends Component {
 		
 		const onPress = () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id });
 		
-		const title = item.item.amount 
-			? `${item.item.amount} ${item.item.name}`
-			: `${item.item.name}`;
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
-				<ListItem title={title} onPress={onPress} hideChevron/>
+				<ListItem
+					title={item.item.name}
+					subtitle={item.item.amount}
+					onPress={onPress}
+					hideChevron/>
 			</Swipeout>
 		);
 	}

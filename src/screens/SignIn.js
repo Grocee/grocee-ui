@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, LayoutAnimation, View, Text } from 'react-native';
+import { StyleSheet, Dimensions, LayoutAnimation, View, Text, Platform } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { colors } from '../../config/styles';
 import { InputWrapper } from '../components/GenericTextInput';
 import Button from '../components/Button';
 import Meteor, { Accounts } from 'react-native-meteor';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextField } from 'react-native-material-textfield';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default class SignIn extends Component {
 	constructor(props) {
@@ -149,8 +149,9 @@ export default class SignIn extends Component {
 					<Button text='Create Account' onPress={() => this._handleCreateAccount()} />
 				</View>
 
-				<KeyboardSpacer/>
-
+				{Platform.OS === 'ios'
+					? <KeyboardSpacer/>
+					: null}
 			</SafeAreaView>
 		);
 	}

@@ -132,8 +132,7 @@ export default class Recipe extends Component {
 							? 'URL is invalid'
 							: null}
 						shake={invalidURL}
-						autoCapitalize='none'
-						autoCorrect='false' />
+						autoCapitalize='none' />
 				</View>
 			</SafeAreaView>
 		)
