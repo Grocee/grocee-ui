@@ -32,14 +32,41 @@ export default class AddGroceryList extends Component {
 	}
 
 	static navigationOptions({ navigation, screenProps }) {
-		let name = '';
+		let name = 'New Grocery List';
+		let groceryItems = [];
 		const groceryList = screenProps.groceryLists.find(groceryList => groceryList._id === navigation.state.params.id);
 		if (groceryList) {
 			name = groceryList.name;
+			groceryItems = groceryList.items;
 		}
 		return {
-			headerTitle: 'Grocery List',
+			headerTitle: name,
 			headerBackTitle: "Back",
+			headerRight: (
+				<Button 
+					title="Delete"
+					onPress={() => {
+						Meteor.call('grocerylists.remove', navigation.state.params.id, (err) => {
+							if (err) {
+								Alert.alert(
+									'Error deleting Grocery List',
+									err.error,
+									[
+										{ text: "OK", style: 'normal' }
+									],
+									{ cancelable: true }
+								);
+							}
+
+							groceryItems.forEach(item => {
+								Meteor.call('groceries.archive', item);
+							});
+
+							navigation.popToTop();
+						});
+					}}
+					backgroundColor={colors.background}/>
+			)
 		}
 	}
 
