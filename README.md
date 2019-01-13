@@ -3,9 +3,13 @@
 
 ### To run the project
 
+To run the metro bundler, first install all the dependencies:
 ```
 npm i
+```
 
+Next, run the metro bundler:
+```
 react-native start
 ```
 
