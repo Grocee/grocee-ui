@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Text, ScrollView, Alert, FlatList, Linking} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import {colors, deleteButton, editButton, stylesheet} from '../../config/styles';
-import { List, ListItem, Icon, Card } from 'react-native-elements';
+import { List, ListItem, Icon, Card, SearchBar } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { styles } from "../Inventory/Home";
 import EditButton from "../components/EditButton";
@@ -13,9 +13,15 @@ export default class Home extends Component {
 	constructor(props) {
 		super(props);
 
+		let displayedRecipes = [];
+		if (this.props.screenProps.recipes.length > 0) {
+			displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archived);
+		}
 		this.state = {
 			newItemInputVisible: false,
-			newListName: ''
+			newListName: '',
+			searchText: '',
+			displayedRecipes
 		}
 	}
 
@@ -32,8 +38,24 @@ export default class Home extends Component {
 		}
 	}
 
-	renderRecipe(recipes) {
+	onChangeText(text) {
+		const trimmedText = text.trim();
+		if (!trimmedText) {
+			const displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archive);
+			this.setState({
+				searchText: trimmedText,
+				displayedRecipes
+			});
+		} else {
+			const displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.indexOf(trimmedText) >= 0);
+			this.setState({
+				searchText: trimmedText,
+				displayedRecipes
+			});
+		}
+	}
 
+	renderRecipe(recipes) {
 		const rightButtons = [
 			{
 				text: (<EditButton/>),
@@ -76,10 +98,7 @@ export default class Home extends Component {
 	}
 
 	renderRecipes() {
-
-		let recipes = this.props.screenProps.recipes.filter(recipe => !recipe.archived);
-
-		if (recipes.length === 0) {
+		if (this.state.displayedRecipes.length === 0) {
 			return (
 				<Card>
 					<Text style={{textAlign: 'center'}}>
@@ -87,17 +106,17 @@ export default class Home extends Component {
 					</Text>
 				</Card>
 			);
+		} else {
+			return (
+				<List containerStyle={styles.list}>
+					<FlatList
+						keyExtractor={(_item, index) => index}
+						data={this.state.displayedRecipes}
+						renderItem={(recipes) => this.renderRecipe(recipes)}
+					/>
+				</List>
+			);
 		}
-
-		return (
-			<List containerStyle={styles.list}>
-				<FlatList
-					keyExtractor={(_item, index) => index}
-					data={recipes}
-					renderItem={(recipes) => this.renderRecipe(recipes)}
-				/>
-			</List>
-		);
 	}
 
 	renderAddButton() {
@@ -119,6 +138,12 @@ export default class Home extends Component {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
 				<ScrollView style={{ flex: 1 }}>
+					<SearchBar
+						lightTheme
+						round
+						searchIcon={{ size: 24 }}
+						placeholder='Search for recipe'
+						onChangeText={(text) => this.onChangeText(text)} />
 					{this.renderRecipes()}
 				</ScrollView>
 				{this.renderAddButton()}
