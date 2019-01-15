@@ -46,7 +46,7 @@ export default class AddGroceryList extends Component {
 				<Button 
 					title="Delete"
 					onPress={() => {
-						Meteor.call('grocerylists.remove', navigation.state.params.id, (err) => {
+						Meteor.call('grocerylists.archive', navigation.state.params.id, (err) => {
 							if (err) {
 								Alert.alert(
 									'Error deleting Grocery List',
