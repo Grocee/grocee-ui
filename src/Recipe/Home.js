@@ -29,7 +29,19 @@ export default class Home extends Component {
 			headerBackTitle: "Back",
 			headerTitleStyle: {
 				color: colors.tint
-			}
+      },
+      headerRight: (
+				<View style={styles.rightButton} >
+					<Icon 
+						name='add'
+						color={colors.tint}
+						size={24}
+						underlayColor='transparent'
+						onPress={() => navigation.navigate('Recipe', { id: null })}
+						containerStyle={styles.rightButton}
+					/>
+				</View>
+			)
 		}
 	}
 
