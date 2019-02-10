@@ -47,7 +47,7 @@ export default class Home extends Component {
 				displayedRecipes
 			});
 		} else {
-			const displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.indexOf(trimmedText) >= 0);
+			const displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.toLowerCase().indexOf(trimmedText.toLowerCase()) >= 0);
 			this.setState({
 				searchText: trimmedText,
 				displayedRecipes
