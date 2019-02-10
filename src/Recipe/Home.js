@@ -13,16 +13,11 @@ export default class Home extends Component {
 	constructor(props) {
 		super(props);
 
-		let displayedRecipes = [];
-		if (this.props.screenProps.recipes.length > 0) {
-			displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archived);
-		}
 		this.state = {
 			newItemInputVisible: false,
 			newListName: '',
-			searchText: '',
-			displayedRecipes
-		}
+      searchText: ''
+    };
 	}
 
 	static navigationOptions({ navigation }) {
@@ -39,21 +34,19 @@ export default class Home extends Component {
 	}
 
 	onChangeText(text) {
-		const trimmedText = text.trim();
-		if (!trimmedText) {
-			const displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archive);
-			this.setState({
-				searchText: trimmedText,
-				displayedRecipes
-			});
+    const trimmedText = text.trim();
+    this.setState({
+      searchText: trimmedText
+    });
+  }
+  
+  getDisplayedRecipes() {
+    if (!this.state.searchText) {
+			return this.props.screenProps.recipes.filter(recipe => !recipe.archive);
 		} else {
-			const displayedRecipes = this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.indexOf(trimmedText) >= 0);
-			this.setState({
-				searchText: trimmedText,
-				displayedRecipes
-			});
+      return this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.indexOf(this.state.searchText) >= 0);
 		}
-	}
+  }
 
 	renderRecipe(recipes) {
 		const rightButtons = [
@@ -98,7 +91,8 @@ export default class Home extends Component {
 	}
 
 	renderRecipes() {
-		if (this.state.displayedRecipes.length === 0) {
+    const displayedRecipes = this.getDisplayedRecipes();
+		if (displayedRecipes.length === 0) {
 			return (
 				<Card>
 					<Text style={{textAlign: 'center'}}>
@@ -111,7 +105,7 @@ export default class Home extends Component {
 				<List containerStyle={styles.list}>
 					<FlatList
 						keyExtractor={(_item, index) => index}
-						data={this.state.displayedRecipes}
+						data={displayedRecipes}
 						renderItem={(recipes) => this.renderRecipe(recipes)}
 					/>
 				</List>
