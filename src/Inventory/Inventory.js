@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Meteor from 'react-native-meteor';
 import {colors, stylesheet} from '../../config/styles';
 import {Alert, SafeAreaView, View} from 'react-native';
-import {Icon} from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import {Dropdown} from 'react-native-material-dropdown';
 import { TextField } from 'react-native-material-textfield';
 
@@ -54,7 +54,42 @@ export default class Inventory extends Component {
 			headerTitleStyle: {
 				color: colors.tint,
 			},
-			headerBackTitle: "Back",
+      headerBackTitle: "Back",
+      headerRight: (
+				<Button 
+					title="Delete"
+					onPress={() => {
+						Meteor.call('inventories.archive', navigation.state.params.id, true, (err) => {
+							if (err) {
+								return Alert.alert(
+									'Error removing Inventory item from inventory list',
+									err,
+									[
+										{ text: "OK", style: 'normal'}
+									],
+									{ cancelable: true }
+								);
+							}
+
+							// Remove the archived inventory item from the inventory list
+							Meteor.call('inventorylists.removeItem', navigation.state.params.listId, navigation.state.params.id, (err) => {
+								if (err) {
+									return Alert.alert(
+										'Error removing inventory item from inventory list',
+										err,
+										[
+											{ text: "OK", style: 'normal' }
+										],
+										{ cancelable: true }
+									);
+								}
+
+								navigation.goBack();
+							});
+						});
+					}}
+					backgroundColor={colors.background}/>
+			)
 		}
 	}
 

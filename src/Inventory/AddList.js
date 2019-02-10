@@ -31,10 +31,43 @@ export default class AddInventoryList extends Component {
 		}
 	}
 
-	static navigationOptions({ navigation }) {
+	static navigationOptions({ navigation, screenProps }) {
+    let name = 'New Inventory List';
+		let inventoryItems = [];
+		const inventoryList = screenProps.inventoryLists.find(inventoryList => inventoryList._id === navigation.state.params.id);
+		if (inventoryList) {
+			name = inventoryList.name;
+			inventoryItems = inventoryList.items;
+    }
+    
 		return {
-			headerTitle: 'Inventory List',
-			headerBackTitle: "Back",
+			headerTitle: name,
+      headerBackTitle: "Back",
+      headerRight: (
+				<Button 
+					title="Delete"
+					onPress={() => {
+						Meteor.call('inventorylists.archive', navigation.state.params.id, (err) => {
+							if (err) {
+								Alert.alert(
+									'Error deleting Inventory List',
+									err.error,
+									[
+										{ text: "OK", style: 'normal' }
+									],
+									{ cancelable: true }
+								);
+							}
+
+							inventoryItems.forEach(item => {
+								Meteor.call('inventories.archive', item);
+							});
+
+							navigation.popToTop();
+						});
+					}}
+					backgroundColor={colors.background}/>
+			)
 		}
 	}
 
