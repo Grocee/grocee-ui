@@ -56,7 +56,7 @@ export default class Home extends Component {
     if (!this.state.searchText) {
 			return this.props.screenProps.recipes.filter(recipe => !recipe.archive);
 		} else {
-      return this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.indexOf(this.state.searchText) >= 0);
+      return this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) >= 0);
 		}
   }
 
