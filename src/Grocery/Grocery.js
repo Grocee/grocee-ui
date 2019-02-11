@@ -4,7 +4,7 @@ import Meteor from 'react-native-meteor';
 import { colors, stylesheet } from '../../config/styles';
 
 import { SafeAreaView, Alert, View } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { Dropdown } from 'react-native-material-dropdown';
 import { TextField } from 'react-native-material-textfield';
 

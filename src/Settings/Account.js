@@ -3,7 +3,7 @@ import {StyleSheet, ScrollView, View, Alert} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Meteor from 'react-native-meteor';
 import { List, ListItem } from 'react-native-elements';
-import {stylesheet} from "../../config/styles";
+import { colors, stylesheet} from "../../config/styles";
 import { TextField } from 'react-native-material-textfield';
 import { Accounts } from 'react-native-meteor';
 
@@ -74,17 +74,20 @@ export default class Account extends Component {
 					<View style={stylesheet.container}>
 						<TextField
 							label='First Name'
-							value={this.state.firstName}
+              value={this.state.firstName}
+              tintColor={colors.textFieldTint}
 							onChangeText={(name) => this.setState({ firstName: name, profileEdited: true })}
 						/>
 						<TextField
 							label='Last Name'
 							value={this.state.lastName}
+              tintColor={colors.textFieldTint}
 							onChangeText={(name) => this.setState({ lastName: name, profileEdited: true })}
 						/>
 						<TextField
 							label='Email Address'
 							value={this.state.email}
+              tintColor={colors.textFieldTint}
 						/>
 					</View>
 					{this.state.profileEdited

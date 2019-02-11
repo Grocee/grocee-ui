@@ -4,7 +4,7 @@ import { colors, stylesheet } from '../../config/styles';
 
 import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { List, ListItem, Icon } from 'react-native-elements';
+import { List, ListItem, Icon, Card } from 'react-native-elements';
 
 export default class Home extends Component {
 	
@@ -69,7 +69,11 @@ export default class Home extends Component {
 		} else {
 			// TODO make this look nicer
 			return (
-				<Text>You do not have any grocery lists. Click the top right icon to create one!</Text>
+				<Card>
+					<Text style={{textAlign: 'center'}}>
+						You do not have any grocery lists. Tap the + button to create one!
+					</Text>
+				</Card>
 			);
 		}
 	}
