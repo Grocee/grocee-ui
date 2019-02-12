@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import {StyleSheet, View, Text, ScrollView, Alert, FlatList, Linking} from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import {colors, deleteButton, editButton, stylesheet} from '../../config/styles';
-import { List, ListItem, Icon, Card, SearchBar } from 'react-native-elements';
-import Swipeout from 'react-native-swipeout';
+import React, { Component } from "react";
+import { StyleSheet, View, Text, ScrollView, Alert, FlatList, Linking } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import { colors, deleteButton, editButton, stylesheet } from "../../config/styles";
+import { List, ListItem, Icon, Card, SearchBar } from "react-native-elements";
+import Swipeout from "react-native-swipeout";
 import { styles } from "../Inventory/Home";
 import EditButton from "../components/EditButton";
 import DeleteButton from "../components/DeleteButton";
@@ -15,50 +15,52 @@ export default class Home extends Component {
 
 		this.state = {
 			newItemInputVisible: false,
-			newListName: '',
-      searchText: ''
-    };
+			newListName: "",
+			searchText: ""
+		};
 	}
 
 	static navigationOptions({ navigation }) {
 		return {
 			headerTitle: "Recipes",
 			headerStyle: {
-				backgroundColor: colors.background
+				backgroundColor: colors.background 
 			},
 			headerBackTitle: "Back",
 			headerTitleStyle: {
-				color: colors.tint
-      },
-      headerRight: (
+				color: colors.tint 
+			},
+			headerRight: (
 				<View style={styles.rightButton} >
 					<Icon 
 						name='add'
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('Recipe', { id: null })}
+						onPress={() => navigation.navigate("Recipe", {
+							id: null 
+						})}
 						containerStyle={styles.rightButton}
 					/>
 				</View>
 			)
-		}
+		};
 	}
 
 	onChangeText(text) {
-    const trimmedText = text.trim();
-    this.setState({
-      searchText: trimmedText
-    });
-  }
+		const trimmedText = text.trim();
+		this.setState({
+			searchText: trimmedText 
+		});
+	}
   
-  getDisplayedRecipes() {
-    if (!this.state.searchText) {
+	getDisplayedRecipes() {
+		if (!this.state.searchText) {
 			return this.props.screenProps.recipes.filter(recipe => !recipe.archive);
 		} else {
-      return this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) >= 0);
+			return this.props.screenProps.recipes.filter(recipe => !recipe.archive && recipe.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) >= 0);
 		}
-  }
+	}
 
 	renderRecipe(recipes) {
 		const rightButtons = [
@@ -67,22 +69,28 @@ export default class Home extends Component {
 				backgroundColor: editButton.backgroundColor,
 				underlayColor: editButton.underlayColor,
 				type: editButton.type,
-				onPress: () => this.props.navigation.navigate('Recipe', { id: recipes.item._id })
+				onPress: () => this.props.navigation.navigate("Recipe", {
+					id: recipes.item._id 
+				})
 			},
 			{
 				text: (<DeleteButton/>),
 				backgroundColor: deleteButton.backgroundColor,
 				underlayColor: deleteButton.underlayColor,
 				type: deleteButton.type,
-				onPress: () => 	Meteor.call('recipes.archive', recipes.item._id, (err) => {
+				onPress: () => 	Meteor.call("recipes.archive", recipes.item._id, (err) => {
 					if (err) {
 						Alert.alert(
 							"Error Archiving Recipe",
 							err.reason,
 							[
-								{ text: "OK", style: 'normal' }
+								{
+									text: "OK", style: "normal" 
+								}
 							],
-							{ cancelable: true }
+							{
+								cancelable: true 
+							}
 						);
 					}
 				})
@@ -95,7 +103,9 @@ export default class Home extends Component {
 					key={recipes.item._id}
 					title={recipes.item.name}
 					subtitle={recipes.item.url}
-					rightIcon={{ name: 'link' }}
+					rightIcon={{
+						name: "link" 
+					}}
 					onPress={() => Linking.openURL(recipes.item.url)}
 				/>
 			</Swipeout>
@@ -103,11 +113,13 @@ export default class Home extends Component {
 	}
 
 	renderRecipes() {
-    const displayedRecipes = this.getDisplayedRecipes();
+		const displayedRecipes = this.getDisplayedRecipes();
 		if (displayedRecipes.length === 0) {
 			return (
 				<Card>
-					<Text style={{textAlign: 'center'}}>
+					<Text style={{
+						textAlign: "center" 
+					}}>
 						You do not have any recipes saved. Click the + button to add one!
 					</Text>
 				</Card>
@@ -134,20 +146,26 @@ export default class Home extends Component {
 					raised
 					reverse
 					color={colors.background}
-					onPress={() => navigation.navigate('Recipe', { id: null })}
+					onPress={() => navigation.navigate("Recipe", {
+						id: null 
+					})}
 				/>
 			</View>
-		)
+		);
 	}
 
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<ScrollView style={{ flex: 1 }}>
+				<ScrollView style={{
+					flex: 1 
+				}}>
 					<SearchBar
 						lightTheme
 						round
-						searchIcon={{ size: 24 }}
+						searchIcon={{
+							size: 24 
+						}}
 						placeholder='Search for recipe'
 						onChangeText={(text) => this.onChangeText(text)} />
 					{this.renderRecipes()}

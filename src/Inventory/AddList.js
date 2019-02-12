@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import Meteor from 'react-native-meteor';
+import React, { Component } from "react";
+import Meteor from "react-native-meteor";
 
-import { colors, stylesheet } from '../../config/styles';
+import { colors, stylesheet } from "../../config/styles";
 
-import { SafeAreaView, Alert, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import { TextField } from 'react-native-material-textfield';
+import { SafeAreaView, Alert, View } from "react-native";
+import { Button } from "react-native-elements";
+import { TextField } from "react-native-material-textfield";
 
 export default class AddInventoryList extends Component {
 
@@ -13,7 +13,7 @@ export default class AddInventoryList extends Component {
 		super(props);
 
 		const inventoryListId = props.navigation.state.params.id;
-		let name = '';
+		let name = "";
 		let newInventoryList = true;
 		if (inventoryListId) {
 			newInventoryList = false;
@@ -28,39 +28,43 @@ export default class AddInventoryList extends Component {
 			name,
 			newInventoryList,
 			submitted: !newInventoryList
-		}
+		};
 	}
 
 	static navigationOptions({ navigation, screenProps }) {
-    let name = 'New Inventory List';
+		let name = "New Inventory List";
 		let inventoryItems = [];
 		const inventoryList = screenProps.inventoryLists.find(inventoryList => inventoryList._id === navigation.state.params.id);
 		if (inventoryList) {
 			name = inventoryList.name;
 			inventoryItems = inventoryList.items;
-    }
+		}
     
 		return {
 			headerTitle: name,
-      headerBackTitle: "Back",
-      headerRight: (
+			headerBackTitle: "Back",
+			headerRight: (
 				<Button 
 					title="Delete"
 					onPress={() => {
-						Meteor.call('inventorylists.archive', navigation.state.params.id, (err) => {
+						Meteor.call("inventorylists.archive", navigation.state.params.id, (err) => {
 							if (err) {
 								Alert.alert(
-									'Error deleting Inventory List',
+									"Error deleting Inventory List",
 									err.error,
 									[
-										{ text: "OK", style: 'normal' }
+										{
+											text: "OK", style: "normal" 
+										}
 									],
-									{ cancelable: true }
+									{
+										cancelable: true 
+									}
 								);
 							}
 
 							inventoryItems.forEach(item => {
-								Meteor.call('inventories.archive', item);
+								Meteor.call("inventories.archive", item);
 							});
 
 							navigation.popToTop();
@@ -68,7 +72,7 @@ export default class AddInventoryList extends Component {
 					}}
 					backgroundColor={colors.background}/>
 			)
-		}
+		};
 	}
 
 	onChangeName(name) {
@@ -80,21 +84,27 @@ export default class AddInventoryList extends Component {
 
 	createList() {
 		if (this.state.name.length === 0) {
-			return
+			return;
 		}
 
-		Meteor.call('inventorylists.create', this.state.name, (err, newListId) => {
+		Meteor.call("inventorylists.create", this.state.name, (err, newListId) => {
 			if (err) {
 				Alert.alert(
-					'Error Creating Inventory List',
+					"Error Creating Inventory List",
 					err.error,
 					[
-						{ text: "OK", style: 'normal' }
+						{
+							text: "OK", style: "normal" 
+						}
 					],
-					{ cancelable: true }
+					{
+						cancelable: true 
+					}
 				);
 			} else {
-				this.props.navigation.replace('InventoryList', { id: newListId, name: this.state.name });
+				this.props.navigation.replace("InventoryList", {
+					id: newListId, name: this.state.name 
+				});
 			}
 		});
 	}
@@ -102,36 +112,48 @@ export default class AddInventoryList extends Component {
 	updateList() {
 		if (this.state.name.length === 0) {
 			return Alert.alert(
-				'Error updating Inventory list',
-				'Inventory List name must not be empty',
+				"Error updating Inventory list",
+				"Inventory List name must not be empty",
 				[
-					{ text: "OK", style: "normal" }
+					{
+						text: "OK", style: "normal" 
+					}
 				],
-				{ cancelable: true }
-			)
+				{
+					cancelable: true 
+				}
+			);
 		}
 
-		Meteor.call('inventorylists.updateName', this.props.navigation.state.params.id, this.state.name, (err) => {
+		Meteor.call("inventorylists.updateName", this.props.navigation.state.params.id, this.state.name, (err) => {
 			if (err) {
 				return Alert.alert(
-					'Error updating Inventory List',
-					'Error updating name',
+					"Error updating Inventory List",
+					"Error updating name",
 					[
-						{ text: "OK", style: "normal" }
+						{
+							text: "OK", style: "normal" 
+						}
 					],
-					{ cancelable: true }
-				)
+					{
+						cancelable: true 
+					}
+				);
 			}
 			
-			this.props.navigation.replace('InventoryList', {id: this.props.navigation.state.params.id, name: this.state.name});
+			this.props.navigation.replace("InventoryList", {
+				id: this.props.navigation.state.params.id, name: this.state.name 
+			});
 		});
 	}
 
 	render() {
-		const invalidName = !this.state.name || this.state.name === '';
+		const invalidName = !this.state.name || this.state.name === "";
 
 		return (
-			<SafeAreaView style={{ flex: 1 }}>
+			<SafeAreaView style={{
+				flex: 1 
+			}}>
 				<View style={stylesheet.container}>
 					<TextField
 						label='Name'
@@ -143,12 +165,12 @@ export default class AddInventoryList extends Component {
 							: this.updateList()}
 						tintColor={colors.textFieldTint}
 						error={this.state.submitted && invalidName 
-							? 'Name cannot be empty'
+							? "Name cannot be empty"
 							: null}
 						shake={invalidName}
 						autoFocus />
 				</View>
 			</SafeAreaView>
-		)
+		);
 	}
 }

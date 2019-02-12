@@ -1,34 +1,34 @@
-import React, { Component } from 'react';
-import { StackNavigator } from 'react-navigation';
-import Home from '../Inventory/Home';
-import InventoryList from '../Inventory/InventoryList';
-import Inventory from '../Inventory/Inventory';
-import { navigationOptions } from '../../config/styles';
+import React, { Component } from "react";
+import { StackNavigator } from "react-navigation";
+import Home from "../Inventory/Home";
+import InventoryList from "../Inventory/InventoryList";
+import Inventory from "../Inventory/Inventory";
+import { navigationOptions } from "../../config/styles";
 import AddList from "../Inventory/AddList";
 
 const InventoryPage = StackNavigator(
 	{
 		Home: {
 			screen: Home,
-			path: 'inventory',
+			path: "inventory",
 		},
 		InventoryList: {
 			screen: InventoryList,
-			path: 'inventory/list/:listName',
+			path: "inventory/list/:listName",
 		},
 		InventoryEdit: {
 			screen: Inventory,
-			path: 'inventory/:id'
+			path: "inventory/:id"
 		},
 		AddList: {
 			screen: AddList,
-			path: 'inventory/addList',
+			path: "inventory/addList",
 		},
 	},
 	{
-		initialRouteName: 'Home',
+		initialRouteName: "Home",
 		navigationOptions,
-		mode: 'screen'
+		mode: "screen"
 	}
 );
 

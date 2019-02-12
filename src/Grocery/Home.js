@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { colors, stylesheet } from '../../config/styles';
+import { colors, stylesheet } from "../../config/styles";
 
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import { List, ListItem, Icon, Card } from 'react-native-elements';
+import { Text, StyleSheet, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import { List, ListItem, Icon, Card } from "react-native-elements";
 
 export default class Home extends Component {
 	
@@ -14,7 +14,7 @@ export default class Home extends Component {
 
 	static navigationOptions({ navigation }) {
 		return {
-			headerTitle: 'Groceries',
+			headerTitle: "Groceries",
 			headerBackTitle: "Back",
 			headerRight: (
 				<View style={stylesheet.rightButton}>
@@ -23,7 +23,8 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('AddList', {})}
+						onPress={() => navigation.navigate("AddList", {
+						})}
 						containerStyle={stylesheet.rightButton}
 					/>
 				</View>
@@ -45,7 +46,9 @@ export default class Home extends Component {
 			}).length;
 		}
 		const badge = badgeValue > 0 
-			? { value: badgeValue, containerStyle: stylesheet.badge } 
+			? {
+				value: badgeValue, containerStyle: stylesheet.badge 
+			} 
 			: null;
             
 		return (
@@ -53,8 +56,10 @@ export default class Home extends Component {
 				key={list._id}
 				title={list.name}
 				badge={badge}
-				onPress={() => this.props.navigation.navigate('GroceryList', {id: list._id, name: list.name})}/>
-		)
+				onPress={() => this.props.navigation.navigate("GroceryList", {
+					id: list._id, name: list.name 
+				})}/>
+		);
 	}
     
 	renderLists() {
@@ -70,7 +75,9 @@ export default class Home extends Component {
 			// TODO make this look nicer
 			return (
 				<Card>
-					<Text style={{textAlign: 'center'}}>
+					<Text style={{
+						textAlign: "center" 
+					}}>
 						You do not have any grocery lists. Tap the + button to create one!
 					</Text>
 				</Card>

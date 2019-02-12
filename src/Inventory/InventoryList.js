@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, FlatList, View, Text, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import Meteor from 'react-native-meteor';
-import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
-import {List, ListItem, Icon, Card, Button} from 'react-native-elements';
-import Swipeout from 'react-native-swipeout';
-import EditButton from '../components/EditButton';
-import DeleteButton from '../components/DeleteButton';
+import React, { Component } from "react";
+import { StyleSheet, FlatList, View, Text, ScrollView, Alert } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import Meteor from "react-native-meteor";
+import { colors, stylesheet, editButton, deleteButton } from "../../config/styles";
+import { List, ListItem, Icon, Card, Button } from "react-native-elements";
+import Swipeout from "react-native-swipeout";
+import EditButton from "../components/EditButton";
+import DeleteButton from "../components/DeleteButton";
 
 class InventoryList extends Component {
 
@@ -14,13 +14,14 @@ class InventoryList extends Component {
 		super(props);
 
 		this.state = {
-			newItemInputVisible: false
+			newItemInputVisible: false 
 		};
 
 	}
 
 	static navigationOptions({ navigation }) {
-		const params = navigation.state.params || {};
+		const params = navigation.state.params || {
+		};
 
 		return {
 			headerTitle: params.name,
@@ -29,11 +30,13 @@ class InventoryList extends Component {
 				<Button 
 					title="Edit"
 					onPress={() => {
-						navigation.navigate('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
+						navigation.navigate("AddList", {
+							id: navigation.state.params.id, name: navigation.state.params.name 
+						});
 					}}
 					backgroundColor={colors.background}/>
 			)
-		}
+		};
 	}
 
 	renderItem(inventories) {
@@ -44,29 +47,37 @@ class InventoryList extends Component {
 				backgroundColor: editButton.backgroundColor,
 				underlayColor: editButton.underlayColor,
 				type: editButton.type,
-				onPress: () => this.props.navigation.navigate('InventoryEdit', { listId: listId, id: inventories.item._id })
+				onPress: () => this.props.navigation.navigate("InventoryEdit", {
+					listId: listId, id: inventories.item._id 
+				})
 			},
 			{
 				text: (<DeleteButton/>),
 				backgroundColor: deleteButton.backgroundColor,
 				underlayColor: deleteButton.underlayColor,
 				type: deleteButton.type,
-				onPress: () => 	Meteor.call('inventories.archive', inventories.item._id, (err) => {
+				onPress: () => 	Meteor.call("inventories.archive", inventories.item._id, (err) => {
 					if (err) {
 						Alert.alert(
 							"Error Archiving Item",
 							err.reason,
 							[
-								{ text: "OK", style: 'normal' }
+								{
+									text: "OK", style: "normal" 
+								}
 							],
-							{ cancelable: true }
+							{
+								cancelable: true 
+							}
 						);
 					}
 				})
 			}
 		];
 
-		const onPress = () => this.props.navigation.navigate('InventoryEdit', { listId: listId, id: inventories.item._id });
+		const onPress = () => this.props.navigation.navigate("InventoryEdit", {
+			listId: listId, id: inventories.item._id 
+		});
 
 		return (
 			<Swipeout right={rightButtons} autoClose='true' backgroundColor='white'>
@@ -100,7 +111,9 @@ class InventoryList extends Component {
 		} else {
 			return (
 				<Card>
-					<Text style={{textAlign: 'center'}}>
+					<Text style={{
+						textAlign: "center" 
+					}}>
 						There are no inventory items in this list. Tap the + button to add one!
 					</Text>
 				</Card>
@@ -118,7 +131,9 @@ class InventoryList extends Component {
 					raised
 					reverse
 					color={colors.background}
-					onPress={() => navigation.navigate('InventoryEdit', { listId: navigation.state.params.id })}
+					onPress={() => navigation.navigate("InventoryEdit", {
+						listId: navigation.state.params.id 
+					})}
 				/>
 			</View>
 		);
@@ -128,7 +143,9 @@ class InventoryList extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<ScrollView style={{ flex: 1 }}>
+				<ScrollView style={{
+					flex: 1 
+				}}>
 					{this.renderItems()}
 				</ScrollView>
 				{this.renderAddButton()}

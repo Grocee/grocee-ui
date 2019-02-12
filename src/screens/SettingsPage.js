@@ -1,30 +1,30 @@
-import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import React from "react";
+import { StackNavigator } from "react-navigation";
 import { navigationOptions } from "../../config/styles";
-import Home from '../Settings/Home';
-import SelectInventoryList from '../Settings/SelectInventoryList';
-import Account from '../Settings/Account';
+import Home from "../Settings/Home";
+import SelectInventoryList from "../Settings/SelectInventoryList";
+import Account from "../Settings/Account";
 
 const SettingsPage = StackNavigator(
 	{
 		Home: {
 			screen: Home,
-			path: 'settings'
+			path: "settings"
 		},
 		SelectInventoryList: {
 			screen: SelectInventoryList,
-			path: 'selectInventoryList'
+			path: "selectInventoryList"
 		},
 		Account: {
 			screen: Account,
-			path: 'account'
+			path: "account"
 		},
 
 	},
 	{
-		initialRouteName: 'Home',
+		initialRouteName: "Home",
 		navigationOptions,
-		mode: 'screen'
+		mode: "screen"
 	}
 );
 

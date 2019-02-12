@@ -1,6 +1,6 @@
-import React from 'react';
-import { colors } from '../../config/styles';
-import { Icon } from 'react-native-elements';
+import React from "react";
+import { colors } from "../../config/styles";
+import { Icon } from "react-native-elements";
 
 const EditButton = () => {
 	return (
@@ -10,7 +10,7 @@ const EditButton = () => {
 			size={24}
 			underlayColor='transparent'
 		/>
-	)
+	);
 };
 
 export default EditButton;

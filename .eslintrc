@@ -1,54 +1,56 @@
 {
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": true
-        }
-    },
-    "env": {
-        "mocha": true,
-        "es6": true,
-        "browser": true
-    },
-    "plugins": [
-        "react"
-    ],
-    "extends": [
-        "eslint:recommended", 
-        "plugin:react/recommended"
-    ],
-    "rules": {
-        "quotes": ["off", "single"],
-        "indent": ["warn", "tab"],
-        "no-unused-vars": ["warn", {
-            "vars": "all",
-            "args": "all",
-            "argsIgnorePattern": "^(next|_+)",
-            "ignoreRestSiblings": false 
-            }
-        ],
-        "no-console": 1,
-        "semi": ["off", "always"],
-        "no-extra-semi": "warn",
-        "curly": ["warn", "all"],
-        "multiline-ternary": ["warn", "always"],
-        "operator-linebreak": ["warn", "before"],
-        "space-infix-ops": ["warn", {
-            "int32Hint": true
-            }
-        ],
-        "newline-per-chained-call": ["warn"],
-        "keyword-spacing": ["warn", { 
-            "overrides": {} 
-            }
-        ],
-        "object-curly-spacing": ["off", "always"],
-        "array-bracket-spacing": ["off", "always"],
-        "no-undef": ["error"],
+	"parserOptions": {
+		"ecmaVersion": 2018,
+		"sourceType": "module",
+		"ecmaFeatures": {
+				"jsx": true
+		}
+	},
+	"env": {
+		"mocha": true,
+		"es6": true,
+		"browser": true
+	},
+	"plugins": [
+		"react"
+	],
+	"extends": [
+		"eslint:recommended", 
+		"plugin:react/recommended"
+	],
+	"rules": {
+		"quotes": ["error", "double"],
+		"indent": ["warn", "tab"],
+		"no-unused-vars": ["warn", {
+			"vars": "all",
+			"args": "all",
+			"argsIgnorePattern": "^(next|_+)",
+			"ignoreRestSiblings": false 
+			}
+		],
+		"no-console": 1,
+		"semi": ["error", "always"],
+		"no-extra-semi": "warn",
+		"curly": ["warn", "all"],
+		"multiline-ternary": ["warn", "always"],
+		"operator-linebreak": ["warn", "before"],
+		"space-infix-ops": ["warn", { "int32Hint": true }],
+		"newline-per-chained-call": ["warn"],
+		"keyword-spacing": ["warn", { 
+				"overrides": {} 
+				}
+		],
+		"object-curly-spacing": ["error", "always"],
+		"array-bracket-spacing": ["off", "always"],
+		"no-undef": ["error"],
 		"brace-style": ["error", "1tbs"],
-		
+		"object-curly-newline": ["error", {
+			"ImportDeclaration": "never",
+			"ExportDeclaration": "never",
+			"ObjectExpression": "always",
+			"ObjectPattern": "never"
+		}],
 		"react/prop-types": ["off"],
 		"react/display-name": ["off"]
-    }
+	}
 }

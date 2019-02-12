@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import {StyleSheet, View, Text, TextInput, ScrollView, Alert} from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import {colors, stylesheet} from '../../config/styles';
-import {List, ListItem, Icon, Card} from 'react-native-elements';
+import React, { Component } from "react";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import { colors, stylesheet } from "../../config/styles";
+import { List, ListItem, Icon, Card } from "react-native-elements";
 
 export default class Home extends Component {
 
@@ -11,7 +11,7 @@ export default class Home extends Component {
 
 		this.state = {
 			newListInputVisible: false,
-			newListName: ''
+			newListName: ""
 		};
 	}
 
@@ -19,11 +19,11 @@ export default class Home extends Component {
 		return {
 			headerTitle: "Inventory",
 			headerStyle: {
-				backgroundColor: colors.background
+				backgroundColor: colors.background 
 			},
 			headerBackTitle: "Back",
 			headerTitleStyle: {
-				color: colors.tint
+				color: colors.tint 
 			},
 			headerRight: (
 				<View style={styles.rightButton} >
@@ -32,12 +32,13 @@ export default class Home extends Component {
 						color={colors.tint}
 						size={24}
 						underlayColor='transparent'
-						onPress={() => navigation.navigate('AddList', {})}
+						onPress={() => navigation.navigate("AddList", {
+						})}
 						containerStyle={styles.rightButton}
 					/>
 				</View>
 			)
-		}
+		};
 	}
 
 	renderList(list) {
@@ -50,11 +51,13 @@ export default class Home extends Component {
 				const inventory = inventories.find(inventory => inventory._id === item);
 				return inventory 
 					? !inventory.archived 
-					: false
+					: false;
 			}).length;
 		}
 		const badge = badgeValue > 0 
-			? { value: badgeValue, containerStyle: stylesheet.badge } 
+			? {
+				value: badgeValue, containerStyle: stylesheet.badge 
+			} 
 			: null;
 
 		return (
@@ -62,7 +65,9 @@ export default class Home extends Component {
 				key={list._id}
 				title={list.name}
 				badge={badge}
-				onPress={() => this.props.navigation.navigate('InventoryList', { id: list._id, name: list.name })}
+				onPress={() => this.props.navigation.navigate("InventoryList", {
+					id: list._id, name: list.name 
+				})}
 			/>
 		);
 	}
@@ -80,7 +85,9 @@ export default class Home extends Component {
 		} else {
 			return (
 				<Card>
-					<Text style={{textAlign: 'center'}}>
+					<Text style={{
+						textAlign: "center" 
+					}}>
 						You do not have any inventory lists. Tap the + button to create one!
 					</Text>
 				</Card>
@@ -91,7 +98,9 @@ export default class Home extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<ScrollView style={{ flex: 1 }}>
+				<ScrollView style={{
+					flex: 1 
+				}}>
 					{this.renderLists()}
 				</ScrollView>
 			</SafeAreaView>
@@ -101,12 +110,12 @@ export default class Home extends Component {
 
 export const styles = StyleSheet.create({
 	fab: {
-		position: 'absolute',
+		position: "absolute",
 		bottom: 24,
 		right: 24,
 	},
 	rightButton: {
-		padding: 5
+		padding: 5 
 	},
 	list: {
 		borderTopWidth: 0.5,

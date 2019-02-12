@@ -1,39 +1,39 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const colors = {
-	background: '#FF5252',
-	tint: 'white',
-	signInBackground: '#F5F2F9',
-	errorText: '#FA3256',
-	headerText: '#444444',
-	buttonBackground: '#39BD98',
-	buttonText: '#FFFFFF',
-	inputBackground: '#FFFFFF',
-	inputDivider: '#E4E2E5',
-	textFieldTint: 'dimgray'
+	background: "#FF5252",
+	tint: "white",
+	signInBackground: "#F5F2F9",
+	errorText: "#FA3256",
+	headerText: "#444444",
+	buttonBackground: "#39BD98",
+	buttonText: "#FFFFFF",
+	inputBackground: "#FFFFFF",
+	inputDivider: "#E4E2E5",
+	textFieldTint: "dimgray"
 };
 
 const navigationOptions = {
 	headerStyle: {
-		backgroundColor: colors.background
+		backgroundColor: colors.background 
 	},
 	headerTintColor: colors.tint,
 	headerTitleStyle: {
-		color: colors.tint
+		color: colors.tint 
 	}
 };
 
 const editButton = {
-	backgroundColor: 'orange',
-	underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-	type: 'secondary'
+	backgroundColor: "orange",
+	underlayColor: "rgba(0, 0, 0, 1, 0.6)",
+	type: "secondary"
 };
 
 const deleteButton = {
-	backgroundColor: 'red',
-	underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-	type: 'secondary'
-}
+	backgroundColor: "red",
+	underlayColor: "rgba(0, 0, 0, 1, 0.6)",
+	type: "secondary"
+};
 
 const stylesheet = StyleSheet.create({
 	input: {
@@ -42,47 +42,47 @@ const stylesheet = StyleSheet.create({
 		fontSize: 18,
 	},
 	leftButton: {
-		padding: 5
+		padding: 5 
 	},
 	rightButton: {
-		padding: 5
+		padding: 5 
 	},
 	fab: {
-		position: 'absolute',
+		position: "absolute",
 		bottom: 24,
 		right: 24,
 	},
 	newItem: {
-		backgroundColor: 'white',
+		backgroundColor: "white",
 		height: 40,
 		padding: 4
 	},
 	standaloneRowFront: {
-		backgroundColor: 'white',
-		justifyContent: 'center',
+		backgroundColor: "white",
+		justifyContent: "center",
 		padding: 10,
 		height: 45,
 		borderWidth: 0.3,
-		borderColor: '#3c3c3c'
+		borderColor: "#3c3c3c"
 	},
 	standaloneRowBack: {
-		alignItems: 'center',
-		backgroundColor: 'red',
+		alignItems: "center",
+		backgroundColor: "red",
 		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
+		flexDirection: "row",
+		justifyContent: "space-between",
 		padding: 15
 	},
 	backTextWhite: {
-		color: '#FFF'
+		color: "#FFF" 
 	},
 	badge: {
-		backgroundColor: 'salmon'
+		backgroundColor: "salmon" 
 	},
 	signOutText: {
 		fontSize: 18,
-		color: 'red',
-		alignItems: 'center',
+		color: "red",
+		alignItems: "center",
 		flex: 1,
 		padding: 5,
 		height: 45

@@ -1,37 +1,37 @@
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator } from "react-navigation";
 
-import { navigationOptions } from '../../config/styles';
+import { navigationOptions } from "../../config/styles";
 
-import Home from '../Grocery/Home';
-import AddList from '../Grocery/AddList';
-import GroceryList from '../Grocery/GroceryList';
-import Grocery from '../Grocery/Grocery';
+import Home from "../Grocery/Home";
+import AddList from "../Grocery/AddList";
+import GroceryList from "../Grocery/GroceryList";
+import Grocery from "../Grocery/Grocery";
 
 const GroceryPage = StackNavigator(
 	{
 		Home: {
 			screen: Home,
-			path: 'grocery'
+			path: "grocery"
 		},
 		AddList: {
 			screen: AddList,
-			path: 'grocery/addList',
-			mode: 'modal' // why doesn't this work?
+			path: "grocery/addList",
+			mode: "modal" // why doesn't this work?
 		},
 		GroceryList: {
 			screen: GroceryList,
-			path: 'grocery/list/:id'
+			path: "grocery/list/:id"
 		},
 		Grocery: {
 			screen: Grocery,
-			path: 'grocery/:id',
-			mode: 'modal' // why doesn't this work?
+			path: "grocery/:id",
+			mode: "modal" // why doesn't this work?
 		}
 	},
 	{
-		initialRouteName: 'Home',
+		initialRouteName: "Home",
 		navigationOptions,
-		mode: 'screen' 
+		mode: "screen" 
 	}
 );
 
