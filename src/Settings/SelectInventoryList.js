@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import Meteor from 'react-native-meteor';
-import { List, ListItem } from 'react-native-elements';
+import React, { Component } from "react";
+import { StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import Meteor from "react-native-meteor";
+import { List, ListItem } from "react-native-elements";
 
 export default class SelectInventoryList extends Component {
 
@@ -27,12 +27,12 @@ export default class SelectInventoryList extends Component {
 
 	static navigationOptions() {
 		return {
-			headerTitle: 'Select Inventory List'
+			headerTitle: "Select Inventory List" 
 		};
 	}
 
 	setDefaultList(listId) {
-		Meteor.call('inventorylists.setDefault', listId);
+		Meteor.call("inventorylists.setDefault", listId);
 		this.props.navigation.goBack();
 	}
 
@@ -49,8 +49,11 @@ export default class SelectInventoryList extends Component {
 								key={list._id}
 								hideChevron={!list.isDefault}
 								rightIcon={list.isDefault 
-									? {name: 'done'} 
-									: {}} />
+									? {
+										name: "done" 
+									} 
+									: {
+									}} />
 						)}
 					</List>
 				</ScrollView>

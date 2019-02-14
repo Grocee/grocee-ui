@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import Meteor from 'react-native-meteor';
+import React, { Component } from "react";
+import Meteor from "react-native-meteor";
 
-import { colors, stylesheet } from '../../config/styles';
+import { colors, stylesheet } from "../../config/styles";
 
-import { SafeAreaView, Alert, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import { Dropdown } from 'react-native-material-dropdown';
-import { TextField } from 'react-native-material-textfield';
+import { SafeAreaView, Alert, View } from "react-native";
+import { Button } from "react-native-elements";
+import { Dropdown } from "react-native-material-dropdown";
+import { TextField } from "react-native-material-textfield";
 
 export default class Grocery extends Component {
 	
@@ -14,8 +14,8 @@ export default class Grocery extends Component {
 		super(props);
 		
 		const groceryId = props.navigation.state.params.id;
-		let name = '';
-		let amount = '';
+		let name = "";
+		let amount = "";
 		let newGrocery = true;
 		if (groceryId) {
 			newGrocery = false;
@@ -45,34 +45,42 @@ export default class Grocery extends Component {
 
 	static navigationOptions({ navigation }) {
 		return {
-			headerTitle: 'Grocery',
+			headerTitle: "Grocery",
 			headerBackTitle: "Back",
 			headerRight: (
 				<Button 
 					title="Delete"
 					onPress={() => {
-						Meteor.call('groceries.archive', navigation.state.params.id, true, (err) => {
+						Meteor.call("groceries.archive", navigation.state.params.id, true, (err) => {
 							if (err) {
 								return Alert.alert(
-									'Error removing Grocery item from grocery list',
+									"Error removing Grocery item from grocery list",
 									err,
 									[
-										{ text: "OK", style: 'normal'}
+										{
+											text: "OK", style: "normal" 
+										}
 									],
-									{ cancelable: true }
+									{
+										cancelable: true 
+									}
 								);
 							}
 
 							// Remove the archived grocery item from the grocery list
-							Meteor.call('grocerylists.removeItem', navigation.state.params.listId, navigation.state.params.id, (err) => {
+							Meteor.call("grocerylists.removeItem", navigation.state.params.listId, navigation.state.params.id, (err) => {
 								if (err) {
 									return Alert.alert(
-										'Error removing grocery item from grocery list',
+										"Error removing grocery item from grocery list",
 										err,
 										[
-											{ text: "OK", style: 'normal' }
+											{
+												text: "OK", style: "normal" 
+											}
 										],
-										{ cancelable: true }
+										{
+											cancelable: true 
+										}
 									);
 								}
 
@@ -88,32 +96,40 @@ export default class Grocery extends Component {
 	addGrocery() {
 		if (this.state.name.length === 0) {
 			return Alert.alert(
-				'Error updating Grocery item',
-				'Grocery name must not be empty',
+				"Error updating Grocery item",
+				"Grocery name must not be empty",
 				[
-					{ text: "OK", style: 'normal'}
+					{
+						text: "OK", style: "normal" 
+					}
 				],
-				{ cancelable: true }
+				{
+					cancelable: true 
+				}
 			);
 		}
 
 		const amount = this.state.amount.trim().length > 0 
 			? this.state.amount 
 			: null;
-		Meteor.call('groceries.insert', this.state.name, amount, (err, groceryId) => {
+		Meteor.call("groceries.insert", this.state.name, amount, (err, groceryId) => {
 			if (err) {
 				Alert.alert(
-					'Error creating Grocery item',
+					"Error creating Grocery item",
 					err.error,
 					[
-						{ text: "OK", style: 'normal' }
+						{
+							text: "OK", style: "normal" 
+						}
 					],
-					{ cancelable: true }
+					{
+						cancelable: true 
+					}
 				);
 				return;
 			}
 
-			Meteor.call('grocerylists.addItem', this.state.listId, groceryId);
+			Meteor.call("grocerylists.addItem", this.state.listId, groceryId);
 			this.props.navigation.goBack();
 		});
 	}
@@ -121,37 +137,49 @@ export default class Grocery extends Component {
 	updateGrocery() {
 		if (this.state.name.length === 0) {
 			return Alert.alert(
-				'Error updating Grocery item',
-				'Grocery name must not be empty',
+				"Error updating Grocery item",
+				"Grocery name must not be empty",
 				[
-					{ text: "OK", style: 'normal'}
+					{
+						text: "OK", style: "normal" 
+					}
 				],
-				{ cancelable: true }
+				{
+					cancelable: true 
+				}
 			);
 		}
 
-		Meteor.call('groceries.updateName', this.props.navigation.state.params.id, this.state.name, (nameErr) => {
+		Meteor.call("groceries.updateName", this.props.navigation.state.params.id, this.state.name, (nameErr) => {
 			if (nameErr) {
 				return Alert.alert(
-					'Error updating Grocery item',
-					'Error updating name',
+					"Error updating Grocery item",
+					"Error updating name",
 					[
-						{ text: "OK", style: 'normal'}
+						{
+							text: "OK", style: "normal" 
+						}
 					],
-					{ cancelable: true }
+					{
+						cancelable: true 
+					}
 				);
 			}
 
 			if (this.state.amount != null) {
-				Meteor.call('groceries.updateAmount', this.props.navigation.state.params.id, this.state.amount, (amountErr) => {
+				Meteor.call("groceries.updateAmount", this.props.navigation.state.params.id, this.state.amount, (amountErr) => {
 					if (amountErr) {
 						return Alert.alert(
-							'Error updating Grocery item',
-							'Error updating amount',
+							"Error updating Grocery item",
+							"Error updating amount",
 							[
-								{ text: "OK", style: 'normal'}
+								{
+									text: "OK", style: "normal" 
+								}
 							],
-							{ cancelable: true }
+							{
+								cancelable: true 
+							}
 						);
 					}
 
@@ -170,18 +198,22 @@ export default class Grocery extends Component {
 
 	onChangeGroceryList(value) {
 		this.setState({
-			selectedGroceryList: value
+			selectedGroceryList: value 
 		});
 
-		Meteor.call('grocerylists.moveItem', this.props.navigation.state.params.id, this.props.navigation.state.params.listId, value, (moveGroceryErr) => {
+		Meteor.call("grocerylists.moveItem", this.props.navigation.state.params.id, this.props.navigation.state.params.listId, value, (moveGroceryErr) => {
 			if (moveGroceryErr) {
 				return Alert.alert(
-					'Error moving Grocery item',
-					'Error moving Grocery item to new list',
+					"Error moving Grocery item",
+					"Error moving Grocery item to new list",
 					[
-						{ text: "OK", style: 'normal' }
+						{
+							text: "OK", style: "normal" 
+						}
 					],
-					{ cancelable: true }
+					{
+						cancelable: true 
+					}
 				);
 			}
 		});
@@ -190,7 +222,9 @@ export default class Grocery extends Component {
 	render() {
 		const invalidName = !this.state.name || this.state.name == "";
 		return (
-			<SafeAreaView style={{ flex: 1 }}>
+			<SafeAreaView style={{
+				flex: 1 
+			}}>
 				<View style={stylesheet.container}>
 					<TextField
 						label='Name'
@@ -200,10 +234,10 @@ export default class Grocery extends Component {
 						returnKeyType='next'
 						tintColor={colors.textFieldTint}
 						onSubmitEditing={() => {
-							this.amountInput.focus()
+							this.amountInput.focus();
 						}}
 						error={this.state.showError && invalidName 
-							? 'Name cannot be empty'
+							? "Name cannot be empty"
 							: null}
 						shake={invalidName} />
 
@@ -213,7 +247,9 @@ export default class Grocery extends Component {
 							this.amountInput = input;
 						}}
 						value={this.state.amount}
-						onChangeText={(amount) => this.setState({ amount })}
+						onChangeText={(amount) => this.setState({
+							amount 
+						})}
 						returnKeyType='done'
 						tintColor={colors.textFieldTint}
 						onSubmitEditing={() => this.state.newGrocery

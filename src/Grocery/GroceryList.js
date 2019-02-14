@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { colors, stylesheet, editButton, deleteButton } from '../../config/styles';
+import { colors, stylesheet, editButton, deleteButton } from "../../config/styles";
 
-import { StyleSheet, View, ScrollView, FlatList, Text } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import { Icon, ListItem, List, Button, Card } from 'react-native-elements';
-import Swipeout from 'react-native-swipeout';
-import EditButton from '../components/EditButton';
-import DeleteButton from '../components/DeleteButton';
+import { StyleSheet, View, ScrollView, FlatList, Text } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import { Icon, ListItem, List, Button, Card } from "react-native-elements";
+import Swipeout from "react-native-swipeout";
+import EditButton from "../components/EditButton";
+import DeleteButton from "../components/DeleteButton";
 
-import Meteor from 'react-native-meteor';
+import Meteor from "react-native-meteor";
 
 export default class GroceryList extends Component {
 
@@ -17,9 +17,9 @@ export default class GroceryList extends Component {
 		super(props);
 
 		this.state = {
-			amount: '',
+			amount: "",
 			isLoading: false,
-			searchNeedle: '',
+			searchNeedle: "",
 			displayChecked: false
 		};
 	}
@@ -32,11 +32,13 @@ export default class GroceryList extends Component {
 				<Button 
 					title="Edit"
 					onPress={() => {
-						navigation.navigate('AddList', {id: navigation.state.params.id, name: navigation.state.params.name})
+						navigation.navigate("AddList", {
+							id: navigation.state.params.id, name: navigation.state.params.name 
+						});
 					}}
 					backgroundColor={colors.background}/>
 			)
-		}
+		};
 	}
 
 	getGroceries() {
@@ -46,10 +48,13 @@ export default class GroceryList extends Component {
 			groceries = this.props.screenProps.groceries.filter(grocery => groceryList.items.includes(grocery._id));
 		}
 		if (!groceryList) {
-			groceryList = {};
+			groceryList = {
+			};
 		}
 
-		return { groceryList , groceries };
+		return {
+			groceryList , groceries 
+		};
 	}
     
 	renderAddButton() {
@@ -61,7 +66,9 @@ export default class GroceryList extends Component {
 					raised
 					reverse
 					color={colors.background}
-					onPress={() => navigation.navigate('Grocery', { listId: navigation.state.params.id })}
+					onPress={() => navigation.navigate("Grocery", {
+						listId: navigation.state.params.id 
+					})}
 				/>
 			</View>
 		);
@@ -72,7 +79,7 @@ export default class GroceryList extends Component {
 
 		// Filter based on search results
 		let filteredGroceries = groceries.filter(grocery => {
-			if (this.state.searchNeedle !== '') {
+			if (this.state.searchNeedle !== "") {
 				return grocery.name.indexOf(this.state.searchNeedle) >= 0;
 			} else {
 				return true;
@@ -86,7 +93,9 @@ export default class GroceryList extends Component {
 		if (filteredGroceries.length == 0) {
 			return (
 				<Card>
-					<Text style={{ textAlign: 'center' }}>
+					<Text style={{
+						textAlign: "center" 
+					}}>
 						You do not have any grocery items in this grocery list. Click the + button to add one!
 					</Text>
 				</Card>
@@ -111,14 +120,16 @@ export default class GroceryList extends Component {
 				backgroundColor: editButton.backgroundColor,
 				underlayColor: editButton.underlayColor,
 				type: editButton.type,
-				onPress: () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id })
+				onPress: () => navigation.navigate("Grocery", {
+					listId: navigation.state.params.id, id: item.item._id 
+				})
 			},
 			{
 				text: (<DeleteButton/>),
 				backgroundColor: deleteButton.backgroundColor,
 				underlayColor: deleteButton.underlayColor,
 				type: deleteButton.type,
-				onPress: () => Meteor.call('groceries.remove', item.item._id)
+				onPress: () => Meteor.call("groceries.remove", item.item._id)
 			}
 		];
 
@@ -130,13 +141,15 @@ export default class GroceryList extends Component {
 					size={24}
 					underlayColor='transparent'
 				/>),
-				backgroundColor: 'green',
-				underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-				onPress: () => Meteor.call('groceries.setChecked', item.item._id, true)
+				backgroundColor: "green",
+				underlayColor: "rgba(0, 0, 0, 1, 0.6)",
+				onPress: () => Meteor.call("groceries.setChecked", item.item._id, true)
 			}
 		];
 		
-		const onPress = () => navigation.navigate('Grocery', { listId: navigation.state.params.id, id: item.item._id });
+		const onPress = () => navigation.navigate("Grocery", {
+			listId: navigation.state.params.id, id: item.item._id 
+		});
 		
 		return (
 			<Swipeout right={rightButtons} left={leftButtons} autoClose='true' backgroundColor='white'>
@@ -152,7 +165,9 @@ export default class GroceryList extends Component {
 	render() {
 		return (
 			<SafeAreaView style={StyleSheet.absoluteFill}>
-				<ScrollView style={{ flex: 1 }}>
+				<ScrollView style={{
+					flex: 1 
+				}}>
 					{this.renderGroceries()}
 				</ScrollView>
 				{this.renderAddButton()}

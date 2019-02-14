@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, Dimensions, LayoutAnimation, View, Text, Platform } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import { colors } from '../../config/styles';
-import { InputWrapper } from '../components/GenericTextInput';
-import Button from '../components/Button';
-import Meteor, { Accounts } from 'react-native-meteor';
-import { TextField } from 'react-native-material-textfield';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import React, { Component } from "react";
+import { StyleSheet, Dimensions, LayoutAnimation, View, Text, Platform } from "react-native";
+import { SafeAreaView } from "react-navigation";
+import { colors } from "../../config/styles";
+import { InputWrapper } from "../components/GenericTextInput";
+import Button from "../components/Button";
+import Meteor, { Accounts } from "react-native-meteor";
+import { TextField } from "react-native-material-textfield";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 export default class SignIn extends Component {
 	constructor(props) {
@@ -14,9 +14,9 @@ export default class SignIn extends Component {
 
 		this.mounted = false;
 		this.state = {
-			email: '',
-			password: '',
-			confirmPassword: '',
+			email: "",
+			password: "",
+			confirmPassword: "",
 			confirmPasswordVisible: false,
 			error: null,
 		};
@@ -32,7 +32,9 @@ export default class SignIn extends Component {
 
 	_handleError(error) {
 		if (this.mounted) {
-			this.setState({ error });
+			this.setState({
+				error 
+			});
 		}
 	}
 
@@ -41,15 +43,15 @@ export default class SignIn extends Component {
 		let valid = true;
 		
 		if (email.length === 0) {
-			this._handleError('Email cannot be empty.');
+			this._handleError("Email cannot be empty.");
 		}
 
 		if (password.length === 0) {
-			this._handleError('Password cannot be empty.');
+			this._handleError("Password cannot be empty.");
 		}
 
 		if (confirmPasswordVisible && password !== confirmPassword) {
-			this._handleError('Passwords do not match.');
+			this._handleError("Passwords do not match.");
 			valid = false;
 		}
 
@@ -75,17 +77,21 @@ export default class SignIn extends Component {
 		const { email, password, confirmPasswordVisible } = this.state;
 
 		if (confirmPasswordVisible && this._validateInput()) {
-			Accounts.createUser({ email, password }, (error) => {
+			Accounts.createUser({
+				email, password 
+			}, (error) => {
 				if (error) {
 					this._handleError(error.reason);
 				} else {
 					// react-native-meteor doesn't log in right away after sign up
 					this._handleSignIn();
 				}
-			})
+			});
 		} else {
 			LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-			this.setState({ confirmPasswordVisible: true });
+			this.setState({
+				confirmPasswordVisible: true 
+			});
 		}
 	}
 
@@ -98,10 +104,12 @@ export default class SignIn extends Component {
 
 				<InputWrapper>
 					<TextField
-						onChangeText={(email) => this.setState({ email })}
+						onChangeText={(email) => this.setState({
+							email 
+						})}
 						keyboardType='email-address'
 						onSubmitEditing={() => {
-							this.passwordInput.focus()
+							this.passwordInput.focus();
 						}}
 						label='Email Address'
 						autoCapitalize='none'
@@ -111,9 +119,11 @@ export default class SignIn extends Component {
 					<TextField
 						label='Password'
 						ref={(input) => {
-							this.passwordInput = input
+							this.passwordInput = input;
 						}}
-						onChangeText={(password) => this.setState({ password })}
+						onChangeText={(password) => this.setState({
+							password 
+						})}
 						autoCapitalize='none'
 						secureTextEntry
 						tintColor={colors.textFieldTint}
@@ -122,16 +132,18 @@ export default class SignIn extends Component {
 							: this.confirmPasswordInput.focus()
 						}
 						returnKeyType={this.state.confirmPasswordVisible
-							? 'next'
-							: 'done'}
+							? "next"
+							: "done"}
 					/>
 					{this.state.confirmPasswordVisible
 						? <TextField
 							label='Confirm Password'
 							ref={(input) => {
-								this.confirmPasswordInput = input
+								this.confirmPasswordInput = input;
 							}}
-							onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+							onChangeText={(confirmPassword) => this.setState({
+								confirmPassword 
+							})}
 							onSubmitEditing={() => this._handleCreateAccount()}
 							secureTextEntry
 							borderTop
@@ -149,7 +161,7 @@ export default class SignIn extends Component {
 					<Button text='Create Account' onPress={() => this._handleCreateAccount()} />
 				</View>
 
-				{Platform.OS === 'ios'
+				{Platform.OS === "ios"
 					? <KeyboardSpacer/>
 					: null}
 			</SafeAreaView>
@@ -157,22 +169,22 @@ export default class SignIn extends Component {
 	}
 }
 
-const window = Dimensions.get('window');
+const window = Dimensions.get("window");
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 		backgroundColor: colors.signInBackground,
 	},
 	buttons: {
-		flexDirection: 'row',
+		flexDirection: "row", 
 	},
 	error: {
 		height: 28,
-		justifyContent: 'center',
+		justifyContent: "center",
 		width: window.width,
-		alignItems: 'center',
+		alignItems: "center",
 	},
 	errorText: {
 		color: colors.errorText,
@@ -180,7 +192,7 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		marginBottom: 25,
-		alignItems: 'center',
+		alignItems: "center",
 	},
 	logo: {
 		width: 125,
@@ -189,13 +201,13 @@ const styles = StyleSheet.create({
 	headerText: {
 		fontSize: 30,
 		color: colors.background,
-		fontWeight: '600',
-		fontStyle: 'italic',
+		fontWeight: "600",
+		fontStyle: "italic",
 	},
 	subHeaderText: {
 		fontSize: 20,
 		color: colors.headerText,
-		fontWeight: '400',
-		fontStyle: 'italic',
+		fontWeight: "400",
+		fontStyle: "italic",
 	},
 });

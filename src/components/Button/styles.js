@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { colors } from '../../../config/styles';
+import { StyleSheet } from "react-native";
+import { colors } from "../../../config/styles";
 
 export default StyleSheet.create({
 	button: {
@@ -11,6 +11,6 @@ export default StyleSheet.create({
 	buttonText: {
 		color: colors.buttonText,
 		fontSize: 16,
-		fontWeight: '500',
+		fontWeight: "500",
 	},
 });
