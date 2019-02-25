@@ -99,7 +99,7 @@ export default class SignIn extends Component {
 		return (
 			<SafeAreaView style={styles.container}>
 				<View style={styles.header}>
-					<Text style={styles.headerText}>grocee</Text>
+					<Text style={styles.headerText}>PANTRI</Text>
 				</View>
 
 				<InputWrapper>
@@ -199,9 +199,9 @@ const styles = StyleSheet.create({
 		height: 125,
 	},
 	headerText: {
-		fontSize: 30,
+		fontSize: 36,
 		color: colors.background,
-		fontWeight: "600",
+		fontWeight: "900",
 		fontStyle: "italic",
 	},
 	subHeaderText: {
